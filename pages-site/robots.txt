@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://ssschangersss.github.io/world-of-games/sitemap.xml

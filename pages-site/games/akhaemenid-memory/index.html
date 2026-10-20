@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+<title>حافظه هخامنشی</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  body {
+    font-family: Vazirmatn, Tahoma, sans-serif;
+    background: linear-gradient(160deg, #101a2e, #0b1220);
+    color: #f3ead8; min-height: 100dvh;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 14px; user-select: none;
+  }
+  header { text-align: center; margin-bottom: 12px; }
+  h1 { font-size: 1.25rem; color: #d9a441; }
+  .hud { display: flex; gap: 16px; justify-content: center; color: #a8b3c9; font-size: .9rem; margin-top: 4px; }
+  .hud b { color: #e8c073; }
+  #board {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;
+    width: min(92vw, 420px);
+  }
+  .card {
+    aspect-ratio: 1; border: 1px solid rgba(217,164,65,.35); border-radius: 12px;
+    background: #14203a; display: flex; align-items: center; justify-content: center;
+    font-size: clamp(1.4rem, 8vw, 2.2rem); cursor: pointer;
+    transition: transform .15s, background .15s; min-height: 64px;
+  }
+  .card:active { transform: scale(.96); }
+  .card.open { background: #1a2848; }
+  .card.done { background: rgba(103,185,138,.16); border-color: rgba(103,185,138,.5); cursor: default; }
+  .card span { opacity: 0; transition: opacity .15s; }
+  .card.open span, .card.done span { opacity: 1; }
+  #msg { margin-top: 14px; min-height: 1.6em; color: #67b98a; font-weight: 700; }
+  button.restart {
+    margin-top: 10px; padding: 12px 26px; min-height: 44px;
+    border: 0; border-radius: 999px; cursor: pointer;
+    background: linear-gradient(135deg, #e8c073, #d9a441); color: #221806; font: inherit; font-weight: 700;
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>❋ حافظه هخامنشی ❋</h1>
+  <div class="hud">
+    <span>حرکت: <b id="moves">۰</b></span>
+    <span>جفت‌ها: <b id="pairs">۰/۸</b></span>
+  </div>
+</header>
+<div id="board" role="grid" aria-label="صفحه بازی"></div>
+<div id="msg" aria-live="polite"></div>
+<button class="restart" id="restart">شروع دوباره</button>
+
+<script>
+(function () {
+  'use strict';
+  // shim سازگار با sandbox (بدون localStorage — KI-2 استاندارد آپلود)
+  var store = {
+    get: function (k) { try { return window.localStorage.getItem(k); } catch (e) { return null; } },
+    set: function (k, v) { try { window.localStorage.setItem(k, v); } catch (e) {} }
+  };
+
+  var symbols = ['☀️', '🦁', '🌹', '🏛️', '🐎', '🦅', '👑', '🏹'];
+  var board = document.getElementById('board');
+  var movesEl = document.getElementById('moves');
+  var pairsEl = document.getElementById('pairs');
+  var msgEl = document.getElementById('msg');
+  var moves = 0, pairs = 0, first = null, lock = false;
+
+  var fa = function (n) { return String(n).replace(/\d/g, function (d) { return '۰۱۲۳۴۵۶۷۸۹'[d]; }); };
+
+  function shuffle(a) {
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  }
+
+  function start() {
+    moves = 0; pairs = 0; first = null; lock = false;
+    movesEl.textContent = fa(0); pairsEl.textContent = fa(0) + '/۸';
+    msgEl.textContent = '';
+    board.innerHTML = '';
+    shuffle(symbols.concat(symbols)).forEach(function (sym) {
+      var card = document.createElement('div');
+      card.className = 'card';
+      card.setAttribute('role', 'gridcell');
+      var s = document.createElement('span');
+      s.textContent = sym;
+      card.appendChild(s);
+      card.addEventListener('click', function () { flip(card, sym); });
+      board.appendChild(card);
+    });
+  }
+
+  function flip(card, sym) {
+    if (lock || card.classList.contains('open') || card.classList.contains('done')) return;
+    card.classList.add('open');
+    if (!first) { first = { card: card, sym: sym }; return; }
+    moves++; movesEl.textContent = fa(moves);
+    if (first.sym === sym) {
+      first.card.classList.add('done');
+      card.classList.add('done');
+      first = null;
+      pairs++; pairsEl.textContent = fa(pairs) + '/۸';
+      if (pairs === 8) {
+        msgEl.textContent = '🎉 آفرین! همه جفت‌ها را در ' + fa(moves) + ' حرکت پیدا کردی';
+        var best = store.get('wog-memory-best');
+        if (!best || moves < Number(best)) store.set('wog-memory-best', String(moves));
+      }
+    } else {
+      lock = true;
+      var a = first.card, b = card;
+      first = null;
+      setTimeout(function () {
+        a.classList.remove('open');
+        b.classList.remove('open');
+        lock = false;
+      }, 650);
+    }
+  }
+
+  document.getElementById('restart').addEventListener('click', start);
+  start();
+})();
+</script>
+</body>
+</html>

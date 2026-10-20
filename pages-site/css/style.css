@@ -1,0 +1,249 @@
+/* ─────────────────────────────────────────────
+   World of Games — GitHub Pages Landing
+   همان توکن‌های طراحی پلتفرم: لاجورد شب + زرین هخامنشی + فیروزه
+   RTL · Mobile-first · بدون وابستگی خارجی
+   ───────────────────────────────────────────── */
+
+@font-face {
+  font-family: 'Vazirmatn';
+  src: url('../fonts/Vazirmatn-Regular.woff2') format('woff2');
+  font-weight: 400; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'Vazirmatn';
+  src: url('../fonts/Vazirmatn-Medium.woff2') format('woff2');
+  font-weight: 500; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'Vazirmatn';
+  src: url('../fonts/Vazirmatn-Bold.woff2') format('woff2');
+  font-weight: 700; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'Vazirmatn';
+  src: url('../fonts/Vazirmatn-Black.woff2') format('woff2');
+  font-weight: 900; font-style: normal; font-display: swap;
+}
+
+:root {
+  --bg: #0b1220;
+  --bg-2: #101a2e;
+  --surface: #14203a;
+  --surface-2: #1a2848;
+  --line: rgba(217, 164, 65, .22);
+  --line-strong: rgba(217, 164, 65, .5);
+  --gold: #d9a441;
+  --gold-2: #e8c073;
+  --gold-ink: #221806;
+  --turquoise: #3fb8af;
+  --text: #f3ead8;
+  --muted: #a8b3c9;
+  --radius: 14px;
+  --radius-sm: 9px;
+  --shadow: 0 10px 30px rgba(3, 8, 20, .45);
+  --font: 'Vazirmatn', 'Segoe UI', Tahoma, system-ui, sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  font-family: var(--font);
+  font-size: 16px;
+  line-height: 1.9;
+  color: var(--text);
+  background:
+    radial-gradient(1200px 500px at 85% -10%, rgba(63, 184, 175, .07), transparent 60%),
+    radial-gradient(900px 420px at 10% -5%, rgba(217, 164, 65, .08), transparent 55%),
+    var(--bg);
+  min-height: 100dvh;
+  overflow-x: hidden;
+}
+
+img { max-width: 100%; height: auto; }
+a { color: var(--gold-2); text-decoration: none; }
+a:hover { color: var(--gold); }
+h1, h2, h3, h4 { line-height: 1.5; margin: 0 0 .6em; }
+h1 { font-weight: 900; }
+code {
+  font-family: 'Vazirmatn', Consolas, monospace;
+  background: rgba(217, 164, 65, .1);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: .05em .4em;
+  font-size: .92em;
+  color: var(--gold-2);
+  direction: ltr;
+  unicode-bidi: embed;
+}
+
+.container { width: 100%; max-width: 1180px; margin-inline: auto; padding-inline: 16px; }
+@media (min-width: 720px) { .container { padding-inline: 24px; } }
+
+:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; border-radius: 4px; }
+::selection { background: var(--gold); color: var(--gold-ink); }
+
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px; margin: -1px;
+  clip-path: inset(50%); overflow: hidden; white-space: nowrap;
+}
+
+/* ─── هدر ─── */
+.site-header {
+  position: sticky; top: 0; z-index: 50;
+  background: rgba(11, 18, 32, .88);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line);
+}
+.header-inner { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 62px; flex-wrap: wrap; }
+.brand { display: inline-flex; align-items: center; gap: 10px; color: var(--gold); font-weight: 800; }
+.brand-mark { flex: none; }
+.brand-text { font-size: 1.05rem; }
+.site-nav { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
+.site-nav a { padding: 7px 12px; border-radius: var(--radius-sm); color: var(--muted); font-size: .95rem; }
+.site-nav a:hover { color: var(--text); background: rgba(217, 164, 65, .08); }
+.site-nav .nav-gh { color: var(--gold-2); border: 1px solid var(--line); }
+.site-nav .nav-gh:hover { border-color: var(--line-strong); background: rgba(217, 164, 65, .1); }
+
+/* ─── قهرمان ─── */
+.hero { padding: 64px 0 56px; text-align: center; border-bottom: 1px solid var(--line); }
+.hero-emblem { margin-bottom: 10px; filter: drop-shadow(0 6px 24px rgba(217, 164, 65, .25)); }
+.hero-kicker { color: var(--turquoise); font-size: .95rem; letter-spacing: .02em; margin: 0 0 8px; }
+.hero h1 { font-size: clamp(1.9rem, 5.5vw, 3.2rem); margin-bottom: .5em; color: var(--text); }
+.hero-lead {
+  max-width: 760px; margin: 0 auto 28px; color: var(--muted); font-size: 1.05rem;
+}
+.hero-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 26px; }
+.tech-strip {
+  list-style: none; display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;
+  padding: 0; margin: 0; color: var(--muted); font-size: .85rem;
+}
+.tech-strip li {
+  border: 1px solid var(--line); border-radius: 999px; padding: 3px 14px;
+  background: rgba(20, 32, 58, .55);
+}
+
+/* ─── دکمه‌ها ─── */
+.btn {
+  display: inline-block; padding: 11px 26px; border-radius: var(--radius-sm);
+  font-weight: 700; font-size: .98rem; transition: transform .12s, box-shadow .12s, background .12s;
+  border: 1px solid transparent;
+}
+.btn:hover { transform: translateY(-1px); }
+.btn-gold { background: linear-gradient(160deg, var(--gold-2), var(--gold)); color: var(--gold-ink); box-shadow: 0 6px 18px rgba(217, 164, 65, .3); }
+.btn-gold:hover { color: var(--gold-ink); box-shadow: 0 8px 22px rgba(217, 164, 65, .42); }
+.btn-ghost { border-color: var(--line-strong); color: var(--gold-2); }
+.btn-ghost:hover { background: rgba(217, 164, 65, .1); color: var(--gold-2); }
+.btn-sm { padding: 8px 20px; font-size: .9rem; }
+
+/* ─── بخش‌ها ─── */
+.section { padding: 58px 0; }
+.section-alt { background: var(--bg-2); border-block: 1px solid var(--line); }
+.section-head { text-align: center; max-width: 720px; margin: 0 auto 36px; }
+.section-head h2 { font-size: clamp(1.5rem, 4vw, 2.1rem); color: var(--gold); }
+.section-head p { color: var(--muted); margin: 0; }
+.section-note { text-align: center; color: var(--muted); font-size: .92rem; margin-top: 26px; }
+
+/* ─── کارت‌های بازی ─── */
+.game-grid { display: grid; gap: 20px; grid-template-columns: 1fr; }
+@media (min-width: 760px) { .game-grid { grid-template-columns: repeat(3, 1fr); } }
+.game-card {
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+  overflow: hidden; box-shadow: var(--shadow); display: flex; flex-direction: column;
+  transition: transform .15s, border-color .15s;
+}
+.game-card:hover { transform: translateY(-3px); border-color: var(--line-strong); }
+.game-cover { display: block; line-height: 0; }
+.game-body { padding: 18px 18px 22px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+.game-body h3 { margin: 0; color: var(--text); font-size: 1.15rem; }
+.game-body p { margin: 0; color: var(--muted); font-size: .93rem; flex: 1; }
+.game-body .btn { align-self: flex-start; margin-top: 8px; }
+.game-meta { display: flex; gap: 8px; }
+.chip {
+  font-size: .78rem; padding: 1px 12px; border-radius: 999px;
+  background: rgba(63, 184, 175, .12); border: 1px solid rgba(63, 184, 175, .35); color: var(--turquoise);
+}
+.chip-alt { background: rgba(217, 164, 65, .1); border-color: var(--line); color: var(--gold-2); }
+.game-card-cta {
+  background: linear-gradient(160deg, var(--surface-2), var(--surface));
+  border-style: dashed; border-color: var(--line-strong);
+  justify-content: center;
+}
+.game-card-cta .game-body { justify-content: center; }
+
+/* ─── امکانات ─── */
+.feature-grid { display: grid; gap: 18px; grid-template-columns: 1fr; }
+@media (min-width: 640px) { .feature-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1020px) { .feature-grid { grid-template-columns: repeat(3, 1fr); } }
+.feature {
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 22px 20px; transition: border-color .15s, transform .15s;
+}
+.feature:hover { border-color: var(--line-strong); transform: translateY(-2px); }
+.feature h3 { color: var(--gold-2); font-size: 1.05rem; margin-bottom: .4em; }
+.feature p { margin: 0; color: var(--muted); font-size: .93rem; }
+
+/* ─── گام‌ها ─── */
+.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 18px; counter-reset: none; }
+@media (min-width: 860px) { .steps { grid-template-columns: repeat(3, 1fr); } }
+.step {
+  position: relative; background: var(--surface); border: 1px solid var(--line);
+  border-radius: var(--radius); padding: 24px 20px 20px; text-align: center;
+}
+.step-num {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 44px; height: 44px; border-radius: 50%; margin-bottom: 10px;
+  background: linear-gradient(160deg, var(--gold-2), var(--gold)); color: var(--gold-ink);
+  font-weight: 900; font-size: 1.25rem;
+  box-shadow: 0 4px 14px rgba(217, 164, 65, .35);
+}
+.step h3 { color: var(--text); font-size: 1.05rem; }
+.step p { margin: 0; color: var(--muted); font-size: .93rem; text-align: start; }
+
+/* ─── حمایت مالی ─── */
+.donate-inner { display: grid; gap: 26px; align-items: start; }
+@media (min-width: 900px) { .donate-inner { grid-template-columns: 1.7fr 1fr; } }
+.donate-inner h2 { color: var(--gold); font-size: clamp(1.4rem, 3.5vw, 1.9rem); }
+.donate-inner > div > p { color: var(--muted); }
+.donate-box {
+  background: var(--surface); border: 1px solid var(--line-strong); border-radius: var(--radius);
+  padding: 22px 20px; box-shadow: var(--shadow);
+}
+.donate-box h3 { color: var(--gold-2); margin-bottom: .4em; }
+.donate-box p { margin: 0 0 10px; color: var(--muted); font-size: .93rem; }
+.donate-box p:last-child { margin-bottom: 0; }
+.donate-mock-note { border-top: 1px dashed var(--line-strong); padding-top: 10px; }
+
+/* ─── MCP ─── */
+.mcp-wrap { max-width: 860px; margin-inline: auto; }
+.mcp-table {
+  width: 100%; border-collapse: collapse; background: var(--surface);
+  border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden;
+  font-size: .95rem;
+}
+.mcp-table th, .mcp-table td { padding: 12px 16px; text-align: start; border-bottom: 1px solid var(--line); }
+.mcp-table thead th { background: var(--surface-2); color: var(--gold-2); font-size: .9rem; }
+.mcp-table tbody tr:last-child td { border-bottom: 0; }
+.mcp-table tbody tr:hover { background: rgba(217, 164, 65, .05); }
+
+/* ─── فراخوان نهایی ─── */
+.final-cta { text-align: center; background: var(--bg-2); border-top: 1px solid var(--line); }
+.final-cta h2 { color: var(--gold); }
+.final-cta p { max-width: 720px; margin: 0 auto 24px; color: var(--muted); }
+.final-cta .btn-gold { direction: ltr; }
+
+/* ─── فوتر ─── */
+.site-footer { border-top: 1px solid var(--line); background: var(--bg); padding: 40px 0 26px; }
+.footer-inner { display: grid; gap: 26px; grid-template-columns: 1fr; }
+@media (min-width: 760px) { .footer-inner { grid-template-columns: 2fr 1fr 1fr; } }
+.footer-col p { color: var(--muted); font-size: .93rem; margin: 0; }
+.footer-col h4 { color: var(--gold-2); font-size: .98rem; margin-bottom: .5em; }
+.footer-col a { display: block; color: var(--muted); padding: 3px 0; font-size: .93rem; }
+.footer-col a:hover { color: var(--gold-2); }
+.footer-brand { color: var(--gold); font-weight: 800; font-size: 1.05rem; margin-bottom: 6px !important; }
+.footer-base {
+  margin-top: 30px; padding-top: 18px; border-top: 1px solid var(--line);
+  display: flex; flex-wrap: wrap; gap: 8px 20px; justify-content: space-between;
+}
+.footer-base p { margin: 0; color: var(--muted); font-size: .85rem; }
