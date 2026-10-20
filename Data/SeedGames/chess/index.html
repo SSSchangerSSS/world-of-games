@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+<title>شطرنج</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  body {
+    font-family: Vazirmatn, Tahoma, sans-serif;
+    background: linear-gradient(160deg, #101a2e, #0b1220);
+    color: #f3ead8; min-height: 100dvh; user-select: none;
+    display: flex; flex-direction: column; align-items: center; padding: 12px;
+  }
+  header { text-align: center; margin-bottom: 8px; }
+  h1 { font-size: 1.25rem; color: #d9a441; }
+  .hud { color: #a8b3c9; font-size: .9rem; margin-top: 2px; min-height: 1.4em; }
+  .hud b { color: #e8c073; }
+  #board {
+    direction: ltr; display: grid; grid-template-columns: repeat(8, 1fr);
+    width: min(92vw, 440px); border: 2px solid rgba(217,164,65,.5);
+    border-radius: 10px; overflow: hidden; touch-action: manipulation;
+  }
+  .sq { aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
+        position: relative; cursor: pointer; }
+  .sq.light { background: #e8dcc0; } .sq.dark { background: #41527a; }
+  .sq .pc { font-size: clamp(22px, 7.6vw, 38px); line-height: 1; z-index: 2; }
+  .sq.w .pc { color: #f8f1e0; text-shadow: 0 1px 2px rgba(20,20,20,.85), 0 0 2px rgba(20,20,20,.9); }
+  .sq.b .pc { color: #1c2438; text-shadow: 0 1px 1px rgba(243,234,216,.35); }
+  .sq.sel::after { content: ''; position: absolute; inset: 0; box-shadow: inset 0 0 0 3px #d9a441; }
+  .sq.last::before { content: ''; position: absolute; inset: 0; background: rgba(217,164,65,.28); }
+  .sq.dot .dotm { position: absolute; width: 26%; height: 26%; border-radius: 50%; background: rgba(63,184,175,.85); }
+  .sq.cap .dotm { width: 86%; height: 86%; background: transparent; border: 3px solid rgba(226,109,92,.9); }
+  .sq.chk::after { content: ''; position: absolute; inset: 0; box-shadow: inset 0 0 0 3px #e26d5c;
+                   background: radial-gradient(circle, rgba(226,109,92,.5), transparent 70%); }
+  .bar { display: flex; gap: 8px; align-items: center; margin: 10px 0 4px; flex-wrap: wrap; justify-content: center; }
+  button {
+    font-family: inherit; font-size: .88rem; font-weight: 700; cursor: pointer;
+    background: #d9a441; color: #221806; border: 0; border-radius: 10px; padding: 8px 16px;
+  }
+  button.ghost { background: #14203a; color: #e8c073; border: 1px solid rgba(217,164,65,.4); }
+  button.on { outline: 2px solid #3fb8af; }
+  #hint { color: #a8b3c9; font-size: .82rem; text-align: center; padding: 6px 10px; }
+  #overlay { position: fixed; inset: 0; background: rgba(11,18,32,.82); display: none;
+             align-items: center; justify-content: center; z-index: 9; }
+  #overlay.show { display: flex; }
+  .panel { background: #14203a; border: 1px solid rgba(217,164,65,.5); border-radius: 14px;
+           padding: 22px 26px; text-align: center; box-shadow: 0 10px 30px rgba(3,8,20,.45); }
+  .panel h2 { color: #e8c073; font-size: 1.2rem; margin-bottom: 6px; }
+  .panel p { color: #a8b3c9; font-size: .9rem; margin-bottom: 12px; }
+  .promo { display: flex; gap: 8px; justify-content: center; }
+  .promo button { font-size: 1.5rem; padding: 6px 14px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>❋ شطرنج ❋</h1>
+  <div class="hud" id="status">نوبت شما — مهره‌های کرم</div>
+</header>
+<div id="board"></div>
+<div class="bar">
+  <button id="new">بازی جدید</button>
+  <button id="undo" class="ghost">برگرداندن حرکت</button>
+  <button id="lvl" class="ghost">حریف: متوسط</button>
+</div>
+<p id="hint">مهرهٔ خودت را بزن، بعد خانهٔ مقصد را — کیش را با نوار قرمز ببین.</p>
+<div id="overlay"><div class="panel">
+  <h2 id="otitle"></h2><p id="osub"></p>
+  <div class="promo" id="opromo" style="display:none"></div>
+  <button id="ook" style="display:none">باشه</button>
+</div></div>
+
+<script src="js/chess.min.js"></script>
+<script>
+(function () {
+  'use strict';
+  var store = {
+    get: function (k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+    set: function (k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+  };
+  var GLYPH = { p: '\u265F', n: '\u265E', b: '\u265D', r: '\u265C', q: '\u265B', k: '\u265A' };
+  var VAL = { p: 100, n: 320, b: 330, r: 500, q: 900, k: 0 };
+  var PST = {
+    p: [0,0,0,0,0,0,0,0, 50,50,50,50,50,50,50,50, 10,10,20,30,30,20,10,10, 5,5,10,25,25,10,5,5,
+        0,0,0,20,20,0,0,0, 5,-5,-10,0,0,-10,-5,5, 5,10,10,-20,-20,10,10,5, 0,0,0,0,0,0,0,0],
+    n: [-50,-40,-30,-30,-30,-30,-40,-50, -40,-20,0,0,0,0,-20,-40, -30,0,10,15,15,10,0,-30,
+        -30,5,15,20,20,15,5,-30, -30,0,15,20,20,15,0,-30, -30,5,10,15,15,10,5,-30,
+        -40,-20,0,5,5,0,-20,-40, -50,-40,-30,-30,-30,-30,-40,-50],
+    k: [-30,-40,-40,-50,-50,-40,-40,-30, -30,-40,-40,-50,-50,-40,-40,-30, -30,-40,-40,-50,-50,-40,-40,-30,
+        -30,-40,-40,-50,-50,-40,-40,-30, -20,-30,-30,-40,-40,-30,-30,-20, -10,-20,-20,-20,-20,-20,-20,-10,
+        20,20,0,0,0,0,20,20, 20,30,10,0,0,10,30,20]
+  };
+  var game = new Chess();
+  var boardEl = document.getElementById('board');
+  var statusEl = document.getElementById('status');
+  var sel = null, legal = [], lastMove = null, aiTimer = null, busy = false, over = false;
+  var deep = store.get('wog-chess-deep') === '2' ? 2 : 3;
+
+  var FILES = 'abcdefgh'.split('');
+  function squares() { var out = []; for (var r = 8; r >= 1; r--) for (var f = 0; f < 8; f++) out.push(FILES[f] + r); return out; }
+  var ALL = squares();
+
+  function buildBoard() {
+    boardEl.innerHTML = '';
+    ALL.forEach(function (sq) {
+      var d = document.createElement('div');
+      var dark = (FILES.indexOf(sq[0]) + Number(sq[1])) % 2 === 0;
+      d.className = 'sq ' + (dark ? 'dark' : 'light');
+      d.dataset.sq = sq;
+      d.addEventListener('click', function () { onSquare(sq); });
+      boardEl.appendChild(d);
+    });
+  }
+
+  function kingSquare(color) {
+    var b = game.board();
+    for (var r = 0; r < 8; r++) for (var f = 0; f < 8; f++) {
+      var p = b[r][f];
+      if (p && p.type === 'k' && p.color === color) return FILES[f] + (8 - r);
+    }
+    return null;
+  }
+
+  function render() {
+    var checkSq = game.in_check() ? kingSquare(game.turn()) : null;
+    var cells = boardEl.children;
+    for (var i = 0; i < 64; i++) {
+      var sq = ALL[i], d = cells[i];
+      var p = game.get(sq);
+      d.className = 'sq ' + ((FILES.indexOf(sq[0]) + Number(sq[1])) % 2 === 0 ? 'dark' : 'light');
+      if (p) d.className += ' ' + p.color;
+      var html = p ? '<span class="pc">' + GLYPH[p.type] + '</span>' : '';
+      if (sel === sq) d.className += ' sel';
+      if (lastMove && (lastMove.from === sq || lastMove.to === sq)) d.className += ' last';
+      if (checkSq === sq) d.className += ' chk';
+      for (var j = 0; j < legal.length; j++) {
+        if (legal[j].to === sq) { d.className += legal[j].captured ? ' cap' : ' dot'; break; }
+      }
+      if (d.className.indexOf('dot') >= 0 || d.className.indexOf('cap') >= 0) html += '<span class="dotm"></span>';
+      d.innerHTML = html;
+    }
+  }
+
+  function setStatus(t) { statusEl.innerHTML = t; }
+
+  function endText() {
+    if (game.in_checkmate()) return game.turn() === 'w'
+      ? ['کیش و مات — باختی!', 'حریف سیاه مات کرد. دوباره امتحان کن.']
+      : ['کیش و مات — بردی!', 'حریف سیاه را مات کردی. آفرین!'];
+    if (game.in_stalemate()) return ['پات — مساوی', 'حرکت قانونی باقی نمانده است.'];
+    if (game.in_threefold_repetition()) return ['مساوی', 'تکرار سه‌بارهٔ وضعیت.'];
+    if (game.insufficient_material()) return ['مساوی', 'مهرهٔ کافی برای مات باقی نمانده.'];
+    if (game.in_draw()) return ['مساوی', 'قانون ۵۰ حرکت.'];
+    return null;
+  }
+
+  function checkEnd() {
+    var t = endText();
+    if (t) { over = true; showPanel(t[0], t[1]); setStatus(t[0]); return true; }
+    return false;
+  }
+
+  function showPanel(title, sub, promoCb) {
+    var ov = document.getElementById('overlay');
+    document.getElementById('otitle').textContent = title;
+    document.getElementById('osub').textContent = sub || '';
+    var pr = document.getElementById('opromo'), ok = document.getElementById('ook');
+    if (promoCb) {
+      pr.style.display = 'flex'; ok.style.display = 'none'; pr.innerHTML = '';
+      ['q', 'r', 'b', 'n'].forEach(function (t) {
+        var b = document.createElement('button');
+        b.textContent = GLYPH[t];
+        b.addEventListener('click', function () { hidePanel(); promoCb(t); });
+        pr.appendChild(b);
+      });
+    } else { pr.style.display = 'none'; ok.style.display = 'inline-block'; }
+    ov.classList.add('show');
+  }
+  function hidePanel() { document.getElementById('overlay').classList.remove('show'); }
+  document.getElementById('ook').addEventListener('click', hidePanel);
+
+  // ─── هوش مصنوعی: negamax + آلفا-بتا ───
+  function evaluate() {
+    var b = game.board(), s = 0;
+    for (var r = 0; r < 8; r++) for (var f = 0; f < 8; f++) {
+      var p = b[r][f]; if (!p) continue;
+      var v = VAL[p.type];
+      var pst = PST[p.type] ? PST[p.type][p.color === 'w' ? r * 8 + f : (7 - r) * 8 + (7 - f)] : 0;
+      if (p.type === 'k') pst = 0;
+      s += p.color === 'w' ? (v + pst) : -(v + pst);
+    }
+    return s;
+  }
+  function orderMoves(ms) {
+    return ms.sort(function (a, b) {
+      return (b.captured ? VAL[b.captured] : 0) - (a.captured ? VAL[a.captured] : 0);
+    });
+  }
+  function negamax(depth, alpha, beta) {
+    if (depth === 0) {
+      var e = evaluate();
+      return game.turn() === 'w' ? e : -e;
+    }
+    var ms = orderMoves(game.moves({ verbose: true }));
+    if (ms.length === 0) return game.in_check() ? -99999 : 0;
+    var best = -Infinity;
+    for (var i = 0; i < ms.length; i++) {
+      game.move(ms[i]);
+      var v = -negamax(depth - 1, -beta, -alpha);
+      game.undo();
+      if (v > best) best = v;
+      if (best > alpha) alpha = best;
+      if (alpha >= beta) break;
+    }
+    return best;
+  }
+  function aiPick() {
+    var depth = deep, t0 = Date.now();
+    var ms = orderMoves(game.moves({ verbose: true }));
+    var best = null, bestV = -Infinity;
+    for (var i = 0; i < ms.length; i++) {
+      game.move(ms[i]);
+      var v = -negamax(depth - 1, -Infinity, Infinity) + Math.random() * 6;
+      game.undo();
+      if (v > bestV) { bestV = v; best = ms[i]; }
+      if (Date.now() - t0 > 2500) break; // سقف زمان
+    }
+    return best;
+  }
+  function aiTurn() {
+    if (over || game.turn() !== 'b') return;
+    busy = true;
+    setStatus('حریف فکر می‌کند…');
+    aiTimer = setTimeout(function () {
+      var m = aiPick();
+      busy = false;
+      if (!m) { checkEnd(); return; }
+      lastMove = m;
+      game.move(m);
+      render();
+      if (!checkEnd()) setStatus('نوبت شما — مهره‌های کرم');
+    }, 220);
+  }
+
+  function onSquare(sq) {
+    if (over || busy || game.turn() !== 'w') return;
+    var mv = null;
+    for (var i = 0; i < legal.length; i++) if (legal[i].to === sq) { mv = legal[i]; break; }
+    if (mv) {
+      var apply = function (promo) {
+        var done = game.move({ from: mv.from, to: mv.to, promotion: promo || 'q' });
+        if (!done) return;
+        sel = null; legal = []; lastMove = done;
+        render();
+        if (!checkEnd()) aiTurn();
+      };
+      if (mv.piece === 'p' && mv.to[1] === '8') {
+        showPanel('ارتقای سرباز', 'مهرهٔ جدید را انتخاب کن:', apply);
+      } else apply('q');
+      return;
+    }
+    var p = game.get(sq);
+    if (p && p.color === 'w') {
+      sel = sq; legal = game.moves({ square: sq, verbose: true });
+    } else { sel = null; legal = []; }
+    render();
+  }
+
+  document.getElementById('new').addEventListener('click', function () {
+    clearTimeout(aiTimer); game.reset(); over = false; busy = false;
+    sel = null; legal = []; lastMove = null; render();
+    setStatus('نوبت شما — مهره‌های کرم');
+  });
+  document.getElementById('undo').addEventListener('click', function () {
+    if (busy) return;
+    clearTimeout(aiTimer); over = false; hidePanel();
+    if (game.turn() === 'b') game.undo();
+    if (game.turn() === 'b') game.undo();
+    var h = game.history({ verbose: true });
+    lastMove = h.length ? h[h.length - 1] : null;
+    sel = null; legal = []; render();
+    setStatus('نوبت شما — مهره‌های کرم');
+  });
+  var lvlBtn = document.getElementById('lvl');
+  lvlBtn.textContent = deep === 3 ? 'حریف: متوسط' : 'حریف: آسان';
+  lvlBtn.addEventListener('click', function () {
+    deep = deep === 3 ? 2 : 3;
+    store.set('wog-chess-deep', String(deep));
+    lvlBtn.textContent = deep === 3 ? 'حریف: متوسط' : 'حریف: آسان';
+  });
+
+  buildBoard();
+  render();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+<title>پینگ‌پنگ</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  body {
+    font-family: Vazirmatn, Tahoma, sans-serif;
+    background: linear-gradient(160deg, #101a2e, #0b1220);
+    color: #f3ead8; min-height: 100dvh;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 14px; user-select: none; touch-action: manipulation;
+  }
+  header { text-align: center; margin-bottom: 12px; }
+  h1 { font-size: 1.25rem; color: #d9a441; }
+  .hud { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; color: #a8b3c9; font-size: .9rem; margin-top: 4px; }
+  .hud b { color: #e8c073; }
+  .stage { position: relative; width: min(92vw, 420px); }
+  canvas {
+    display: block; width: 100%; max-width: min(92vw, 420px); height: auto; touch-action: none;
+    border: 1px solid rgba(217,164,65,.35); border-radius: 12px; background: #0b1220;
+  }
+  .panel {
+    position: absolute; inset: 0; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 12px; padding: 20px; text-align: center;
+    background: rgba(11,18,32,.86); border-radius: 12px;
+  }
+  .panel p { font-size: 1.1rem; font-weight: 700; line-height: 1.9; }
+  .panel .sub { color: #a8b3c9; font-weight: 400; font-size: .9rem; }
+  .panel button {
+    padding: 12px 30px; min-height: 44px; border: 0; border-radius: 10px; cursor: pointer;
+    background: #d9a441; color: #221806; font: inherit; font-weight: 700;
+  }
+  .panel.hidden { display: none; }
+  #hint { margin-top: 12px; color: #a8b3c9; font-size: .85rem; text-align: center; line-height: 1.8; max-width: min(92vw, 420px); }
+</style>
+</head>
+<body>
+<header>
+  <h1>❋ پینگ‌پنگ ❋</h1>
+  <div class="hud">
+    <span>شما <b id="ps">۰</b> — <b id="cs">۰</b> حریف</span>
+    <span>بردها: <b id="wins">۰</b></span>
+  </div>
+</header>
+<div class="stage">
+  <canvas id="cv" width="420" height="560" role="img" aria-label="صفحه بازی پینگ‌پنگ"></canvas>
+  <div class="panel" id="panel">
+    <p id="pMsg" aria-live="polite"></p>
+    <p class="sub" id="pSub"></p>
+    <button id="pBtn">شروع بازی</button>
+  </div>
+</div>
+<p id="hint">راهنما: راکت تو پایین است؛ با ماوس، لمس یا کلیدهای چپ/راست حرکت کن. اولین نفر به ۷ امتیاز برنده است.</p>
+
+<script>
+(function () {
+  'use strict';
+  // shim ذخیره‌سازی سازگار با sandbox
+  var store = {
+    get: function (k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+    set: function (k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+  };
+
+  var W = 420, H = 560;
+  var PW = 76, PH = 12, PY = H - 30, AY = 18;
+  var BR = 6, WIN_SCORE = 7;
+  var BASE_SPEED = 300, SPEED_UP = 1.045, MAX_SPEED = 640;
+  var AI_TRACK = 235, AI_IDLE = 110, PADDLE_SPEED = 400, PAD_MARGIN = 8;
+
+  var cv = document.getElementById('cv');
+  var ctx = cv.getContext('2d');
+  var psEl = document.getElementById('ps');
+  var csEl = document.getElementById('cs');
+  var winsEl = document.getElementById('wins');
+  var panel = document.getElementById('panel');
+  var pMsg = document.getElementById('pMsg');
+  var pSub = document.getElementById('pSub');
+  var pBtn = document.getElementById('pBtn');
+
+  var fa = function (n) { return String(n).replace(/\d/g, function (d) { return '۰۱۲۳۴۵۶۷۸۹'[d]; }); };
+
+  var px = (W - PW) / 2, ax = (W - PW) / 2;
+  var ball = { x: W / 2, y: H / 2, vx: 0, vy: 0 };
+  var ps = 0, cs = 0, speed = BASE_SPEED, serveT = 0;
+  var wins = Number(store.get('wog-pong-wins')) || 0;
+  var keys = { left: false, right: false };
+  var state = 'menu', last = 0;
+  winsEl.textContent = fa(wins);
+
+  function rr(x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.arcTo(x + w, y, x + w, y + h, r);
+    ctx.arcTo(x + w, y + h, x, y + h, r);
+    ctx.arcTo(x, y + h, x, y, r);
+    ctx.arcTo(x, y, x + w, y, r);
+    ctx.closePath();
+  }
+
+  function clampP(x) { return Math.max(PAD_MARGIN, Math.min(W - PAD_MARGIN - PW, x)); }
+
+  function updateHud() {
+    psEl.textContent = fa(ps);
+    csEl.textContent = fa(cs);
+    winsEl.textContent = fa(wins);
+  }
+
+  function serve(down) {
+    ball.x = W / 2;
+    ball.y = H / 2;
+    speed = BASE_SPEED;
+    var ang = Math.random() * .9 - .45;
+    ball.vx = speed * Math.sin(ang);
+    ball.vy = speed * (down ? Math.cos(ang) : -Math.cos(ang));
+    serveT = .8;
+  }
+
+  function show(msg, sub, btn) {
+    pMsg.textContent = msg;
+    pSub.textContent = sub || '';
+    pSub.style.display = sub ? '' : 'none';
+    pBtn.textContent = btn;
+    panel.classList.remove('hidden');
+  }
+
+  function end(won) {
+    state = 'over';
+    if (won) {
+      wins++;
+      store.set('wog-pong-wins', String(wins));
+      updateHud();
+    }
+    show(won ? 'بردی!' : 'باختی!', 'نتیجه: ' + fa(ps) + ' — ' + fa(cs), 'شروع دوباره');
+  }
+
+  function point(who) {
+    if (who === 'player') ps++; else cs++;
+    updateHud();
+    if (ps >= WIN_SCORE) return end(true);
+    if (cs >= WIN_SCORE) return end(false);
+    serve(who === 'ai');
+  }
+
+  function start() {
+    ps = 0; cs = 0;
+    px = (W - PW) / 2;
+    ax = (W - PW) / 2;
+    updateHud();
+    serve(Math.random() < .5);
+    state = 'run';
+    panel.classList.add('hidden');
+  }
+
+  function hitPaddle(x0, up) {
+    var rel = Math.max(-1, Math.min(1, (ball.x - (x0 + PW / 2)) / (PW / 2)));
+    var ang = rel;
+    speed = Math.min(MAX_SPEED, speed * SPEED_UP);
+    ball.vx = speed * Math.sin(ang);
+    ball.vy = speed * Math.cos(ang) * (up ? -1 : 1);
+  }
+
+  function sub(dt) {
+    ball.x += ball.vx * dt;
+    ball.y += ball.vy * dt;
+    if (ball.x < BR) { ball.x = BR; ball.vx = Math.abs(ball.vx); }
+    if (ball.x > W - BR) { ball.x = W - BR; ball.vx = -Math.abs(ball.vx); }
+    if (ball.vy < 0 && ball.y >= AY && ball.y - BR <= AY + PH &&
+        ball.x >= ax - BR && ball.x <= ax + PW + BR) {
+      hitPaddle(ax, true);
+      ball.y = AY + PH + BR;
+      return;
+    }
+    if (ball.vy > 0 && ball.y <= PY + PH && ball.y + BR >= PY &&
+        ball.x >= px - BR && ball.x <= px + PW + BR) {
+      hitPaddle(px, false);
+      ball.y = PY - BR;
+      return;
+    }
+    if (ball.y - BR > H) point('ai');
+    else if (ball.y + BR < 0) point('player');
+  }
+
+  function update(dt) {
+    if (keys.left) px -= PADDLE_SPEED * dt;
+    if (keys.right) px += PADDLE_SPEED * dt;
+    px = clampP(px);
+    var target = ball.vy < 0 ? ball.x : W / 2;
+    var c = ax + PW / 2;
+    var d = target - c;
+    if (Math.abs(d) > 4) {
+      var sp = ball.vy < 0 ? AI_TRACK : AI_IDLE;
+      ax = clampP(ax + Math.max(-sp * dt, Math.min(sp * dt, d)));
+    }
+    if (serveT > 0) { serveT -= dt; return; }
+    var steps = Math.max(1, Math.ceil(dt / .008));
+    var sd = dt / steps, s;
+    for (s = 0; s < steps; s++) {
+      sub(sd);
+      if (serveT > 0 || state !== 'run') break;
+    }
+  }
+
+  function draw() {
+    ctx.fillStyle = '#0b1220';
+    ctx.fillRect(0, 0, W, H);
+    ctx.strokeStyle = 'rgba(243,234,216,.22)';
+    ctx.lineWidth = 2;
+    ctx.setLineDash([10, 12]);
+    ctx.beginPath();
+    ctx.moveTo(6, H / 2);
+    ctx.lineTo(W - 6, H / 2);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = '#3fb8af';
+    rr(ax, AY, PW, PH, 6);
+    ctx.fill();
+    ctx.fillStyle = '#d9a441';
+    rr(px, PY, PW, PH, 6);
+    ctx.fill();
+    ctx.fillStyle = '#f3ead8';
+    ctx.beginPath();
+    ctx.arc(ball.x, ball.y, BR, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  function frame(ts) {
+    var dt = last ? Math.min(.032, (ts - last) / 1000) : 0;
+    last = ts;
+    if (state === 'run') update(dt);
+    draw();
+    requestAnimationFrame(frame);
+  }
+
+  function toX(clientX) {
+    var r = cv.getBoundingClientRect();
+    return (clientX - r.left) * (W / r.width);
+  }
+
+  cv.addEventListener('mousemove', function (e) { if (state === 'run') px = clampP(toX(e.clientX)); });
+  cv.addEventListener('touchstart', function (e) {
+    e.preventDefault();
+    if (state === 'run') px = clampP(toX(e.touches[0].clientX));
+  }, { passive: false });
+  cv.addEventListener('touchmove', function (e) {
+    e.preventDefault();
+    if (state === 'run') px = clampP(toX(e.touches[0].clientX));
+  }, { passive: false });
+
+  document.addEventListener('keydown', function (e) {
+    if (e.code === 'ArrowLeft' || e.code === 'KeyA') { keys.left = true; e.preventDefault(); }
+    else if (e.code === 'ArrowRight' || e.code === 'KeyD') { keys.right = true; e.preventDefault(); }
+    else if (e.code === 'Space' || e.code === 'Enter') {
+      e.preventDefault();
+      if (state !== 'run') start();
+    }
+  });
+  document.addEventListener('keyup', function (e) {
+    if (e.code === 'ArrowLeft' || e.code === 'KeyA') keys.left = false;
+    if (e.code === 'ArrowRight' || e.code === 'KeyD') keys.right = false;
+  });
+
+  pBtn.addEventListener('click', start);
+
+  updateHud();
+  draw();
+  show('آماده‌ای؟', 'اولین کسی که به ۷ امتیاز برسد برنده است.', 'شروع بازی');
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
