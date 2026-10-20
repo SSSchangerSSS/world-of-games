@@ -1,0 +1,26 @@
+## .NET
+bin/
+obj/
+*.user
+*.suo
+.vs/
+artifacts/
+publish/
+
+## Databases (dev)
+App_Data/*.db
+App_Data/*.db-shm
+App_Data/*.db-wal
+
+## User uploads runtime
+wwwroot/media/
+!wwwroot/media/.gitkeep
+
+## Tooling
+.dotnet/
+node_modules/
+*.log
+
+## IDE
+.idea/
+*.swp
