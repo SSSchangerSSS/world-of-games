@@ -1,0 +1,79 @@
+@model (WorldOfGames.Core.Common.PagedResult<WorldOfGames.Core.Interfaces.GameListItem> Featured, WorldOfGames.Core.Common.PagedResult<WorldOfGames.Core.Entities.BlogPost> Latest)
+@{
+    ViewData["Description"] = "پلتفرم ایرانی بازی‌های تحت وب — بازی‌های سبک مرورگری ساخت بازی‌سازهای ایرانی را همین‌جا اجرا کنید؛ بدون نصب، بدون تبلیغات مزاحم.";
+}
+<section class="hero">
+    <div class="container hero-inner">
+        <div class="hero-ornament" aria-hidden="true">❋ ❋ ❋</div>
+        <h1>بازی‌های ایرانی، <span class="gold">در مرورگر شما</span></h1>
+        <p class="lead">
+            World of Games خانه‌ی بازی‌های تحت وب ایرانی است؛ یک کلیک و بازی شروع می‌شود —
+            بدون نصب، بدون تبلیغات مزاحم. بازی‌ساز هستید؟ بازی خود را ارسال کنید.
+        </p>
+        <div class="hero-cta">
+            <a class="btn btn-gold" asp-controller="Games" asp-action="Index">ورود به کاتالوگ بازی‌ها</a>
+            <a class="btn btn-ghost" asp-controller="Donations" asp-action="Index">حمایت از پلتفرم</a>
+        </div>
+        <div class="hero-stats">
+            <div class="hero-stat"><b>@DisplayHelper.Number(Model.Featured.Total)</b><span>بازی در کاتالوگ</span></div>
+            <div class="hero-stat"><b>@ViewBag.Supporters</b><span>حامی مالی</span></div>
+            <div class="hero-stat"><b>@ViewBag.SumPaidToman</b><span>جمع حمایت‌ها</span></div>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <div class="section-head-row">
+            <h2 class="section-title"><span class="orn">❋</span> محبوب‌ترین بازی‌ها</h2>
+            <a class="btn btn-ghost btn-sm" asp-controller="Games" asp-action="Index">همه بازی‌ها</a>
+        </div>
+        @if (Model.Featured.Items.Count == 0)
+        {
+            <div class="empty-state"><span class="orn">❋</span>هنوز بازی‌ای منتشر نشده است — اولین نفر باشید!</div>
+        }
+        else
+        {
+            <div class="grid-games">
+                @foreach (var game in Model.Featured.Items)
+                {
+                    <partial name="_GameCard" model="game" />
+                }
+            </div>
+        }
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <div class="section-head-row">
+            <h2 class="section-title"><span class="orn">❋</span> از وبلاگ</h2>
+            <a class="btn btn-ghost btn-sm" asp-controller="Blog" asp-action="Index">همه پست‌ها</a>
+        </div>
+        @if (Model.Latest.Items.Count == 0)
+        {
+            <div class="empty-state"><span class="orn">❋</span>به‌زودی اولین نوشته‌ها منتشر می‌شوند.</div>
+        }
+        else
+        {
+            <div class="grid-posts">
+                @foreach (var post in Model.Latest.Items)
+                {
+                    <article class="post-card">
+                        <div class="post-card-body">
+                            <h3><a asp-controller="Blog" asp-action="Details" asp-route-slug="@post.Slug">@post.Title</a></h3>
+                            <p class="excerpt">@post.Excerpt</p>
+                            <div class="post-meta">
+                                <span>@DisplayHelper.PersianDate(post.PublishedAt ?? post.CreatedAt)</span>
+                                @if (!string.IsNullOrWhiteSpace(post.TagsCsv))
+                                {
+                                    <span>· @post.TagsCsv.Split(',')[0]</span>
+                                }
+                            </div>
+                        </div>
+                    </article>
+                }
+            </div>
+        }
+    </div>
+</section>

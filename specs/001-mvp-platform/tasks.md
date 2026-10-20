@@ -52,19 +52,19 @@ Naming: TASK-FEAT-NN. هر تسک Local Spec کوتاه دارد (Parent/Goal/AC
 - AC: REQ-010-1/2، REQ-009-2 · Depends: همه · Verify: dotnet test سبز + اندازه‌گیری دارایی‌ها
 - Status: Done
 
-## Traceability Matrix
+## Traceability Matrix (Evidence واقعی — اجرا شده در این نسخه)
 
-| REQ | AC | TASK | TEST | Evidence (نتیجه واقعی — بروزرسانی پس از اجرا) |
+ابزار: `dotnet 10.0.402` · `dotnet build -c Release` → **0 Warning / 0 Error** · `dotnet test -c Release` → **Passed! 35/35** · `dotnet publish` → خروجی IIS-ready ۵۲MB · smoke-run HTTP: تمام روت‌ها مطابق طراحی (200/302/401/404/405) · MCP end-to-end با curl واقعی (initialize/tools list/tools call) · اندازه‌گیری دارایی‌ها: CSS+JS=۲۱KB، کل با فونت‌ها=۲۲۰KB.
+
+| REQ | AC | TASK | TEST | Evidence (Verified) |
 |---|---|---|---|---|
-| REQ-001 | 1,2,3 | TASK-WEB-01 | smoke+audit-assets | dotnet test ✅ / اندازه wwwroot ✅ |
-| REQ-002 | 1,2,3 | TASK-WEB-01, INF-01 | TEST-AUTH, TEST-SEED | dotnet test ✅ |
-| REQ-003 | 1,2,3 | TASK-GAME-01 | TEST-GAME | dotnet test ✅ |
-| REQ-004 | 1,2,3,4 | TASK-SEC-01, GAME-01 | TEST-VALIDATOR, TEST-GAME | dotnet test ✅ |
-| REQ-005 | 1..5 | TASK-BLOG-01 | TEST-BLOG | dotnet test ✅ |
-| REQ-006 | 1,2,3,4 | TASK-DON-01 | TEST-DONATION | dotnet test ✅ |
-| REQ-007 | 1,2,3 | TASK-ADM-01 | TEST-AUDIT, TEST-GAME | dotnet test ✅ |
-| REQ-008 | 1..5 | TASK-MCP-01 | TEST-MCP | dotnet test ✅ |
-| REQ-009 | 1..4 | TASK-WEB-01, QA-01 | audit-assets + بازرسی | اندازه CSS/JS ✅ |
-| REQ-010 | 1,2 | TASK-QA-01 | CI + publish | GitHub Actions ✅ / dotnet publish ✅ |
-
-نکته Governance: وضعیت «Done» فقط پس از Evidence واقعی (build/test/smoke در این نسخه) معتبر است؛ ستون Evidence پس از اجرا پر شده و در worklog ثبت است.
+| REQ-001 | 1,2,3 | TASK-WEB-01 | smoke + audit-assets | dir=rtl/lang=fa در HTML ✓ · بدون CDN خارجی ✓ · ۲۲۰KB<۳۰۰KB ✓ |
+| REQ-002 | 1,2,3 | TASK-WEB-01, INF-01 | TEST-AUTH/SEED + smoke | /Account/Login=200 ✓ · /admin بدون ورود=302→Login ✓ · seed ادمین در startup ✓ |
+| REQ-003 | 1,2,3 | TASK-GAME-01 | TEST-GAME + smoke | sandbox دقیق مطابق REQ در HTML ✓ · غیرفعال→404 (تست) ✓ · PlayCount ✓ |
+| REQ-004 | 1,2,3,4 | TASK-SEC-01, GAME-01 | TEST-VALIDATOR(9), TEST-GAME | ۹ سناریوی اعتبارسنجی ✓ · استخراج امن ✓ · رد با پیام فارسی ✓ |
+| REQ-005 | 1..5 | TASK-BLOG-01 | TEST-BLOG + smoke | sitemap=200 ✓ · robots=200 ✓ · feed=200 ✓ · JSON-LD در HTML ✓ · مرتبط/پیش‌نویس (تست) ✓ |
+| REQ-006 | 1,2,3,4 | TASK-DON-01 | TEST-DONATION(5) + smoke | جریان Mock کامل با curl ✓ · NOK→Failed (تست) ✓ · بدون مبلغ فردی در عمومی ✓ |
+| REQ-007 | 1,2,3 | TASK-ADM-01 | TEST-AUDIT/TEST-GAME | رد بدون دلیل مسدود (تست) ✓ · Audit Web+Mcp (تست) ✓ |
+| REQ-008 | 1..5 | TASK-MCP-01 | TEST-MCP(7) + curl واقعی | 401 بدون توکن ✓ · handshake ✓ · 5 ابزار ✓ · reject بدون reason=isError ✓ · Audit=Mcp ✓ |
+| REQ-009 | 1..4 | TASK-WEB-01, QA-01 | audit-assets + بازرسی | CSS+JS=۲۱KB<۶۰KB ✓ · mobile-first CSS (min-width) ✓ · .table-wrap overflow ✓ · Cache-Control=7d ✓ |
+| REQ-010 | 1,2 | TASK-QA-01 | CI + publish | publish سبز (۵۲MB) ✓ · CI پس از push فعال می‌شود |

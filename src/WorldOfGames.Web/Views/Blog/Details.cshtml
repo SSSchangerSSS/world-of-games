@@ -1,0 +1,62 @@
+@model BlogDetailsVm
+@{
+    var p = Model.Post;
+    ViewData["Title"] = p.MetaTitle ?? p.Title;
+    ViewData["Description"] = p.MetaDescription ?? (p.Excerpt.Length > 155 ? p.Excerpt[..155] : p.Excerpt);
+    ViewData["Canonical"] = Url.Action("Details", "Blog", new { slug = p.Slug }, "https");
+    ViewData["OgType"] = "article";
+    if (!string.IsNullOrEmpty(p.CoverPath)) { ViewData["OgImage"] = "https://" + Context.Request.Host + p.CoverPath; }
+}
+@section JsonLd {
+<script type="application/ld+json">
+{
+  "@@context": "https://schema.org",
+  "@@type": "Article",
+  "headline": @System.Text.Json.JsonSerializer.Serialize(p.Title),
+  "description": @System.Text.Json.JsonSerializer.Serialize(p.Excerpt),
+  "datePublished": "@((p.PublishedAt ?? p.CreatedAt).ToString("yyyy-MM-ddTHH:mm:ssZ"))",
+  "dateModified": "@p.UpdatedAt.ToString("yyyy-MM-ddTHH:mm:ssZ")",
+  "author": { "@@type": "Organization", "name": @System.Text.Json.JsonSerializer.Serialize(p.AuthorDisplayName) },
+  "publisher": { "@@type": "Organization", "name": "World of Games" },
+  "mainEntityOfPage": "@ViewData["Canonical"]"
+}
+</script>
+}
+<section class="section">
+    <div class="container" style="max-width:820px;">
+        <article class="prose">
+            <h1>@p.Title</h1>
+            <div class="post-meta mb-2">
+                <span>@DisplayHelper.PersianDate(p.PublishedAt ?? p.CreatedAt)</span>
+                <span>· @p.AuthorDisplayName</span>
+                <span>· @DisplayHelper.Number(p.Views) بازدید</span>
+            </div>
+            @if (!string.IsNullOrWhiteSpace(p.TagsCsv))
+            {
+                <div class="tag-row mb-2">
+                    @foreach (var tag in p.TagsCsv.Split(',', StringSplitOptions.RemoveEmptyEntries))
+                    {
+                        <a class="chip" asp-controller="Blog" asp-action="Index" asp-route-tag="@tag.Trim()">@tag.Trim()</a>
+                    }
+                </div>
+            }
+            @Html.Raw(p.ContentHtml)
+        </article>
+
+        @if (Model.Related.Count > 0)
+        {
+            <h2 class="section-title mt-3"><span class="orn">❋</span> پست‌های مرتبط</h2>
+            <div class="grid-posts">
+                @foreach (var rel in Model.Related)
+                {
+                    <article class="post-card">
+                        <div class="post-card-body">
+                            <h3><a asp-controller="Blog" asp-action="Details" asp-route-slug="@rel.Slug">@rel.Title</a></h3>
+                            <p class="excerpt">@rel.Excerpt</p>
+                        </div>
+                    </article>
+                }
+            </div>
+        }
+    </div>
+</section>

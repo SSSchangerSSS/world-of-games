@@ -1,0 +1,51 @@
+@model BlogIndexVm
+@{
+    ViewData["Title"] = Model.Tag != null ? $"وبلاگ — تگ «{Model.Tag}»" : "وبلاگ World of Games";
+    ViewData["Description"] = "اخبار، آموزش‌ها و راهنماهای پلتفرم بازی‌های تحت وب ایرانی — از استاندارد آپلود تا سئو برای بازی‌سازها.";
+    ViewData["Canonical"] = Url.Action("Index", "Blog", Model.Tag != null ? new { tag = Model.Tag } : null, "https");
+}
+<section class="section">
+    <div class="container">
+        <h1 class="section-title"><span class="orn">❋</span> @(Model.Tag != null ? $"پست‌های تگ «{Model.Tag}»" : "وبلاگ")</h1>
+
+        @if (!string.IsNullOrWhiteSpace(Model.Tag))
+        {
+            <p><a asp-controller="Blog" asp-action="Index">← همه پست‌ها</a></p>
+        }
+
+        @if (Model.Result.Items.Count == 0)
+        {
+            <div class="empty-state"><span class="orn">❋</span>پستی در این بخش منتشر نشده است.</div>
+        }
+        else
+        {
+            <div class="grid-posts">
+                @foreach (var post in Model.Result.Items)
+                {
+                    <article class="post-card">
+                        <div class="post-card-body">
+                            <h3><a asp-controller="Blog" asp-action="Details" asp-route-slug="@post.Slug">@post.Title</a></h3>
+                            <p class="excerpt">@post.Excerpt</p>
+                            @if (!string.IsNullOrWhiteSpace(post.TagsCsv))
+                            {
+                                <div class="tag-row">
+                                    @foreach (var tag in post.TagsCsv.Split(',', StringSplitOptions.RemoveEmptyEntries).Take(3))
+                                    {
+                                        <a class="chip" asp-controller="Blog" asp-action="Index" asp-route-tag="@tag.Trim()">@tag.Trim()</a>
+                                    }
+                                </div>
+                            }
+                            <div class="post-meta">
+                                <span>@DisplayHelper.PersianDate(post.PublishedAt ?? post.CreatedAt)</span>
+                                <span>· @post.AuthorDisplayName</span>
+                            </div>
+                        </div>
+                    </article>
+                }
+            </div>
+            ViewData["PagerUrl"] = (Func<int, string>)(p =>
+                $"/blog?page={p}" + (Model.Tag != null ? $"&tag={Uri.EscapeDataString(Model.Tag)}" : ""));
+            <partial name="_Pagination" model="new { Model.Result.Page, Model.Result.TotalPages }" />
+        }
+    </div>
+</section>

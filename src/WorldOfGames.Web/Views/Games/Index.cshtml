@@ -1,0 +1,50 @@
+@model GameIndexVm
+@{
+    ViewData["Title"] = "کاتالوگ بازی‌ها";
+    ViewData["Description"] = "لیست کامل بازی‌های تحت وب ایرانی — جست‌وجو کنید، مرتب‌سازی کنید و همان‌جا بازی کنید.";
+    ViewData["Canonical"] = Url.Action("Index", "Games", null, "https");
+}
+<section class="section">
+    <div class="container">
+        <h1 class="section-title"><span class="orn">❋</span> کاتالوگ بازی‌ها</h1>
+
+        <form method="get" class="mb-2" role="search">
+            <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                <div class="field" style="flex:1;min-width:200px;margin:0;">
+                    <label for="q" class="sr-only" style="position:absolute;inset-inline-start:-9999px;">جست‌وجو</label>
+                    <input type="search" id="q" name="q" value="@Model.Query" placeholder="جست‌وجوی بازی…" />
+                </div>
+                <div class="field" style="margin:0;">
+                    <label for="sort" style="position:absolute;inset-inline-start:-9999px;">مرتب‌سازی</label>
+                    <select id="sort" name="sort" style="min-width:150px;">
+                        <option value="" selected="@(string.IsNullOrEmpty(Model.Sort))">جدیدترین</option>
+                        <option value="popular" selected="@(Model.Sort == "popular")">محبوب‌ترین</option>
+                    </select>
+                </div>
+                <button class="btn btn-gold" type="submit">جست‌وجو</button>
+            </div>
+        </form>
+
+        @if (Model.Result.Items.Count == 0)
+        {
+            <div class="empty-state">
+                <span class="orn">❋</span>
+                بازی‌ای با این مشخصات پیدا نشد.
+                <div class="mt-2"><a class="btn btn-ghost btn-sm" asp-controller="Games" asp-action="Submit">ارسال اولین بازی</a></div>
+            </div>
+        }
+        else
+        {
+            <div class="grid-games">
+                @foreach (var game in Model.Result.Items)
+                {
+                    <partial name="_GameCard" model="game" />
+                }
+            </div>
+            ViewData["PagerUrl"] = (Func<int, string>)(p =>
+                $"/games?page={p}" + (!string.IsNullOrEmpty(Model.Query) ? $"&q={Uri.EscapeDataString(Model.Query)}" : "") +
+                (!string.IsNullOrEmpty(Model.Sort) ? $"&sort={Model.Sort}" : ""));
+            <partial name="_Pagination" model="new { Model.Result.Page, Model.Result.TotalPages }" />
+        }
+    </div>
+</section>

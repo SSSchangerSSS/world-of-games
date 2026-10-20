@@ -1,0 +1,70 @@
+@model GameDetailsVm
+@{
+    var g = Model.Game;
+    ViewData["Title"] = g.Title;
+    ViewData["Description"] = g.Description.Length > 155 ? g.Description[..155] : g.Description;
+    ViewData["Canonical"] = Url.Action("Details", "Games", new { slug = g.Slug }, "https");
+    ViewData["OgImage"] = "https://" + Context.Request.Host + g.CoverPath;
+}
+@section JsonLd {
+<script type="application/ld+json">
+{
+  "@@context": "https://schema.org",
+  "@@type": "VideoGame",
+  "name": @System.Text.Json.JsonSerializer.Serialize(g.Title),
+  "description": @System.Text.Json.JsonSerializer.Serialize(g.Description),
+  "genre": "@g.Category",
+  "gamePlatform": "Web Browser",
+  "applicationCategory": "Game",
+  "author": { "@@type": "Person", "name": "@g.DeveloperName" },
+  "image": "@Context.Request.Scheme://@Context.Request.Host@g.CoverPath",
+  "url": "@ViewData["Canonical"]"
+}
+</script>
+}
+<section class="section">
+    <div class="container">
+        <div class="details-grid">
+            <div>
+                <div class="details-cover">
+                    <img src="@g.CoverPath" alt="کاور بازی @g.Title" width="600" height="400" />
+                </div>
+                <div class="meta-list">
+                    <span><b>دسته:</b> @g.Category</span>
+                    <span><b>توسعه‌دهنده:</b> @g.DeveloperName</span>
+                    <span><b>تعداد اجرا:</b> @DisplayHelper.PlayCount(g.PlayCount)</span>
+                    <span><b>انتشار:</b> @DisplayHelper.PersianDate(g.ReviewedAt ?? g.SubmittedAt)</span>
+                </div>
+                @if (!string.IsNullOrWhiteSpace(g.TagsCsv))
+                {
+                    <div class="tag-row">
+                        @foreach (var tag in g.TagsCsv.Split(',', StringSplitOptions.RemoveEmptyEntries))
+                        {
+                            <span class="chip">@tag.Trim()</span>
+                        }
+                    </div>
+                }
+                <a class="btn btn-gold btn-block mt-2" asp-controller="Games" asp-action="Play" asp-route-slug="@g.Slug">▶ اجرای بازی</a>
+            </div>
+            <div>
+                <h1>@g.Title</h1>
+                <div class="prose">
+                    <p style="white-space:pre-line;">@g.Description</p>
+                    @if (!string.IsNullOrWhiteSpace(g.Instructions))
+                    {
+                        <h2>راهنمای بازی</h2>
+                        <p style="white-space:pre-line;">@g.Instructions</p>
+                    }
+                </div>
+                @if (Model.CanEdit)
+                {
+                    <div class="alert alert-info mt-2">
+                        حالت ادمین: این بازی را در
+                        <a asp-controller="Admin" asp-action="Games">پنل مدیریت</a>
+                        ببینید.
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</section>

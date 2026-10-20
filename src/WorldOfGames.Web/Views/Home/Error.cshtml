@@ -1,0 +1,19 @@
+@{
+    ViewData["Title"] = "خطا";
+    var code = Context.Response.StatusCode;
+}
+<section class="section">
+    <div class="container center" style="max-width:560px;">
+        <div class="hero-ornament" aria-hidden="true">❋ ❋ ❋</div>
+        <h1>@(code == 404 ? "صفحه‌ای که دنبالش بودید پیدا نشد" : "خطایی رخ داد")</h1>
+        <p class="muted">
+            @(code == 404
+                ? "ممکن است این بازی یا پست حذف شده یا غیرفعال باشد."
+                : "مشکلی در پردازش درخواست پیش آمد. لطفاً دوباره تلاش کنید.")
+        </p>
+        <div class="hero-cta">
+            <a class="btn btn-gold" href="/">بازگشت به خانه</a>
+            <a class="btn btn-ghost" asp-controller="Games" asp-action="Index">کاتالوگ بازی‌ها</a>
+        </div>
+    </div>
+</section>

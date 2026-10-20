@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>@(ViewData["Title"] != null ? ViewData["Title"] + " — World of Games" : "World of Games | پلتفرم ایرانی بازی‌های تحت وب")</title>
+    <meta name="description" content="@(ViewData["Description"] ?? "پلتفرم ایرانی بازی‌های تحت وب — بازی کن، بساز، حمایت کن؛ بدون تبلیغات مزاحم، با تم ایران باستان.")" />
+    @if (ViewData["Canonical"] is string canonical)
+    {
+        <link rel="canonical" href="@canonical" />
+    }
+    <meta property="og:type" content="@(ViewData["OgType"] ?? "website")" />
+    <meta property="og:site_name" content="World of Games" />
+    <meta property="og:title" content="@(ViewData["Title"] ?? "World of Games")" />
+    <meta property="og:description" content="@(ViewData["Description"] ?? "پلتفرم ایرانی بازی‌های تحت وب")" />
+    @if (ViewData["OgImage"] is string ogImage)
+    {
+        <meta property="og:image" content="@ogImage" />
+    }
+    <link rel="icon" type="image/svg+xml" href="~/favicon.svg" asp-append-version="true" />
+    <link rel="alternate" type="application/rss+xml" title="وبلاگ World of Games" href="/blog/feed.xml" />
+    <link rel="preload" href="~/fonts/Vazirmatn-Regular.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="~/fonts/Vazirmatn-Bold.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="stylesheet" href="~/css/tokens.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/app.css" asp-append-version="true" />
+    @await RenderSectionAsync("JsonLd", required: false)
+</head>
+<body>
+    <a class="skip-link" href="#main">پرش به محتوا</a>
+
+    <header class="site-header">
+        <div class="container header-inner">
+            <a class="brand" href="/" aria-label="World of Games — صفحه اصلی">
+                <svg class="brand-mark" viewBox="0 0 48 48" aria-hidden="true">
+                    <circle cx="24" cy="20" r="11" fill="none" stroke="currentColor" stroke-width="2.6"/>
+                    <path d="M24 3v34M9 20h30M14 9.5l20 21M34 9.5l-20 21" stroke="currentColor" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+                    <path d="M12 37c4 5 20 5 24 0" stroke="currentColor" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+                </svg>
+                <span class="brand-text">World<em>of</em>Games</span>
+            </a>
+
+            <nav class="main-nav" id="mainNav" aria-label="ناوبری اصلی">
+                <a asp-controller="Home" asp-action="Index">خانه</a>
+                <a asp-controller="Games" asp-action="Index">بازی‌ها</a>
+                <a asp-controller="Blog" asp-action="Index">وبلاگ</a>
+                <a asp-controller="Donations" asp-action="Index">حمایت مالی</a>
+                @if (User.Identity?.IsAuthenticated == true)
+                {
+                    <a asp-controller="Games" asp-action="Submit" class="nav-cta">ارسال بازی</a>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <a asp-controller="Admin" asp-action="Dashboard">پنل ادمین</a>
+                    }
+                }
+            </nav>
+
+            <div class="header-actions">
+                @if (User.Identity?.IsAuthenticated == true)
+                {
+                    <details class="user-menu">
+                        <summary>@(User.FindFirst("DisplayName")?.Value ?? User.Identity!.Name!.Split('@')[0])</summary>
+                        <div class="user-dropdown">
+                            <form asp-controller="Account" asp-action="Logout" method="post">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="linklike">خروج از حساب</button>
+                            </form>
+                        </div>
+                    </details>
+                }
+                else
+                {
+                    <a class="btn btn-ghost btn-sm" asp-controller="Account" asp-action="Login">ورود</a>
+                    <a class="btn btn-gold btn-sm" asp-controller="Account" asp-action="Register">ثبت‌نام</a>
+                }
+                <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="mainNav" aria-label="بازکردن منو">
+                    <span></span><span></span><span></span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main id="main">
+        @RenderBody()
+    </main>
+
+    <footer class="site-footer">
+        <div class="container footer-grid">
+            <div>
+                <div class="brand footer-brand">
+                    <svg class="brand-mark" viewBox="0 0 48 48" aria-hidden="true">
+                        <circle cx="24" cy="20" r="11" fill="none" stroke="currentColor" stroke-width="2.6"/>
+                        <path d="M24 3v34M9 20h30M14 9.5l20 21M34 9.5l-20 21" stroke="currentColor" stroke-width="2.2" fill="none"/>
+                    </svg>
+                    <span class="brand-text">World<em>of</em>Games</span>
+                </div>
+                <p class="footer-blurb">پلتفرم ایرانی بازی‌های تحت وب. بازی‌های سبک مرورگری، بدون تبلیغات مزاحم — پایداری ما فقط با حمایت شماست.</p>
+            </div>
+            <div>
+                <h4>پلتفرم</h4>
+                <a asp-controller="Games" asp-action="Index">کاتالوگ بازی‌ها</a>
+                <a asp-controller="Games" asp-action="Submit">ارسال بازی</a>
+                <a asp-controller="Donations" asp-action="Index">حمایت مالی</a>
+            </div>
+            <div>
+                <h4>منابع</h4>
+                <a asp-controller="Blog" asp-action="Index">وبلاگ</a>
+                <a href="/blog/game-upload-standard">استاندارد آپلود بازی</a>
+                <a href="/blog/feed.xml">RSS</a>
+            </div>
+        </div>
+        <div class="container footer-bottom">
+            <span>© ۱۴۰۵ World of Games — تمام حقوق محفوظ است</span>
+            <span class="footer-ornament" aria-hidden="true">❋</span>
+            <span>ساخته‌شده با ASP.NET Core و عشق به ایران</span>
+        </div>
+    </footer>
+
+    <script src="~/js/app.js" defer asp-append-version="true"></script>
+</body>
+</html>

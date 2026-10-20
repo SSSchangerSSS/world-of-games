@@ -1,0 +1,32 @@
+@model dynamic
+@{
+    var page = (int)Model.Page;
+    var totalPages = (int)Model.TotalPages;
+    var build = (Func<int, string>)ViewData["PagerUrl"]!;
+    if (totalPages <= 1) { return; }
+}
+<nav class="pager" aria-label="صفحه‌بندی">
+    @if (page > 1)
+    {
+        <a href="@build(page - 1)" rel="prev">قبلی</a>
+    }
+    @foreach (var p in Enumerable.Range(1, totalPages))
+    {
+        if (p == page)
+        {
+            <span class="current" aria-current="page">@DisplayHelper.Number(p)</span>
+        }
+        else if (Math.Abs(p - page) <= 2 || p == 1 || p == totalPages)
+        {
+            <a href="@build(p)">@DisplayHelper.Number(p)</a>
+        }
+        else if (Math.Abs(p - page) == 3)
+        {
+            <span class="muted">…</span>
+        }
+    }
+    @if (page < totalPages)
+    {
+        <a href="@build(page + 1)" rel="next">بعدی</a>
+    }
+</nav>

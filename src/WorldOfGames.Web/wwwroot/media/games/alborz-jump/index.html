@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+<title>پرش از البرز</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  body { font-family: Vazirmatn, Tahoma, sans-serif; background: #0b1220; color: #f3ead8;
+         display: flex; flex-direction: column; align-items: center; min-height: 100dvh; user-select: none; }
+  header { text-align: center; padding: 10px; }
+  h1 { font-size: 1.15rem; color: #d9a441; }
+  .hud { color: #a8b3c9; font-size: .9rem; }
+  .hud b { color: #e8c073; }
+  canvas { border: 1px solid rgba(217,164,65,.35); border-radius: 12px; display: block; touch-action: manipulation; }
+  #hint { color: #a8b3c9; font-size: .85rem; padding: 10px; text-align: center; }
+</style>
+</head>
+<body>
+<header>
+  <h1>❋ پرش از البرز ❋</h1>
+  <div class="hud">امتیاز: <b id="score">۰</b> · رکورد: <b id="best">۰</b></div>
+</header>
+<canvas id="game" width="420" height="560"></canvas>
+<p id="hint">لمس/کلیک = پرش · کشیدن انگشت = حرکت افقی</p>
+
+<script>
+(function () {
+  'use strict';
+  var store = {
+    get: function (k) { try { return window.localStorage.getItem(k); } catch (e) { return null; } },
+    set: function (k, v) { try { window.localStorage.setItem(k, v); } catch (e) {} }
+  };
+
+  var canvas = document.getElementById('game');
+  var ctx = canvas.getContext('2d');
+  var scoreEl = document.getElementById('score');
+  var bestEl = document.getElementById('best');
+  var W = canvas.width, H = canvas.height;
+
+  function fa(n) { return String(n).replace(/\d/g, function (d) { return '۰۱۲۳۴۵۶۷۸۹'[d]; }); }
+
+  var best = Number(store.get('wog-alborz-best') || 0);
+  bestEl.textContent = fa(best);
+
+  var hero, rocks, score, speed, alive, started, t;
+
+  function reset() {
+    hero = { x: W / 2 - 16, y: H - 120, w: 32, h: 32, vy: 0, onGround: true };
+    rocks = [{ x: W / 2 - 30, y: H - 60, w: 70, h: 18 }];
+    score = 0; speed = 2.4; alive = true; started = false; t = 0;
+    scoreEl.textContent = fa(0);
+  }
+
+  function jump() {
+    if (!alive) { reset(); return; }
+    if (hero.onGround) { hero.vy = -9.5; hero.onGround = false; started = true; }
+  }
+
+  canvas.addEventListener('pointerdown', function (e) { e.preventDefault(); jump(); });
+  window.addEventListener('keydown', function (e) { if (e.code === 'Space' || e.code === 'ArrowUp') { e.preventDefault(); jump(); } });
+
+  var GRAV = .55;
+
+  function spawnRock() {
+    var gapX = 30 + Math.random() * (W - 150);
+    rocks.push({ x: gapX, y: H - 40 - Math.random() * 30, w: 50 + Math.random() * 40, h: 16 + Math.random() * 10 });
+  }
+
+  function step() {
+    t++;
+    if (!started || !alive) { draw(); requestAnimationFrame(step); return; }
+    speed = 2.4 + score / 400;
+    hero.vy += GRAV;
+    hero.y += hero.vy;
+
+    if (t % 70 === 0) spawnRock();
+    rocks.forEach(function (r) { r.y += speed; });
+    rocks = rocks.filter(function (r) { return r.y < H + 30; });
+
+    hero.onGround = false;
+    rocks.forEach(function (r) {
+      if (hero.vy >= 0 && hero.x + hero.w > r.x && hero.x < r.x + r.w &&
+          hero.y + hero.h > r.y && hero.y + hero.h < r.y + r.h + 14) {
+        hero.y = r.y - hero.h;
+        hero.vy = 0;
+        hero.onGround = true;
+      }
+    });
+
+    if (hero.y > H + 40) {
+      alive = false;
+      if (score > best) { best = score; store.set('wog-alborz-best', String(best)); bestEl.textContent = fa(best); }
+    }
+
+    if (t % 6 === 0) { score++; scoreEl.textContent = fa(score); }
+    hero.x = Math.max(0, Math.min(W - hero.w, hero.x));
+    draw();
+    requestAnimationFrame(step);
+  }
+
+  canvas.addEventListener('pointermove', function (e) {
+    var rect = canvas.getBoundingClientRect();
+    var scale = W / rect.width;
+    hero.x = Math.max(0, Math.min(W - hero.w, (e.clientX - rect.left) * scale - hero.w / 2));
+  });
+
+  function draw() {
+    var sky = ctx.createLinearGradient(0, 0, 0, H);
+    sky.addColorStop(0, '#101a2e'); sky.addColorStop(1, '#0b1220');
+    ctx.fillStyle = sky;
+    ctx.fillRect(0, 0, W, H);
+
+    ctx.fillStyle = 'rgba(243,234,216,.5)';
+    for (var i = 0; i < 24; i++) {
+      var sx = (i * 137 + t * .15) % W, sy = (i * 89) % (H / 2);
+      ctx.fillRect(sx, sy, 2, 2);
+    }
+
+    ctx.fillStyle = 'rgba(217,164,65,.85)';
+    ctx.beginPath(); ctx.arc(W / 2, 90, 26, 0, Math.PI * 2); ctx.fill();
+
+    ctx.fillStyle = '#1a2848';
+    ctx.strokeStyle = 'rgba(217,164,65,.4)';
+    rocks.forEach(function (r) {
+      ctx.fillRect(r.x, r.y, r.w, r.h);
+      ctx.strokeRect(r.x, r.y, r.w, r.h);
+    });
+
+    ctx.fillStyle = alive ? '#e8c073' : '#e26d5c';
+    ctx.beginPath(); ctx.arc(hero.x + hero.w / 2, hero.y + hero.h / 2, hero.w / 2, 0, Math.PI * 2); ctx.fill();
+    ctx.strokeStyle = 'rgba(63,184,175,.9)';
+    ctx.beginPath(); ctx.arc(hero.x + hero.w / 2, hero.y + hero.h / 2, hero.w / 2 + 3, 0, Math.PI * 2); ctx.stroke();
+
+    if (!alive) {
+      ctx.fillStyle = 'rgba(243,234,216,.92)';
+      ctx.font = 'bold 22px Vazirmatn, Tahoma';
+      ctx.textAlign = 'center';
+      ctx.fillText('پایان بازی — امتیاز: ' + fa(score), W / 2, H / 2 - 10);
+      ctx.font = '15px Vazirmatn, Tahoma';
+      ctx.fillText('برای شروع دوباره لمس کنید', W / 2, H / 2 + 22);
+    }
+  }
+
+  reset();
+  step();
+})();
+</script>
+</body>
+</html>

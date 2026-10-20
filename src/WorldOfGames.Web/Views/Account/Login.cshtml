@@ -1,0 +1,33 @@
+@model LoginVm
+@{
+    ViewData["Title"] = "ورود";
+    ViewData["Description"] = "ورود به حساب کاربری World of Games";
+}
+<section class="section">
+    <div class="container" style="max-width:440px;">
+        <h1 class="section-title"><span class="orn">❋</span> ورود به حساب</h1>
+        <div class="form-card">
+            @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+            {
+                <div class="alert alert-danger">@Model.ErrorMessage</div>
+            }
+            <form method="post" asp-controller="Account" asp-action="Login" asp-route-returnUrl="@(Context.Request.Query["returnUrl"].ToString())">
+                @Html.AntiForgeryToken()
+                <div class="field">
+                    <label asp-for="Email">ایمیل</label>
+                    <input asp-for="Email" type="email" autocomplete="email" />
+                </div>
+                <div class="field">
+                    <label asp-for="Password">رمز عبور</label>
+                    <input asp-for="Password" type="password" autocomplete="current-password" />
+                </div>
+                <div class="check-row field">
+                    <input asp-for="RememberMe" type="checkbox" />
+                    <label asp-for="RememberMe" style="margin:0;">مرا به خاطر بسپار</label>
+                </div>
+                <button type="submit" class="btn btn-gold btn-block">ورود</button>
+            </form>
+            <p class="small muted mt-2 center">حساب ندارید؟ <a asp-controller="Account" asp-action="Register">ثبت‌نام کنید</a></p>
+        </div>
+    </div>
+</section>

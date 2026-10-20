@@ -19,9 +19,10 @@
 - [x] فرض‌های D-12 و KI-1..KI-5 ثبت و افشا شده‌اند
 - [x] اندازه Taskها بر اساس Semantic Complexity — بدون Mega-Task و بدون خردشدن بی‌معنا
 
-## Definition of Done (پیش از اعلام Done)
-- [ ] dotnet build -c Release بدون error
-- [ ] dotnet test همه سبز (Evidence در worklog)
-- [ ] smoke-run: صفحات اصلی 200 و dir=rtl
-- [ ] اندازه دارایی‌ها داخل سقف REQ-001/009
-- [ ] push + CI سبز
+## Definition of Done (Evidence واقعی — تکمیل‌شده)
+- [x] dotnet build -c Release — **0 Warning / 0 Error** (با override پکیج‌های آسیب‌پذیر ترانزیتیو)
+- [x] dotnet test — **35/35 Passed**
+- [x] smoke-run: همه صفحات 200 · dir=rtl · sandbox صحیح · بدون CDN خارجی · sitemap/robots/feed 200 · MCP 401/handshake/tools ✓ · جریان دونیت Mock کامل ✓
+- [x] اندازه دارایی‌ها: CSS+JS=۲۱KB<۶۰KB · کل=۲۲۰KB<۳۰۰KB
+- [x] dotnet publish → خروجی IIS-ready (۵۲MB)
+- [ ] push + CI سبز (پس از push تأیید می‌شود — اقدام بعدی)

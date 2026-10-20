@@ -1,0 +1,31 @@
+@model IEnumerable<WorldOfGames.Infrastructure.Data.ApplicationUser>
+@{
+    ViewData["Title"] = "پنل ادمین — کاربران";
+}
+<section class="section">
+    <div class="container">
+        <div class="admin-head">
+            <h1 class="section-title" style="margin:0;"><span class="orn">❋</span> کاربران</h1>
+            <a class="btn btn-ghost btn-sm" asp-controller="Admin" asp-action="Dashboard">داشبورد</a>
+        </div>
+
+        <div class="table-wrap">
+            <table class="table">
+                <thead>
+                    <tr><th>ایمیل</th><th>نام نمایشی</th><th>تاریخ عضویت</th></tr>
+                </thead>
+                <tbody>
+                    @foreach (var u in Model)
+                    {
+                        <tr>
+                            <td>@u.Email</td>
+                            <td>@(u.DisplayName ?? "—")</td>
+                            <td class="muted">—</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <p class="muted small mt-2">مدیریت نقش‌ها و بن کاربران در چرخه‌های بعدی (Out of Scope فاز ۱).</p>
+    </div>
+</section>

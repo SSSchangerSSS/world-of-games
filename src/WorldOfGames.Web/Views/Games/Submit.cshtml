@@ -1,0 +1,75 @@
+@model SubmitGameVm
+@{
+    ViewData["Title"] = "ارسال بازی";
+    ViewData["Description"] = "درخواست انتشار بازی تحت وب خود در World of Games — طبق استاندارد آپلود، پس از بررسی ادمین منتشر می‌شود.";
+}
+<section class="section">
+    <div class="container">
+        <h1 class="section-title"><span class="orn">❋</span> درخواست انتشار بازی</h1>
+
+        <div class="alert alert-info">
+            بازی شما پس از ارسال وارد <b>صف بررسی ادمین</b> می‌شود و پس از تأیید در کاتالوگ منتشر خواهد شد.
+            قواعد بسته ZIP را در
+            <a href="/blog/game-upload-standard">راهنمای استاندارد آپلود</a>
+            بخوانید — رعایت آن یعنی تأیید سریع‌تر.
+        </div>
+
+        @if (Model.Errors.Count > 0)
+        {
+            <div class="alert alert-danger">
+                <b>ارسال انجام نشد:</b>
+                <ul>
+                    @foreach (var err in Model.Errors)
+                    {
+                        <li>@err</li>
+                    }
+                </ul>
+            </div>
+        }
+
+        <form method="post" asp-controller="Games" asp-action="Submit" enctype="multipart/form-data" class="form-card">
+            @Html.AntiForgeryToken()
+            <div class="field">
+                <label asp-for="Title">عنوان بازی *</label>
+                <input asp-for="Title" placeholder="مثلاً: حافظه هخامنشی" />
+                <span asp-validation-for="Title" class="field-error"></span>
+            </div>
+            <div class="field">
+                <label asp-for="Description">توضیحات *</label>
+                <textarea asp-for="Description" rows="4" placeholder="بازی‌تان را معرفی کنید؛ حداقل ۲۰ نویسه — این متن برای سئو هم استفاده می‌شود."></textarea>
+                <span asp-validation-for="Description" class="field-error"></span>
+            </div>
+            <div class="field">
+                <label asp-for="Instructions">راهنمای اجرا (اختیاری)</label>
+                <textarea asp-for="Instructions" rows="2" placeholder="کنترل‌ها و قواعد بازی"></textarea>
+            </div>
+            <div class="field">
+                <label asp-for="Category">دسته‌بندی *</label>
+                <select asp-for="Category">
+                    <option value="">— انتخاب کنید —</option>
+                    @foreach (var c in DisplayHelper.Categories)
+                    {
+                        <option value="@c" selected="@(Model.Category == c)">@c</option>
+                    }
+                </select>
+                <span asp-validation-for="Category" class="field-error"></span>
+            </div>
+            <div class="field">
+                <label asp-for="TagsCsv">تگ‌ها (با کاما جدا کنید)</label>
+                <input asp-for="TagsCsv" placeholder="فارسی,حافظه,خانوادگی" />
+                <span class="field-hint">تگ‌های خوب، بازی شما را در جست‌وجو و پست‌های وبلاگ مرتبط پیدا می‌کنند.</span>
+            </div>
+            <div class="field">
+                <label for="zip">فایل بسته بازی (ZIP) *</label>
+                <input type="file" id="zip" name="zip" accept=".zip" required />
+                <span class="field-hint">حداکثر ۵۰ مگابایت — باید index.html در ریشه بسته باشد.</span>
+            </div>
+            <div class="field">
+                <label for="cover">تصویر کاور *</label>
+                <input type="file" id="cover" name="cover" accept=".jpg,.jpeg,.png,.webp" required />
+                <span class="field-hint">JPG/PNG/WebP حداکثر ۲ مگابایت — نسبت ۳:۲ بهترین نمایش را دارد.</span>
+            </div>
+            <button type="submit" class="btn btn-gold btn-block">ارسال درخواست انتشار</button>
+        </form>
+    </div>
+</section>

@@ -1,0 +1,52 @@
+@model WorldOfGames.Core.Common.PagedResult<WorldOfGames.Core.Entities.Donation>
+@{
+    ViewData["Title"] = "پنل ادمین — دونیت‌ها";
+}
+<section class="section">
+    <div class="container">
+        <div class="admin-head">
+            <h1 class="section-title" style="margin:0;"><span class="orn">❋</span> دونیت‌ها</h1>
+            <a class="btn btn-ghost btn-sm" asp-controller="Admin" asp-action="Dashboard">داشبورد</a>
+        </div>
+
+        @if (Model.Items.Count == 0)
+        {
+            <div class="empty-state"><span class="orn">❋</span>هنوز دونیتی ثبت نشده است.</div>
+        }
+        else
+        {
+            <div class="table-wrap">
+                <table class="table">
+                    <thead>
+                        <tr><th>تاریخ</th><th>حامی</th><th>مبلغ</th><th>دروازه</th><th>وضعیت</th><th>RefId</th></tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var d in Model.Items)
+                        {
+                            <tr>
+                                <td>@DisplayHelper.PersianDateTime(d.CreatedAt)</td>
+                                <td>
+                                    @(d.IsAnonymous || string.IsNullOrWhiteSpace(d.DonorName) ? "ناشناس" : d.DonorName)
+                                    @if (!string.IsNullOrWhiteSpace(d.Message))
+                                    {
+                                        <div class="muted small">«@d.Message»</div>
+                                    }
+                                </td>
+                                <td>@DisplayHelper.Toman(d.AmountRial)</td>
+                                <td>@d.Gateway</td>
+                                <td>
+                                    <span class="badge @(d.Status switch { DonationStatus.Paid => "badge-approved", DonationStatus.Pending => "badge-pending", _ => "badge-rejected" })">
+                                        @DisplayHelper.StatusFa(d.Status)
+                                    </span>
+                                </td>
+                                <td class="muted small">@(d.RefId ?? "—")</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            ViewData["PagerUrl"] = (Func<int, string>)(p => $"/admin/donations?page={p}");
+            <partial name="_Pagination" model="new { Model.Page, Model.TotalPages }" />
+        }
+    </div>
+</section>

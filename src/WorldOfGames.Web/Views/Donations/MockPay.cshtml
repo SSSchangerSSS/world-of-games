@@ -1,0 +1,23 @@
+@{
+    ViewData["Title"] = "پرداخت آزمایشی (Mock)";
+}
+<section class="section">
+    <div class="container center" style="max-width:460px;">
+        <div class="form-card" style="text-align:right;">
+            <h2 style="margin-top:0;">درگاه آزمایشی Mock</h2>
+            <p class="muted">
+                این صفحه جایگزین درگاه واقعی برای توسعه و تست است.
+                مبلغ: <b>@ViewBag.AmountToman</b>
+            </p>
+            <div class="alert alert-info small">هیچ پول واقعی جابه‌جا نمی‌شود — فقط جریان کامل دونیت شبیه‌سازی می‌شود.</div>
+            <form method="post" asp-controller="Donations" asp-action="MockPayComplete">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="authority" value="@ViewBag.Authority" />
+                <div class="row-actions" style="justify-content:center;">
+                    <button type="submit" name="succeed" value="true" class="btn btn-gold">پرداخت موفق (شبیه‌سازی)</button>
+                    <button type="submit" name="succeed" value="false" class="btn btn-danger">پرداخت ناموفق</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>

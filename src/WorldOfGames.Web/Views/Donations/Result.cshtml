@@ -1,0 +1,32 @@
+@model DonationResultVm
+@{
+    ViewData["Title"] = Model.Success ? "پرداخت موفق" : "پرداخت ناموفق";
+}
+<section class="section">
+    <div class="container center" style="max-width:520px;">
+        <div class="form-card" style="text-align:right;">
+            @if (Model.Success)
+            {
+                <div class="alert alert-success">
+                    <b>حمایت شما ثبت شد — سپاسگزاریم! 🌟</b><br />
+                    نام شما در فهرست حامیان @(Model.Donation?.IsAnonymous == true ? "ناشناس" : "با نامتان") دیده می‌شود.
+                </div>
+                @if (Model.Donation is not null)
+                {
+                    <p class="muted small">
+                        کد پیگیری درگاه: <b>@(Model.Donation.RefId ?? "—")</b><br />
+                        شناسه تراکنش: @Model.Donation.Authority
+                    </p>
+                }
+            }
+            else
+            {
+                <div class="alert alert-danger"><b>پرداخت انجام نشد.</b><br />@(Model.Message ?? "در صورت کسر وجه، مبلغ حداکثر تا ۷۲ ساعت بازگشت داده می‌شود.")</div>
+            }
+            <div class="hero-cta mt-2">
+                <a class="btn btn-ghost btn-sm" asp-controller="Donations" asp-action="Index">بازگشت به صفحه حمایت</a>
+                <a class="btn btn-gold btn-sm" asp-controller="Games" asp-action="Index">کاتالوگ بازی‌ها</a>
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,10 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/WorldOfGames.Core/WorldOfGames.Core.csproj" />
+    <Project Path="src/WorldOfGames.Infrastructure/WorldOfGames.Infrastructure.csproj" />
+    <Project Path="src/WorldOfGames.Web/WorldOfGames.Web.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/WorldOfGames.Tests/WorldOfGames.Tests.csproj" />
+  </Folder>
+</Solution>

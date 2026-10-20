@@ -1,0 +1,70 @@
+@model AdminPostFormVm
+@{
+    var isEdit = Model.Id.HasValue;
+    ViewData["Title"] = isEdit ? "ویرایش پست" : "پست جدید";
+}
+<section class="section">
+    <div class="container">
+        <div class="admin-head">
+            <h1 class="section-title" style="margin:0;"><span class="orn">❋</span> @(isEdit ? "ویرایش پست" : "ساخت پست جدید")</h1>
+            <a class="btn btn-ghost btn-sm" asp-controller="Admin" asp-action="Posts">بازگشت به فهرست</a>
+        </div>
+
+        <div asp-validation-summary="All" class="alert alert-danger" style="@(ViewData.ModelState.IsValid ? "display:none" : "")"></div>
+
+        <form method="post" enctype="multipart/form-data"
+              asp-controller="Admin" asp-action="@(isEdit ? "PostEdit" : "PostCreate")" asp-route-id="@Model.Id"
+              class="form-card form-card-wide">
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="ExistingCoverPath" />
+            <div class="two-col">
+                <div class="field">
+                    <label asp-for="Title">عنوان *</label>
+                    <input asp-for="Title" />
+                </div>
+                <div class="field">
+                    <label asp-for="SlugHint">نامک URL (اختیاری — لاتین)</label>
+                    <input asp-for="SlugHint" placeholder="my-post-slug" />
+                    <span class="field-hint">خالی بگذارید تا از عنوان ساخته شود.</span>
+                </div>
+            </div>
+            <div class="field">
+                <label asp-for="Excerpt">خلاصه برای سئو * (حداکثر ~۳۰۰ نویسه)</label>
+                <textarea asp-for="Excerpt" rows="2"></textarea>
+            </div>
+            <div class="field">
+                <label asp-for="Markdown">متن پست (Markdown) *</label>
+                <textarea asp-for="Markdown" class="md"></textarea>
+                <span class="field-hint">HTML خام برای امنیت غیرفعال است؛ از Markdown استفاده کنید (## تیتر، **بولد**، - لیست، ```کد```).</span>
+            </div>
+            <div class="two-col">
+                <div class="field">
+                    <label asp-for="TagsCsv">تگ‌ها (با کاما)</label>
+                    <input asp-for="TagsCsv" placeholder="سئو,آموزش" />
+                    <span class="field-hint">تگ مشترک = پست مرتبط</span>
+                </div>
+                <div class="field">
+                    <label asp-for="Cover">کاور (اختیاری)</label>
+                    <input type="file" asp-for="Cover" accept=".jpg,.jpeg,.png,.webp" />
+                    @if (!string.IsNullOrEmpty(Model.ExistingCoverPath))
+                    {
+                        <span class="field-hint">کاور فعلی: @Model.ExistingCoverPath</span>
+                    }
+                </div>
+                <div class="field">
+                    <label asp-for="MetaTitle">Meta Title (اختیاری)</label>
+                    <input asp-for="MetaTitle" />
+                </div>
+                <div class="field">
+                    <label asp-for="MetaDescription">Meta Description (اختیاری)</label>
+                    <input asp-for="MetaDescription" />
+                </div>
+            </div>
+            <div class="check-row field">
+                <input asp-for="IsPublished" type="checkbox" />
+                <label asp-for="IsPublished" style="margin:0;">انتشار عمومی</label>
+            </div>
+            <button type="submit" class="btn btn-gold">@(isEdit ? "ذخیره تغییرات" : "ساخت پست")</button>
+        </form>
+    </div>
+</section>

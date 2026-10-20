@@ -1,0 +1,42 @@
+@model WorldOfGames.Core.Common.PagedResult<WorldOfGames.Core.Entities.AuditEntry>
+@{
+    ViewData["Title"] = "پنل ادمین — Audit Log";
+}
+<section class="section">
+    <div class="container">
+        <div class="admin-head">
+            <h1 class="section-title" style="margin:0;"><span class="orn">❋</span> ردپای اقدامات (Audit)</h1>
+            <a class="btn btn-ghost btn-sm" asp-controller="Admin" asp-action="Dashboard">داشبورد</a>
+        </div>
+
+        @if (Model.Items.Count == 0)
+        {
+            <div class="empty-state"><span class="orn">❋</span>ردپی ثبت نشده است.</div>
+        }
+        else
+        {
+            <div class="table-wrap">
+                <table class="table">
+                    <thead>
+                        <tr><th>زمان</th><th>منبع</th><th>عامل</th><th>اقدام</th><th>موجودیت</th><th>جزئیات</th></tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var a in Model.Items)
+                        {
+                            <tr>
+                                <td class="muted small">@DisplayHelper.PersianDateTime(a.CreatedAt)</td>
+                                <td><span class="badge @(a.Source == AuditSource.Mcp ? "badge-pending" : "badge-muted")">@a.Source</span></td>
+                                <td>@a.Actor</td>
+                                <td>@a.Action</td>
+                                <td class="small">@a.EntityType#@a.EntityId</td>
+                                <td class="small muted">@a.Detail</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            ViewData["PagerUrl"] = (Func<int, string>)(p => $"/admin/audit?page={p}");
+            <partial name="_Pagination" model="new { Model.Page, Model.TotalPages }" />
+        }
+    </div>
+</section>

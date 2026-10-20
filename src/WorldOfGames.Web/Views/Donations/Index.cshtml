@@ -1,0 +1,93 @@
+@model DonationIndexVm
+@{
+    ViewData["Title"] = "حمایت مالی (دونیت)";
+    ViewData["Description"] = "از پلتفرم ایرانی بازی‌های تحت وب حمایت کنید — دونیت تنها منبع درآمد ماست؛ بدون تبلیغات مزاحم.";
+    ViewData["Canonical"] = Url.Action("Index", "Donations", null, "https");
+}
+<section class="section">
+    <div class="container">
+        <h1 class="section-title"><span class="orn">❋</span> حمایت از World of Games</h1>
+
+        <div class="donate-grid">
+            <div class="form-card form-card-wide">
+                <p class="muted">
+                    پایداری این پلتفرم <b>فقط</b> با حمایت مالی شما ممکن است — نه تبلیغات، نه فروش داده.
+                    مبلغ دلخواه خود را به <b>تومان</b> انتخاب یا وارد کنید.
+                </p>
+
+                @if (TempData["DonationError"] is string err)
+                {
+                    <div class="alert alert-danger">@err</div>
+                }
+                @if (Model.GatewayName == "Mock")
+                {
+                    <div class="alert alert-info">
+                        حالت آزمایشی درگاه فعال است (Mock) — پرداخت واقعی انجام نمی‌شود. برای اتصال زرین‌پال، MerchantId را در تنظیمات وارد کنید.
+                    </div>
+                }
+
+                <form method="post" asp-controller="Donations" asp-action="Start">
+                    @Html.AntiForgeryToken()
+                    <div class="field">
+                        <label>مبلغ</label>
+                        <div class="preset-row">
+                            @foreach (var preset in DisplayHelper.DonationPresetsRial)
+                            {
+                                <input type="radio" id="p@preset" name="amountRial" value="@preset" @(preset == 1_000_000 ? "checked=\"checked\"" : "") />
+                                <label for="p@preset">@DisplayHelper.Number(preset / 10)</label>
+                            }
+                        </div>
+                        <input type="number" name="amountCustom" min="1000" step="1000"
+                               placeholder="یا مبلغ دلخواه به «تومان» — حداقل ۱٬۰۰۰ تومان"
+                               style="width:100%;min-height:46px;background:var(--surface);color:var(--text);border:1px solid var(--line);border-radius:9px;padding:10px 14px;font:inherit;" />
+                        <span class="field-hint">پیش‌فرض‌ها به تومان‌اند؛ اگر مبلغ دلخواه وارد کنید، بر آن اولویت داده می‌شود.</span>
+                    </div>
+                    <div class="field">
+                        <label>نام شما (اختیاری)</label>
+                        <input type="text" name="donorName" maxlength="60" placeholder="نامی که در فهرست حامیان دیده می‌شود" />
+                    </div>
+                    <div class="field">
+                        <label>پیام شما (اختیاری)</label>
+                        <textarea name="message" maxlength="300" rows="2" placeholder="پیامی برای ما و بازدیدکنندگان"></textarea>
+                    </div>
+                    <div class="check-row field">
+                        <input type="checkbox" id="anon" name="isAnonymous" value="true" />
+                        <label for="anon" style="margin:0;">ناشناس بمانم (در فهرست حامیان «حامی ناشناس» نمایش داده می‌شوم)</label>
+                    </div>
+                    <button type="submit" class="btn btn-gold btn-block">ادامه و پرداخت</button>
+                </form>
+            </div>
+
+            <div>
+                <div class="stat-card mb-2">
+                    <b>@DisplayHelper.Toman(Model.SumPaidRial)</b>
+                    <span>جمع حمایت‌های دریافت‌شده تا امروز</span>
+                </div>
+                <div class="stat-card mb-2">
+                    <b>@DisplayHelper.Number(Model.SupportersCount)</b>
+                    <span>حامی مالی تا امروز</span>
+                </div>
+                <div class="form-card">
+                    <h3 style="margin-top:0;">حامیان اخیر</h3>
+                    @if (Model.Recent.Count == 0)
+                    {
+                        <p class="muted small">هنوز حامیی ثبت نشده — شاید شما اولین باشید 🌟</p>
+                    }
+                    @foreach (var d in Model.Recent)
+                    {
+                        <div class="supporter-item">
+                            <div class="supporter-avatar">❋</div>
+                            <div>
+                                <b>@(d.IsAnonymous || string.IsNullOrWhiteSpace(d.DonorName) ? "حامی ناشناس" : d.DonorName)</b>
+                                @if (!string.IsNullOrWhiteSpace(d.Message))
+                                {
+                                    <p>«@d.Message»</p>
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

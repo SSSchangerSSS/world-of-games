@@ -1,0 +1,64 @@
+@model WorldOfGames.Core.Common.PagedResult<WorldOfGames.Core.Entities.BlogPost>
+@{
+    ViewData["Title"] = "پنل ادمین — وبلاگ";
+}
+<section class="section">
+    <div class="container">
+        <div class="admin-head">
+            <h1 class="section-title" style="margin:0;"><span class="orn">❋</span> مدیریت وبلاگ</h1>
+            <a class="btn btn-gold btn-sm" asp-controller="Admin" asp-action="PostCreate">+ پست جدید</a>
+        </div>
+
+        @if (TempData["Ok"] is string ok) { <div class="alert alert-success">@ok</div> }
+        @if (TempData["Err"] is string err) { <div class="alert alert-danger">@err</div> }
+
+        @if (Model.Items.Count == 0)
+        {
+            <div class="empty-state"><span class="orn">❋</span>هنوز پستی ساخته نشده است.</div>
+        }
+        else
+        {
+            <div class="table-wrap">
+                <table class="table">
+                    <thead>
+                        <tr><th>عنوان</th><th>وضعیت</th><th>تاریخ</th><th>بازدید</th><th>اقدامات</th></tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var p in Model.Items)
+                        {
+                            <tr>
+                                <td>
+                                    <a asp-controller="Blog" asp-action="Details" asp-route-slug="@p.Slug">@p.Title</a>
+                                    <div class="muted small">/@p.Slug</div>
+                                </td>
+                                <td>
+                                    <span class="badge @(p.IsPublished ? "badge-approved" : "badge-pending")">
+                                        @(p.IsPublished ? "منتشرشده" : "پیش‌نویس")
+                                    </span>
+                                </td>
+                                <td>@DisplayHelper.PersianDate(p.PublishedAt ?? p.CreatedAt)</td>
+                                <td>@DisplayHelper.Number(p.Views)</td>
+                                <td>
+                                    <div class="row-actions">
+                                        <a class="btn btn-ghost btn-sm" asp-controller="Admin" asp-action="PostEdit" asp-route-id="@p.Id">ویرایش</a>
+                                        <form method="post" asp-controller="Admin" asp-action="PostToggle" asp-route-id="@p.Id">
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="published" value="@(p.IsPublished ? "false" : "true")" />
+                                            <button class="btn btn-ghost btn-sm" type="submit">@(p.IsPublished ? "لغو انتشار" : "انتشار")</button>
+                                        </form>
+                                        <form method="post" asp-controller="Admin" asp-action="PostDelete" asp-route-id="@p.Id" data-confirm="پست «@p.Title» برای همیشه حذف شود؟">
+                                            @Html.AntiForgeryToken()
+                                            <button class="btn btn-danger btn-sm" type="submit">حذف</button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            ViewData["PagerUrl"] = (Func<int, string>)(p => $"/admin/posts?page={p}");
+            <partial name="_Pagination" model="new { Model.Page, Model.TotalPages }" />
+        }
+    </div>
+</section>

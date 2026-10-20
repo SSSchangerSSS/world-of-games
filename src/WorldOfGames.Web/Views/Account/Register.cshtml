@@ -1,0 +1,39 @@
+@model RegisterVm
+@{
+    ViewData["Title"] = "ثبت‌نام";
+    ViewData["Description"] = "ساخت حساب کاربری در World of Games — برای ارسال بازی و مشارکت";
+}
+<section class="section">
+    <div class="container" style="max-width:460px;">
+        <h1 class="section-title"><span class="orn">❋</span> ساخت حساب</h1>
+        <div class="form-card">
+            <div asp-validation-summary="All" class="alert alert-danger" style="@(ViewData.ModelState.IsValid ? "display:none" : "")"></div>
+            <form method="post" asp-controller="Account" asp-action="Register">
+                @Html.AntiForgeryToken()
+                <div class="field">
+                    <label asp-for="DisplayName">نام نمایشی</label>
+                    <input asp-for="DisplayName" autocomplete="name" />
+                    <span asp-validation-for="DisplayName" class="field-error"></span>
+                </div>
+                <div class="field">
+                    <label asp-for="Email">ایمیل</label>
+                    <input asp-for="Email" type="email" autocomplete="email" />
+                    <span asp-validation-for="Email" class="field-error"></span>
+                </div>
+                <div class="field">
+                    <label asp-for="Password">رمز عبور</label>
+                    <input asp-for="Password" type="password" autocomplete="new-password" />
+                    <span class="field-hint">حداقل ۸ نویسه و شامل حداقل یک رقم</span>
+                    <span asp-validation-for="Password" class="field-error"></span>
+                </div>
+                <div class="field">
+                    <label asp-for="ConfirmPassword">تکرار رمز عبور</label>
+                    <input asp-for="ConfirmPassword" type="password" autocomplete="new-password" />
+                    <span asp-validation-for="ConfirmPassword" class="field-error"></span>
+                </div>
+                <button type="submit" class="btn btn-gold btn-block">ساخت حساب</button>
+            </form>
+            <p class="small muted mt-2 center">قبلاً ثبت‌نام کرده‌اید؟ <a asp-controller="Account" asp-action="Login">ورود</a></p>
+        </div>
+    </div>
+</section>

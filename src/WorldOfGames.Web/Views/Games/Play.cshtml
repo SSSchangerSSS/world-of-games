@@ -1,0 +1,19 @@
+@model PlayVm
+@{
+    var g = Model.Game;
+    ViewData["Title"] = "اجرای " + g.Title;
+    ViewData["Description"] = "اجرای بازی «" + g.Title + "» در مرورگر — بدون نصب.";
+}
+<div class="play-stage" id="playStage">
+    <div class="play-bar">
+        <a class="btn btn-ghost btn-sm" asp-controller="Games" asp-action="Details" asp-route-slug="@g.Slug">← بازگشت</a>
+        <button class="btn btn-ghost btn-sm" id="fullscreenBtn" type="button">⛶ تمام‌صفحه</button>
+    </div>
+    <div class="play-title">@g.Title</div>
+    @* REQ-003-1: sandbox بدون allow-same-origin — امنیت پلتفرم *@
+    <iframe class="play-frame" src="@g.EntryPath"
+            sandbox="allow-scripts allow-pointer-lock allow-popups allow-modals allow-forms"
+            allow="fullscreen; gamepad"
+            title="بازی @g.Title"
+            loading="eager"></iframe>
+</div>

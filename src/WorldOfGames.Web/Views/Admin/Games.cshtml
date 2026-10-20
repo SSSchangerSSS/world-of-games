@@ -1,0 +1,105 @@
+@model WorldOfGames.Core.Common.PagedResult<WorldOfGames.Core.Entities.Game>
+@{
+    ViewData["Title"] = "پنل ادمین — بازی‌ها";
+    var filter = (string?)ViewBag.Filter;
+}
+<section class="section">
+    <div class="container">
+        <div class="admin-head">
+            <h1 class="section-title" style="margin:0;"><span class="orn">❋</span> مدیریت بازی‌ها</h1>
+            <a class="btn btn-ghost btn-sm" asp-controller="Admin" asp-action="Dashboard">داشبورد</a>
+        </div>
+
+        @if (TempData["Ok"] is string ok) { <div class="alert alert-success">@ok</div> }
+        @if (TempData["Err"] is string err) { <div class="alert alert-danger">@err</div> }
+
+        <div class="filter-tabs">
+            <a asp-controller="Admin" asp-action="Games" class="@(string.IsNullOrEmpty(filter) ? "active" : "")">همه (@DisplayHelper.Number(Model.Total))</a>
+            <a asp-controller="Admin" asp-action="Games" asp-route-status="pending" class="@(filter == "pending" ? "active" : "")">در انتظار</a>
+            <a asp-controller="Admin" asp-action="Games" asp-route-status="approved" class="@(filter == "approved" ? "active" : "")">تأییدشده</a>
+            <a asp-controller="Admin" asp-action="Games" asp-route-status="rejected" class="@(filter == "rejected" ? "active" : "")">ردشده</a>
+        </div>
+
+        @if (Model.Items.Count == 0)
+        {
+            <div class="empty-state"><span class="orn">❋</span>موردی در این فیلتر نیست.</div>
+        }
+        else
+        {
+            <div class="table-wrap">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>بازی</th><th>دسته</th><th>توسعه‌دهنده</th><th>وضعیت</th><th>اجرا</th><th>اقدامات</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var g in Model.Items)
+                        {
+                            <tr>
+                                <td>
+                                    <div style="display:flex;align-items:center;gap:10px;">
+                                        <img src="@g.CoverPath" alt="" width="56" height="38" style="border-radius:6px;object-fit:cover;" loading="lazy" />
+                                        <div>
+                                            <a asp-controller="Games" asp-action="Details" asp-route-slug="@g.Slug">@g.Title</a>
+                                            <div class="muted small">@g.Slug · @DisplayHelper.PersianDate(g.SubmittedAt)</div>
+                                            @if (g.Status == GameStatus.Rejected && !string.IsNullOrWhiteSpace(g.RejectionReason))
+                                            {
+                                                <div class="small text-danger">دلیل رد: @g.RejectionReason</div>
+                                            }
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>@g.Category</td>
+                                <td>@g.DeveloperName</td>
+                                <td>
+                                    <span class="badge @(g.Status switch { GameStatus.Pending => "badge-pending", GameStatus.Approved => "badge-approved", _ => "badge-rejected" })">
+                                        @DisplayHelper.StatusFa(g.Status)
+                                    </span>
+                                    @if (g.Status == GameStatus.Approved)
+                                    {
+                                        <div class="small @(g.IsEnabled ? "muted" : "text-danger")">@(g.IsEnabled ? "فعال" : "غیرفعال")</div>
+                                    }
+                                </td>
+                                <td>@DisplayHelper.Number(g.PlayCount)</td>
+                                <td>
+                                    <div class="row-actions">
+                                        @if (g.Status == GameStatus.Pending)
+                                        {
+                                            <form method="post" asp-controller="Admin" asp-action="Approve" asp-route-id="@g.Id">
+                                                @Html.AntiForgeryToken()
+                                                <button class="btn btn-gold btn-sm" type="submit">تأیید</button>
+                                            </form>
+                                            <details class="reject-box">
+                                                <summary class="btn btn-danger btn-sm">رد…</summary>
+                                                <form method="post" asp-controller="Admin" asp-action="Reject" asp-route-id="@g.Id" class="form-card">
+                                                    @Html.AntiForgeryToken()
+                                                    <input type="hidden" name="Id" value="@g.Id" />
+                                                    <div class="field">
+                                                        <label for="reason-@g.Id">دلیل رد (الزامی — به توسعه‌دهنده نمایش داده می‌شود)</label>
+                                                        <textarea id="reason-@g.Id" name="Reason" rows="3" maxlength="400" placeholder="مثلاً: بسته شامل index.html در ریشه نیست"></textarea>
+                                                    </div>
+                                                    <button class="btn btn-danger btn-sm" type="submit">ثبت رد</button>
+                                                </form>
+                                            </details>
+                                        }
+                                        else if (g.Status == GameStatus.Approved)
+                                        {
+                                            <form method="post" asp-controller="Admin" asp-action="Toggle" asp-route-id="@g.Id">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="enabled" value="@(g.IsEnabled ? "false" : "true")" />
+                                                <button class="btn btn-ghost btn-sm" type="submit">@(g.IsEnabled ? "غیرفعال‌سازی" : "فعال‌سازی")</button>
+                                            </form>
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            ViewData["PagerUrl"] = (Func<int, string>)(p => $"/admin/games?page={p}" + (string.IsNullOrEmpty(filter) ? "" : $"&status={filter}"));
+            <partial name="_Pagination" model="new { Model.Page, Model.TotalPages }" />
+        }
+    </div>
+</section>

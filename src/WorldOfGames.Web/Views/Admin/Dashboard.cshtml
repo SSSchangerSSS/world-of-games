@@ -1,0 +1,57 @@
+@model AdminDashboardVm
+@{
+    ViewData["Title"] = "پنل ادمین — داشبورد";
+}
+<section class="section">
+    <div class="container">
+        <div class="admin-head">
+            <h1 class="section-title" style="margin:0;"><span class="orn">❋</span> داشبورد مدیریت</h1>
+            <div class="row-actions">
+                <a class="btn btn-ghost btn-sm" asp-controller="Admin" asp-action="Games">مدیریت بازی‌ها</a>
+                <a class="btn btn-ghost btn-sm" asp-controller="Admin" asp-action="Posts">وبلاگ</a>
+                <a class="btn btn-ghost btn-sm" asp-controller="Admin" asp-action="Audit">Audit Log</a>
+            </div>
+        </div>
+
+        @if (TempData["Ok"] is string ok) { <div class="alert alert-success">@ok</div> }
+        @if (TempData["Err"] is string err) { <div class="alert alert-danger">@err</div> }
+
+        <div class="stats-grid">
+            <div class="stat-card"><b>@DisplayHelper.Number(Model.PendingGames)</b><span>بازی در انتظار بررسی</span></div>
+            <div class="stat-card"><b>@DisplayHelper.Number(Model.ApprovedGames)</b><span>بازی تأییدشده</span></div>
+            <div class="stat-card"><b>@DisplayHelper.Number(Model.RejectedGames)</b><span>بازی ردشده</span></div>
+            <div class="stat-card"><b>@DisplayHelper.Number(Model.TotalUsers)</b><span>کاربر ثبت‌نام‌شده</span></div>
+            <div class="stat-card"><b>@DisplayHelper.Toman(Model.SumPaidRial)</b><span>جمع دونیت پرداخت‌شده</span></div>
+            <div class="stat-card"><b>@DisplayHelper.Number(Model.PaidDonations)</b><span>تعداد دونیت موفق</span></div>
+            <div class="stat-card"><b>@DisplayHelper.Number(Model.PublishedPosts)</b><span>پست منتشرشده وبلاگ</span></div>
+        </div>
+
+        <h2 class="section-title"><span class="orn">❋</span> آخرین درخواست‌های در انتظار</h2>
+        @if (Model.LatestPending.Count == 0)
+        {
+            <div class="empty-state"><span class="orn">❋</span>صف بررسی خالی است — عالی!</div>
+        }
+        else
+        {
+            <div class="table-wrap">
+                <table class="table">
+                    <thead>
+                        <tr><th>بازی</th><th>دسته</th><th>توسعه‌دهنده</th><th>تاریخ ارسال</th><th></th></tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var g in Model.LatestPending)
+                        {
+                            <tr>
+                                <td><a asp-controller="Games" asp-action="Details" asp-route-slug="@g.Slug">@g.Title</a></td>
+                                <td>@g.Category</td>
+                                <td>@g.DeveloperName</td>
+                                <td>@DisplayHelper.PersianDate(g.SubmittedAt)</td>
+                                <td><a class="btn btn-gold btn-sm" asp-controller="Admin" asp-action="Games" asp-route-status="pending">بررسی</a></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</section>

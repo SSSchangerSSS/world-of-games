@@ -1,0 +1,19 @@
+@model WorldOfGames.Core.Interfaces.GameListItem
+<article class="game-card">
+    <a class="game-cover" asp-controller="Games" asp-action="Details" asp-route-slug="@Model.Slug" aria-label="@Model.Title">
+        <img src="@Model.CoverPath" alt="کاور بازی @Model.Title" loading="lazy" width="360" height="240" />
+    </a>
+    <div class="game-card-body">
+        <a class="game-card-title" asp-controller="Games" asp-action="Details" asp-route-slug="@Model.Slug">@Model.Title</a>
+        <div class="game-card-meta">
+            @if (!string.IsNullOrWhiteSpace(Model.Category))
+            {
+                <span class="chip">@Model.Category</span>
+            }
+            <span>@DisplayHelper.PlayCount(Model.PlayCount)</span>
+        </div>
+        <div class="game-card-meta">
+            <span>@Model.DeveloperName</span>
+        </div>
+    </div>
+</article>
