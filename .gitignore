@@ -8,9 +8,9 @@ artifacts/
 publish/
 
 ## Databases (dev)
-App_Data/*.db
-App_Data/*.db-shm
-App_Data/*.db-wal
+App_Data/
+App_Data/-shm
+App_Data/-wal
 
 ## User uploads runtime
 wwwroot/media/
@@ -24,4 +24,4 @@ node_modules/
 ## IDE
 .idea/
 *.swp
-App_Data/*.db*
+App_Data/*
