@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+<title>بلک‌جک ۲۱</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  body {
+    font-family: Vazirmatn, Tahoma, sans-serif;
+    background: linear-gradient(160deg, #101a2e, #0b1220);
+    color: #f3ead8; min-height: 100dvh; user-select: none;
+    display: flex; flex-direction: column; align-items: center; padding: 12px;
+  }
+  header { text-align: center; margin-bottom: 6px; }
+  h1 { font-size: 1.25rem; color: #d9a441; }
+  .hud { color: #a8b3c9; font-size: .9rem; margin-top: 2px; }
+  .hud b { color: #e8c073; }
+  #table { direction: ltr; width: min(94vw, 460px); background:
+      radial-gradient(ellipse at 50% 0%, rgba(63,184,175,.10), transparent 60%), #123227;
+      border: 2px solid rgba(217,164,65,.5); border-radius: 16px; padding: 14px 10px; }
+  .row-label { text-align: center; color: #a8b3c9; font-size: .82rem; margin: 6px 0 4px; }
+  .hand { display: flex; justify-content: center; min-height: 76px; }
+  .card { width: 52px; height: 74px; border-radius: 7px; background: #f3ead8;
+          border: 1px solid #b7ab8e; box-shadow: 0 2px 5px rgba(3,8,20,.4);
+          position: relative; margin-inline: -8px; transition: transform .15s; }
+  .hand .card:first-child { margin-inline-start: 0; }
+  .card .corner { position: absolute; top: 3px; left: 5px; font-size: 12px; font-weight: 700;
+                  line-height: 1.1; text-align: center; }
+  .card .big { position: absolute; inset: 0; display: flex; align-items: center;
+               justify-content: center; font-size: 22px; }
+  .card.down { background: repeating-linear-gradient(45deg, #1a2848 0 6px, #22345c 6px 12px);
+               border: 1px solid rgba(217,164,65,.5); }
+  .red { color: #c65445; } .blk { color: #23283b; }
+  .val { text-align: center; color: #e8c073; font-size: .9rem; min-height: 1.3em; }
+  #msg { text-align: center; color: #f3ead8; font-size: .95rem; min-height: 1.6em; margin-top: 8px; }
+  #msg.win { color: #67b98a; } #msg.lose { color: #e26d5c; }
+  #bar { display: flex; gap: 8px; justify-content: center; margin: 12px 0 4px; flex-wrap: wrap; }
+  button { font-family: inherit; font-size: .88rem; font-weight: 700; cursor: pointer;
+           background: #d9a441; color: #221806; border: 0; border-radius: 10px; padding: 8px 16px; }
+  button.ghost { background: #14203a; color: #e8c073; border: 1px solid rgba(217,164,65,.4); }
+  button:disabled { opacity: .35; cursor: default; }
+  #hint { color: #a8b3c9; font-size: .82rem; text-align: center; padding: 4px; }
+  #overlay { position: fixed; inset: 0; background: rgba(11,18,32,.85); display: none;
+             align-items: center; justify-content: center; z-index: 9; }
+  #overlay.show { display: flex; }
+  .panel { background: #14203a; border: 1px solid rgba(217,164,65,.5); border-radius: 14px;
+           padding: 24px 28px; text-align: center; }
+  .panel h2 { color: #e8c073; margin-bottom: 6px; } .panel p { color: #a8b3c9; font-size: .9rem; margin-bottom: 12px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>❋ بلک‌جک ۲۱ ❋</h1>
+  <div class="hud">سکه‌ها: <b id="chips">۱۰۰</b> · شرط: <b id="betv">۰</b></div>
+</header>
+<div id="table">
+  <div class="row-label">حریف — دهنده</div>
+  <div class="hand" id="dealer"></div>
+  <div class="val" id="dval"></div>
+  <div class="row-label">شما</div>
+  <div class="hand" id="player"></div>
+  <div class="val" id="pval"></div>
+  <div id="msg">شرط بگذار و «پخش کن» را بزن</div>
+</div>
+<div id="bar">
+  <button id="b5" class="ghost">+۵</button>
+  <button id="b25" class="ghost">+۲۵</button>
+  <button id="b100" class="ghost">+۱۰۰</button>
+  <button id="bclr" class="ghost">پاک کردن</button>
+  <button id="deal">پخش کن</button>
+  <button id="hit" disabled>کارت</button>
+  <button id="stand" disabled>ایست</button>
+  <button id="dbl" disabled>دوبرابر</button>
+</div>
+<p id="hint">هدف: نزدیک‌تر از حریف به ۲۱، بدون بُر خوردن. بلک‌جک (A + ۱۰) ۱.۵ برابر می‌پردازد.</p>
+<div id="overlay"><div class="panel"><h2 id="otitle"></h2><p id="osub"></p><button id="ook">شروع دوباره</button></div></div>
+
+<script>
+(function () {
+  'use strict';
+  var store = {
+    get: function (k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+    set: function (k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+  };
+  var SUITS = ['\u2660', '\u2665', '\u2666', '\u2663'];
+  var RNAMES = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
+  var shoe = [], player = [], dealer = [], chips = 100, bet = 0, phase = 'bet', doubled = false;
+  var el = function (id) { return document.getElementById(id); };
+
+  function faNum(n) { return String(n).replace(/\d/g, function (d) { return '۰۱۲۳۴۵۶۷۸۹'[d]; }); }
+  function initChips() {
+    var c = Number(store.get('wog-bj-chips'));
+    chips = (c > 0 ? c : 100);
+  }
+  function saveChips() { store.set('wog-bj-chips', String(chips)); }
+  function buildShoe() {
+    shoe = [];
+    for (var d = 0; d < 4; d++) for (var s = 0; s < 4; s++) for (var r = 0; r < 13; r++) shoe.push({ r: r, s: s });
+    for (var i = shoe.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = shoe[i]; shoe[i] = shoe[j]; shoe[j] = t; }
+  }
+  function draw() {
+    if (shoe.length < 52) buildShoe();
+    return shoe.pop();
+  }
+  function cardVal(r) { return r === 0 ? 11 : Math.min(10, r + 1); }
+  function handVal(cards) {
+    var total = 0, aces = 0;
+    for (var i = 0; i < cards.length; i++) {
+      if (cards[i].down) continue;
+      total += cardVal(cards[i].r);
+      if (cards[i].r === 0) aces++;
+    }
+    while (total > 21 && aces > 0) { total -= 10; aces--; }
+    return { total: total, soft: aces > 0 };
+  }
+  function isBJ(cards) {
+    return cards.length === 2 && handVal(cards).total === 21;
+  }
+  function cardEl(c) {
+    var d = document.createElement('div');
+    if (c.down) { d.className = 'card down'; return d; }
+    d.className = 'card ' + (c.s === 1 || c.s === 2 ? 'red' : 'blk');
+    d.innerHTML = '<div class="corner">' + RNAMES[c.r] + '<br>' + SUITS[c.s] + '</div><div class="big">' + SUITS[c.s] + '</div>';
+    return d;
+  }
+  function render(hideHole) {
+    el('chips').textContent = faNum(chips);
+    el('betv').textContent = faNum(bet);
+    var dh = el('dealer'); dh.innerHTML = '';
+    for (var i = 0; i < dealer.length; i++) dh.appendChild(cardEl(dealer[i]));
+    var ph = el('player'); ph.innerHTML = '';
+    for (var j = 0; j < player.length; j++) ph.appendChild(cardEl(player[j]));
+    el('dval').textContent = dealer.length ? 'مجموع: ' + faNum(handVal(dealer).total) : '';
+    el('pval').textContent = player.length ? 'مجموع: ' + faNum(handVal(player).total) : '';
+    var betting = phase === 'bet';
+    el('b5').disabled = !betting || chips < bet + 5;
+    el('b25').disabled = !betting || chips < bet + 25;
+    el('b100').disabled = !betting || chips < bet + 100;
+    el('bclr').disabled = !betting || bet === 0;
+    el('deal').disabled = !betting || bet === 0;
+    el('hit').disabled = phase !== 'play';
+    el('stand').disabled = phase !== 'play';
+    el('dbl').disabled = phase !== 'play' || player.length !== 2 || chips < bet;
+  }
+  function say(t, cls) { var m = el('msg'); m.textContent = t; m.className = cls || ''; }
+
+  function deal() {
+    if (bet === 0 || bet > chips) return;
+    chips -= bet; saveChips();
+    player = []; dealer = []; doubled = false; phase = 'play';
+    player.push(draw()); dealer.push(draw());
+    player.push(draw()); dealer.push(draw());
+    dealer[1].down = true;
+    say('');
+    render();
+    if (isBJ(player) || isBJ(dealer)) { reveal(); return; }
+    say('نوبت توست — کارت بگیر یا ایست کن');
+  }
+  function hit() {
+    if (phase !== 'play') return;
+    player.push(draw());
+    render();
+    if (handVal(player).total > 21) { finish(0, 'بُر خوردی! باختی ' + faNum(bet) + ' سکه', 'lose'); }
+    else if (handVal(player).total === 21) { stand(); }
+  }
+  function dbl() {
+    if (phase !== 'play' || player.length !== 2 || chips < bet) return;
+    chips -= bet; bet *= 2; doubled = true; saveChips();
+    player.push(draw());
+    render();
+    if (handVal(player).total > 21) { finish(0, 'بُر خوردی! باختی ' + faNum(bet) + ' سکه', 'lose'); }
+    else stand();
+  }
+  function stand() {
+    if (phase !== 'play') return;
+    reveal();
+  }
+  function reveal() {
+    phase = 'dealer';
+    dealer.forEach(function (c) { c.down = false; });
+    render();
+    setTimeout(dealerPlay, 650);
+  }
+  function dealerPlay() {
+    var pBJ = isBJ(player), dBJ = isBJ(dealer);
+    if (pBJ || dBJ) { settle(); return; }
+    while (handVal(dealer).total < 17) { dealer.push(draw()); }
+    render();
+    settle();
+  }
+  function settle() {
+    var p = handVal(player).total, d = handVal(dealer).total;
+    var pBJ = isBJ(player), dBJ = isBJ(dealer);
+    if (pBJ && dBJ) finish(0, 'هر دو بلک‌جک — مساوی');
+    else if (pBJ) finish(Math.floor(bet * 2.5), 'بلک‌جک! بردی ' + faNum(Math.floor(bet * 1.5)) + ' سکه', 'win');
+    else if (dBJ) finish(0, 'حریف بلک‌جک داشت — باختی ' + faNum(bet) + ' سکه', 'lose');
+    else if (d > 21) finish(bet * 2, 'حریف بُر خورد — بردی ' + faNum(bet) + ' سکه', 'win');
+    else if (p > d) finish(bet * 2, 'بردی ' + faNum(bet) + ' سکه', 'win');
+    else if (p < d) finish(0, 'حریف برد — باختی ' + faNum(bet) + ' سکه', 'lose');
+    else finish(bet, 'مساوی — شرط برگشت');
+  }
+  function finish(returned, text, cls) {
+    phase = 'done';
+    chips += returned; saveChips();
+    say(text, cls);
+    render();
+    if (chips <= 0) {
+      el('otitle').textContent = 'سکه‌ها تمام شد!';
+      el('osub').textContent = 'شانس دوباره: با ۱۰۰ سکهٔ تازه شروع کن.';
+      el('overlay').classList.add('show');
+    } else {
+      setTimeout(function () {
+        bet = 0; phase = 'bet'; player = []; dealer = [];
+        say('شرط بگذار و «پخش کن» را بزن');
+        render();
+      }, 1800);
+    }
+  }
+  el('b5').addEventListener('click', function () { if (chips >= bet + 5) { bet += 5; render(); } });
+  el('b25').addEventListener('click', function () { if (chips >= bet + 25) { bet += 25; render(); } });
+  el('b100').addEventListener('click', function () { if (chips >= bet + 100) { bet += 100; render(); } });
+  el('bclr').addEventListener('click', function () { bet = 0; render(); });
+  el('deal').addEventListener('click', deal);
+  el('hit').addEventListener('click', hit);
+  el('stand').addEventListener('click', stand);
+  el('dbl').addEventListener('click', dbl);
+  el('ook').addEventListener('click', function () {
+    el('overlay').classList.remove('show');
+    chips = 100; saveChips(); bet = 0; phase = 'bet';
+    say('شرط بگذار و «پخش کن» را بزن');
+    render();
+  });
+  initChips();
+  buildShoe();
+  render();
+})();
+</script>
+</body>
+</html>

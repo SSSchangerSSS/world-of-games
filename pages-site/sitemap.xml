@@ -1,18 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://ssschangersss.github.io/world-of-games/</loc>
-    <changefreq>weekly</changefreq>
-    <priority>1.0</priority>
-  </url>
-  <url>
-    <loc>https://ssschangersss.github.io/world-of-games/games/akhaemenid-memory/</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://ssschangersss.github.io/world-of-games/games/alborz-jump/</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
+  <url><loc>https://ssschangersss.github.io/world-of-games/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://ssschangersss.github.io/world-of-games/games/chess/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://ssschangersss.github.io/world-of-games/games/solitaire/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://ssschangersss.github.io/world-of-games/games/blackjack/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://ssschangersss.github.io/world-of-games/games/sudoku/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://ssschangersss.github.io/world-of-games/games/g2048/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://ssschangersss.github.io/world-of-games/games/reversi/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://ssschangersss.github.io/world-of-games/games/tic-tac-toe/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://ssschangersss.github.io/world-of-games/games/minesweeper/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://ssschangersss.github.io/world-of-games/games/akhaemenid-memory/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://ssschangersss.github.io/world-of-games/games/snake/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://ssschangersss.github.io/world-of-games/games/breakout/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://ssschangersss.github.io/world-of-games/games/alborz-jump/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://ssschangersss.github.io/world-of-games/games/pong/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
 </urlset>

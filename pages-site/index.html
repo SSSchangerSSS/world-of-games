@@ -94,33 +94,128 @@
   <section id="games" class="section">
     <div class="container">
       <header class="section-head">
-        <h2>بازی‌های نمایشی</h2>
+        <h2>۱۳ بازی، همین‌جا و قابل بازی</h2>
         <p>
-          این دو بازی همین‌جا و به‌صورت استاتیک اجرا می‌شوند — روی «بازی کن» بزنید.
-          در نسخهٔ کامل پلتفرم، همین بازی‌ها داخل iframe سندباکس‌شده و همرا با کاتالوگ، امتیازدهی و صف بازبینی اجرا می‌شوند.
+          کل مجموعهٔ دموی پلتفرم به‌صورت استاتیک اینجا اجرا می‌شود — روی «بازی کن» بزنید.
+          در نسخهٔ کامل، همین بازی‌ها داخل iframe سندباکس‌شده و همراه با کاتالوگ، جست‌وجو و صف بازبینی اجرا می‌شوند.
         </p>
       </header>
       <div class="game-grid">
         <article class="game-card">
-          <a class="game-cover" href="games/akhaemenid-memory/" aria-label="بازی حافظه هخامنشی">
-            <img src="covers/akhaemenid-memory.svg" alt="کاور بازی حافظه هخامنشی" width="600" height="400" loading="lazy" />
-          </a>
+          <a class="game-cover" href="games/chess/" aria-label="بازی شطرنج"><img src="covers/chess.svg" alt="کاور شطرنج" width="600" height="400" loading="lazy" /></a>
+          <div class="game-body">
+            <div class="game-meta"><span class="chip">تخته‌ای</span><span class="chip chip-alt">AI</span></div>
+            <h3>شطرنج</h3>
+            <p>برابر حریف رایانه‌ای؛ موتور قوانین متن‌باز chess.js.</p>
+            <a class="btn btn-gold btn-sm" href="games/chess/">بازی کن</a>
+          </div>
+        </article>
+        <article class="game-card">
+          <a class="game-cover" href="games/solitaire/" aria-label="بازی پاسور"><img src="covers/solitaire.svg" alt="کاور پاسور" width="600" height="400" loading="lazy" /></a>
+          <div class="game-body">
+            <div class="game-meta"><span class="chip">کارتی</span><span class="chip chip-alt">کلاسیک</span></div>
+            <h3>پاسور (کلایک)</h3>
+            <p>کلایک کلاسیک با برگردان و حرکت خودکار.</p>
+            <a class="btn btn-gold btn-sm" href="games/solitaire/">بازی کن</a>
+          </div>
+        </article>
+        <article class="game-card">
+          <a class="game-cover" href="games/blackjack/" aria-label="بازی بلک‌جک"><img src="covers/blackjack.svg" alt="کاور بلک‌جک ۲۱" width="600" height="400" loading="lazy" /></a>
+          <div class="game-body">
+            <div class="game-meta"><span class="chip">کارتی</span><span class="chip chip-alt">۲۱</span></div>
+            <h3>بلک‌جک ۲۱</h3>
+            <p>با سکه‌های مجازی، دوبرابرکردن و پرداخت بلک‌جک.</p>
+            <a class="btn btn-gold btn-sm" href="games/blackjack/">بازی کن</a>
+          </div>
+        </article>
+        <article class="game-card">
+          <a class="game-cover" href="games/sudoku/" aria-label="بازی سودوکو"><img src="covers/sudoku.svg" alt="کاور سودوکو" width="600" height="400" loading="lazy" /></a>
+          <div class="game-body">
+            <div class="game-meta"><span class="chip">پازل</span><span class="chip chip-alt">اعداد</span></div>
+            <h3>سودوکو</h3>
+            <p>جدول‌های تازه با راه‌حل یکتا؛ سه سطح دشواری.</p>
+            <a class="btn btn-gold btn-sm" href="games/sudoku/">بازی کن</a>
+          </div>
+        </article>
+        <article class="game-card">
+          <a class="game-cover" href="games/g2048/" aria-label="بازی ۲۰۴۸"><img src="covers/g2048.svg" alt="کاور ۲۰۴۸" width="600" height="400" loading="lazy" /></a>
+          <div class="game-body">
+            <div class="game-meta"><span class="chip">پازل</span><span class="chip chip-alt">اعداد</span></div>
+            <h3>۲۰۴۸</h3>
+            <p>کاشی‌های هم‌ارزش را ادغام کن و به ۲۰۴۸ برس.</p>
+            <a class="btn btn-gold btn-sm" href="games/g2048/">بازی کن</a>
+          </div>
+        </article>
+        <article class="game-card">
+          <a class="game-cover" href="games/reversi/" aria-label="بازی اوتِلو"><img src="covers/reversi.svg" alt="کاور اوتِلو" width="600" height="400" loading="lazy" /></a>
+          <div class="game-body">
+            <div class="game-meta"><span class="chip">تخته‌ای</span><span class="chip chip-alt">استراتژی</span></div>
+            <h3>اوتِلو (ریورسی)</h3>
+            <p>دیسک‌ها را برگردان؛ گوشه‌ها طلایی‌اند.</p>
+            <a class="btn btn-gold btn-sm" href="games/reversi/">بازی کن</a>
+          </div>
+        </article>
+        <article class="game-card">
+          <a class="game-cover" href="games/tic-tac-toe/" aria-label="بازی دوز"><img src="covers/tic-tac-toe.svg" alt="کاور دوز" width="600" height="400" loading="lazy" /></a>
+          <div class="game-body">
+            <div class="game-meta"><span class="chip">تخته‌ای</span><span class="chip chip-alt">AI</span></div>
+            <h3>دوز</h3>
+            <p>برابر حریفی که هرگز اشتباه نمی‌کند.</p>
+            <a class="btn btn-gold btn-sm" href="games/tic-tac-toe/">بازی کن</a>
+          </div>
+        </article>
+        <article class="game-card">
+          <a class="game-cover" href="games/minesweeper/" aria-label="بازی مین‌یاب"><img src="covers/minesweeper.svg" alt="کاور مین‌یاب" width="600" height="400" loading="lazy" /></a>
+          <div class="game-body">
+            <div class="game-meta"><span class="chip">معمایی</span><span class="chip chip-alt">کلاسیک</span></div>
+            <h3>مین‌یاب</h3>
+            <p>اولین کلیک امن؛ با پرچم مین‌ها را علامت بزن.</p>
+            <a class="btn btn-gold btn-sm" href="games/minesweeper/">بازی کن</a>
+          </div>
+        </article>
+        <article class="game-card">
+          <a class="game-cover" href="games/akhaemenid-memory/" aria-label="بازی حافظه هخامنشی"><img src="covers/akhaemenid-memory.svg" alt="کاور حافظه هخامنشی" width="600" height="400" loading="lazy" /></a>
           <div class="game-body">
             <div class="game-meta"><span class="chip">معمایی</span><span class="chip chip-alt">خانوادگی</span></div>
             <h3>حافظه هخامنشی</h3>
-            <p>بازی حافظه با نمادهای ایران باستان؛ جفت‌های یکسان را پیدا کنید و با کمترین حرکت امتیاز بگیرید. مناسب همه سن‌ها.</p>
+            <p>جفت‌های یکسان را با نمادهای ایران باستان پیدا کن.</p>
             <a class="btn btn-gold btn-sm" href="games/akhaemenid-memory/">بازی کن</a>
           </div>
         </article>
         <article class="game-card">
-          <a class="game-cover" href="games/alborz-jump/" aria-label="بازی پرش از البرز">
-            <img src="covers/alborz-jump.svg" alt="کاور بازی پرش از البرز" width="600" height="400" loading="lazy" />
-          </a>
+          <a class="game-cover" href="games/snake/" aria-label="بازی مارِ گرسنه"><img src="covers/snake.svg" alt="کاور مارِ گرسنه" width="600" height="400" loading="lazy" /></a>
+          <div class="game-body">
+            <div class="game-meta"><span class="chip">کازوال</span><span class="chip chip-alt">کلاسیک</span></div>
+            <h3>مارِ گرسنه</h3>
+            <p>سیب بخور، بلند شو — به دُمت نخور!</p>
+            <a class="btn btn-gold btn-sm" href="games/snake/">بازی کن</a>
+          </div>
+        </article>
+        <article class="game-card">
+          <a class="game-cover" href="games/breakout/" aria-label="بازی توپ‌شکن"><img src="covers/breakout.svg" alt="کاور توپ‌شکن" width="600" height="400" loading="lazy" /></a>
+          <div class="game-body">
+            <div class="game-meta"><span class="chip">اکشن</span><span class="chip chip-alt">کلاسیک</span></div>
+            <h3>توپ‌شکن</h3>
+            <p>شش ردیف آجر، سه جان و مراحل سریع‌تر.</p>
+            <a class="btn btn-gold btn-sm" href="games/breakout/">بازی کن</a>
+          </div>
+        </article>
+        <article class="game-card">
+          <a class="game-cover" href="games/alborz-jump/" aria-label="بازی پرش از البرز"><img src="covers/alborz-jump.svg" alt="کاور پرش از البرز" width="600" height="400" loading="lazy" /></a>
           <div class="game-body">
             <div class="game-meta"><span class="chip">اکشن</span><span class="chip chip-alt">کازوال</span></div>
             <h3>پرش از البرز</h3>
-            <p>در کوهستان اسطوره‌ای البرز بپرید، از صخره‌ها بگذرید و با افزایش تدریجی سرعت رکورد بزنید. لمس یا کلیک = پرش.</p>
+            <p>در کوهستان اسطوره‌ای بپر و رکورد بزن.</p>
             <a class="btn btn-gold btn-sm" href="games/alborz-jump/">بازی کن</a>
+          </div>
+        </article>
+        <article class="game-card">
+          <a class="game-cover" href="games/pong/" aria-label="بازی پینگ‌پنگ"><img src="covers/pong.svg" alt="کاور پینگ‌پنگ" width="600" height="400" loading="lazy" /></a>
+          <div class="game-body">
+            <div class="game-meta"><span class="chip">کازوال</span><span class="chip chip-alt">دو نفره با AI</span></div>
+            <h3>پینگ‌پنگ</h3>
+            <p>اولین نفر به ۷ امتیاز برنده است.</p>
+            <a class="btn btn-gold btn-sm" href="games/pong/">بازی کن</a>
           </div>
         </article>
         <article class="game-card game-card-cta">

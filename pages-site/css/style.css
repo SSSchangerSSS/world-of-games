@@ -148,6 +148,7 @@ code {
 /* ─── کارت‌های بازی ─── */
 .game-grid { display: grid; gap: 20px; grid-template-columns: 1fr; }
 @media (min-width: 760px) { .game-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (min-width: 1020px) { .game-grid { grid-template-columns: repeat(4, 1fr); } }
 .game-card {
   background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
   overflow: hidden; box-shadow: var(--shadow); display: flex; flex-direction: column;
