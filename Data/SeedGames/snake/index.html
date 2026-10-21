@@ -37,9 +37,27 @@
   #hint { margin-top: 12px; color: #a8b3c9; font-size: .85rem; text-align: center; line-height: 1.8; max-width: min(92vw, 420px); }
 a.wog-home{position:fixed;top:10px;inset-inline-start:12px;z-index:99;background:rgba(217,164,65,.12);border:1px solid rgba(217,164,65,.45);color:#e8c073;text-decoration:none;padding:6px 12px;border-radius:10px;font-size:.85rem;font-weight:700;font-family:Vazirmatn,Tahoma,sans-serif}
 a.wog-home:hover{background:rgba(217,164,65,.3)}
+
+body{background:radial-gradient(900px 420px at 50% -80px,var(--g1a),transparent 68%),radial-gradient(720px 480px at 108% 112%,var(--g2a),transparent 60%),linear-gradient(168deg,#111c33 0%,#0b1220 58%,#0a0f1d 100%);background-attachment:fixed}
+
+/* ===== WOG Design System v2 ===== */
+body:before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.5;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72' viewBox='0 0 72 72'%3E%3Cg fill='none' stroke='%23d9a441' stroke-opacity='0.07' stroke-width='1'%3E%3Cpath d='M36 6l8 14 16-2-2 16 14 8-14 8 2 16-16-2-8 14-8-14-16 2 2-16-14-8 14-8-2-16 16 2z'/%3E%3Ccircle cx='36' cy='36' r='10'/%3E%3C/g%3E%3C/svg%3E");background-size:72px 72px}
+body:after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(120% 90% at 50% 30%,transparent 55%,rgba(4,7,14,.55) 100%)}
+a.wog-home,header,#app,.stage,.panel,.bar,.toast{position:relative;z-index:1}
+a.wog-home{position:fixed;top:12px;inset-inline-start:14px;z-index:99;display:inline-flex;align-items:center;gap:6px;background:linear-gradient(140deg,rgba(217,164,65,.16),rgba(217,164,65,.06));border:1px solid rgba(217,164,65,.5);color:#e8c073;text-decoration:none;padding:7px 14px;border-radius:12px;font-size:.85rem;font-weight:700;box-shadow:0 2px 10px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.06);transition:.18s}
+a.wog-home:hover{background:rgba(217,164,65,.3);transform:translateY(-1px)}
+h1{font-size:1.3rem;font-weight:800;display:inline-flex;align-items:center;gap:10px;background:linear-gradient(180deg,#f6d996,var(--g1b) 55%,var(--g1));-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 2px 8px rgba(217,164,65,.22))}
+h1:before,h1:after{content:'❋';font-size:.85em;color:var(--g2);-webkit-text-fill-color:var(--g2)}
+button{font-weight:800;border-radius:12px;transition:transform .12s,box-shadow .15s,filter .15s}
+button:active{transform:translateY(1px)}
+.panel{border:1px solid rgba(217,164,65,.4);border-radius:18px;background:linear-gradient(180deg,#182646,#101a30);box-shadow:0 20px 60px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.07)}
+.hud{color:#a8b3c9}
+.hud b{color:#e8c073}
+
+.stage{border-radius:14px;overflow:hidden;box-shadow:0 14px 36px rgba(0,0,0,.55),0 0 0 2px rgba(103,185,138,.45),0 0 0 6px rgba(10,18,14,.95)}
 </style>
 </head>
-<body>
+<body data-cat="arcade" data-slug="snake" style="--g1:#67b98a;--g2:#2c5a3f;--g1a:rgba(103,185,138,0.30);--g2a:rgba(44,90,63,0.42);--g1b:#2c5a3f">
 <a class="wog-home" href="../../index.html">⌂ خانه</a>
 <header>
   <h1>❋ مارِ گرسنه ❋</h1>
@@ -196,10 +214,19 @@ a.wog-home:hover{background:rgba(217,164,65,.3)}
   function draw() {
     var i, s, t, inset;
     ctx.clearRect(0, 0, 420, 560);
-    ctx.fillStyle = '#14203a';
+    var bg = ctx.createLinearGradient(0, 0, 0, 560);
+    bg.addColorStop(0, '#16301f');
+    bg.addColorStop(.55, '#0f2317');
+    bg.addColorStop(1, '#0a1810');
+    ctx.fillStyle = bg;
     rr(BX, BY, COLS * CELL, ROWS * CELL, 10);
     ctx.fill();
-    ctx.strokeStyle = 'rgba(217,164,65,.07)';
+    ctx.fillStyle = 'rgba(255,255,255,.03)';
+    for (var si = 0; si < 26; si++) {
+      var sx = (si * 97) % (COLS * CELL), sy = (si * 53) % (ROWS * CELL);
+      ctx.fillRect(BX + sx, BY + sy, 1.6, 1.6);
+    }
+    ctx.strokeStyle = 'rgba(103,185,138,.09)';
     ctx.lineWidth = 1;
     ctx.beginPath();
     for (i = 1; i < COLS; i++) {
@@ -210,18 +237,38 @@ a.wog-home:hover{background:rgba(217,164,65,.3)}
     }
     ctx.stroke();
     if (food) {
-      ctx.fillStyle = '#e26d5c';
-      ctx.beginPath();
-      ctx.arc(BX + food.x * CELL + CELL / 2, BY + food.y * CELL + CELL / 2, CELL * .32, 0, Math.PI * 2);
-      ctx.fill();
+      var fx = BX + food.x * CELL + CELL / 2, fy = BY + food.y * CELL + CELL / 2;
+      var fg = ctx.createRadialGradient(fx, fy, 1, fx, fy, CELL * 1.15);
+      fg.addColorStop(0, 'rgba(255,140,90,.5)');
+      fg.addColorStop(1, 'rgba(255,140,90,0)');
+      ctx.fillStyle = fg;
+      ctx.beginPath(); ctx.arc(fx, fy, CELL * 1.15, 0, Math.PI * 2); ctx.fill();
+      var fgr = ctx.createRadialGradient(fx - 2, fy - 3, 1, fx, fy, CELL * .34);
+      fgr.addColorStop(0, '#ffb08a');
+      fgr.addColorStop(.6, '#e26d5c');
+      fgr.addColorStop(1, '#a83c2c');
+      ctx.fillStyle = fgr;
+      ctx.beginPath(); ctx.arc(fx, fy, CELL * .32, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = 'rgba(255,255,255,.55)';
+      ctx.beginPath(); ctx.arc(fx - 2.5, fy - 3, 1.6, 0, Math.PI * 2); ctx.fill();
     }
     for (i = snake.length - 1; i >= 0; i--) {
       s = snake[i];
       t = snake.length > 1 ? i / (snake.length - 1) : 0;
       inset = 2 + t * 4;
-      ctx.fillStyle = i === 0 ? '#e8c073' : '#3fb8af';
+      if (i === 0) { ctx.fillStyle = '#f2cf82'; }
+      else {
+        var sg = ctx.createLinearGradient(0, 0, CELL, CELL);
+        var sh = 165 + Math.round(28 * t);
+        sg.addColorStop(0, 'hsl(' + sh + ',52%,46%)');
+        sg.addColorStop(1, 'hsl(' + sh + ',58%,32%)');
+        ctx.fillStyle = sg;
+      }
+      ctx.shadowColor = i === 0 ? 'rgba(232,192,115,.6)' : 'rgba(63,184,175,.35)';
+      ctx.shadowBlur = i === 0 ? 10 : 5;
       rr(BX + s.x * CELL + inset, BY + s.y * CELL + inset, CELL - inset * 2, CELL - inset * 2, 6);
       ctx.fill();
+      ctx.shadowBlur = 0;
     }
     var cx = BX + snake[0].x * CELL + CELL / 2;
     var cy = BY + snake[0].y * CELL + CELL / 2;

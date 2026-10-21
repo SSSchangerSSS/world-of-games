@@ -52,9 +52,35 @@
   .promo button { font-size: 1.5rem; padding: 6px 14px; }
 a.wog-home{position:fixed;top:10px;inset-inline-start:12px;z-index:99;background:rgba(217,164,65,.12);border:1px solid rgba(217,164,65,.45);color:#e8c073;text-decoration:none;padding:6px 12px;border-radius:10px;font-size:.85rem;font-weight:700;font-family:Vazirmatn,Tahoma,sans-serif}
 a.wog-home:hover{background:rgba(217,164,65,.3)}
+
+body{background:radial-gradient(900px 420px at 50% -80px,var(--g1a),transparent 68%),radial-gradient(720px 480px at 108% 112%,var(--g2a),transparent 60%),linear-gradient(168deg,#111c33 0%,#0b1220 58%,#0a0f1d 100%);background-attachment:fixed}
+
+/* ===== WOG Design System v2 ===== */
+body:before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.5;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72' viewBox='0 0 72 72'%3E%3Cg fill='none' stroke='%23d9a441' stroke-opacity='0.07' stroke-width='1'%3E%3Cpath d='M36 6l8 14 16-2-2 16 14 8-14 8 2 16-16-2-8 14-8-14-16 2 2-16-14-8 14-8-2-16 16 2z'/%3E%3Ccircle cx='36' cy='36' r='10'/%3E%3C/g%3E%3C/svg%3E");background-size:72px 72px}
+body:after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(120% 90% at 50% 30%,transparent 55%,rgba(4,7,14,.55) 100%)}
+a.wog-home,header,#app,.stage,.panel,.bar,.toast{position:relative;z-index:1}
+a.wog-home{position:fixed;top:12px;inset-inline-start:14px;z-index:99;display:inline-flex;align-items:center;gap:6px;background:linear-gradient(140deg,rgba(217,164,65,.16),rgba(217,164,65,.06));border:1px solid rgba(217,164,65,.5);color:#e8c073;text-decoration:none;padding:7px 14px;border-radius:12px;font-size:.85rem;font-weight:700;box-shadow:0 2px 10px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.06);transition:.18s}
+a.wog-home:hover{background:rgba(217,164,65,.3);transform:translateY(-1px)}
+h1{font-size:1.3rem;font-weight:800;display:inline-flex;align-items:center;gap:10px;background:linear-gradient(180deg,#f6d996,var(--g1b) 55%,var(--g1));-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 2px 8px rgba(217,164,65,.22))}
+h1:before,h1:after{content:'❋';font-size:.85em;color:var(--g2);-webkit-text-fill-color:var(--g2)}
+button{font-weight:800;border-radius:12px;transition:transform .12s,box-shadow .15s,filter .15s}
+button:active{transform:translateY(1px)}
+.panel{border:1px solid rgba(217,164,65,.4);border-radius:18px;background:linear-gradient(180deg,#182646,#101a30);box-shadow:0 20px 60px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.07)}
+.hud{color:#a8b3c9}
+.hud b{color:#e8c073}
+
+.sq{transition:filter .12s}
+.sq.light{background:linear-gradient(145deg,#f0e5cb,#d8cba6)}
+.sq.dark{background:linear-gradient(145deg,#6d5330,#4e3820)}
+.sq .pc{filter:drop-shadow(0 3px 4px rgba(0,0,0,.45))}
+.sq.w .pc{color:#f7f2e2;text-shadow:0 1px 0 rgba(0,0,0,.5),0 0 12px rgba(255,250,230,.25)}
+.sq.b .pc{color:#20242e;text-shadow:0 1px 0 rgba(255,255,255,.15),0 0 10px rgba(10,10,20,.4)}
+.sq.sel::after{box-shadow:0 0 14px rgba(232,192,115,.9)}
+.sq.chk::after{box-shadow:inset 0 0 16px rgba(255,90,60,.9)}
+.panel{background:linear-gradient(160deg,#2a2013,#1a1409);border-color:rgba(217,164,65,.45)}
 </style>
 </head>
-<body>
+<body data-cat="board" data-slug="chess" style="--g1:#b98a3c;--g2:#4a3620;--g1a:rgba(185,138,60,0.30);--g2a:rgba(74,54,32,0.42);--g1b:#4a3620">
 <a class="wog-home" href="../../index.html">⌂ خانه</a>
 <header>
   <h1>❋ شطرنج ❋</h1>
