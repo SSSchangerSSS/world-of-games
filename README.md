@@ -4,7 +4,7 @@
 
 **پلتفرم ایرانی بازی‌های تحت وب** — بازی کن، بساز، حمایت کن.
 
-> 🌐 **پیش‌نمایش زنده (GitHub Pages):** [https://ssschangersss.github.io/world-of-games/](https://ssschangersss.github.io/world-of-games/)
+> 🌐 **پیش‌نمایش زنده (GitHub Pages):** [hhttps://ssschangersss.github.io/world-of-games/](https://ssschangersss.github.io/world-of-games/)
 > صفحه معرفی استاتیک + دو بازی دمو («حافظه هخامنشی» و «پرش از البرز») که مستقیم و قابل بازی اجرا می‌شوند.
 > منبع این صفحه شاخه [`gh-pages`](https://github.com/SSSchangerSSS/world-of-games/tree/gh-pages) است؛ اپلیکیشن کامل (کاتالوگ، آپلود، وبلاگ، دونیت، ادمین) سرور .NET می‌خواهد — راهنمای استقرار: [docs/deploy-iis.md](docs/deploy-iis.md).
 
@@ -61,7 +61,7 @@ admin@worldofgames.ir / Admin#1404
 | معمایی | مین‌یاب (اولین کلیک امن، ۲ سطح) · حافظه هخامنشی |
 | اکشن/کازوال | توپ‌شکن · پرش از البرز · مارِ گرسنه · پینگ‌پنگ |
 
-همه بازی‌ها سلف‌کانتینند، فارسی/RTL، سازگار با لمس و اجرای امن در iframe سندباکس‌شده. پیش‌نمایش زندهٔ همه: [GitHub Pages](https://ssschangersss.github.io/world-of-games/).
+مجموعهٔ کامل **۱۰۰ بازی** (شطرنج، نرد، حکم، پاسور، سودوکو، ۲۰۴۸، سولیترها، آرکیدها و…) سلف‌کانتینند، فارسی/RTL، سازگار با لمس/کیبورد/ماوس و اجرای امن در iframe سندباکس‌شده. فهرست کامل: [GAMES.md](GAMES.md) · پیش‌نمایش زندهٔ همه: [GitHub Pages](https://ssschangersss.github.io/world-of-games/).
 
 **مجوزهای شخص ثالث:** موتور قوانین شطرنج `chess.js` نسخه ۰.۱۰.۳ تحت **BSD-2-Clause** (فایل `LICENSE-chessjs.txt` در پوشهٔ بازی). بقیه بازی‌ها دست‌ساز همین پروژه‌اند؛ مکانیک ۲۰۴۸ الهام‌گرفته از اثر گابریله چیرولی (MIT) است.
 
