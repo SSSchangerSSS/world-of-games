@@ -1,12 +1,20 @@
 # -*- coding: utf-8 -*-
-"""WOG 100-games build library.
+"""WOG 100-games build library — Design System v2 ("Zartosht" theme).
 Every new game = ONE self-contained index.html following games-spec.md:
 RTL, offline, sandbox-safe (store shim), no emoji in game UI, Vazirmatn tokens.
 Back-to-home button is injected by this template (user requirement).
 Testable logic: every game defines `var WOG_LOGIC = {...}` (pure, DOM-free)
 between WOG_LOGIC markers so Node tests can run it standalone.
+
+v2: per-game identity colors (g1/g2) injected as CSS vars, layered scene
+backgrounds per category, Persian girih pattern, upgraded cards/boards/
+buttons/overlays. All class contracts from v1 preserved.
 """
 import re
+try:
+    from themes import THEMES
+except ImportError:
+    from .themes import THEMES
 
 CATS = {
     "board":  "تخته و استراتژی",
@@ -17,46 +25,120 @@ CATS = {
     "luck":   "شانس و سرگرمی",
 }
 
+def _hex2rgba(h, a):
+    h = h.lstrip('#')
+    if len(h) == 3:
+        h = ''.join(c * 2 for c in h)
+    r, g, b = int(h[0:2], 16), int(h[2:4], 16), int(h[4:6], 16)
+    return "rgba(%d,%d,%d,%.2f)" % (r, g, b, a)
+
+# Persian girih-style eight-point star lattice (gold, very subtle)
+GIRIH_SVG = ("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72' viewBox='0 0 72 72'%3E"
+             "%3Cg fill='none' stroke='%23d9a441' stroke-opacity='0.07' stroke-width='1'%3E"
+             "%3Cpath d='M36 6l8 14 16-2-2 16 14 8-14 8 2 16-16-2-8 14-8-14-16 2 2-16-14-8 14-8-2-16 16 2z'/%3E"
+             "%3Ccircle cx='36' cy='36' r='10'/%3E%3C/g%3E%3C/svg%3E")
+# starfield (tiny white dots) for arcade scene
+STARS_SVG = ("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E"
+             "%3Cg fill='%23ffffff'%3E"
+             "%3Ccircle cx='14' cy='18' r='1'/%3Ccircle cx='64' cy='8' r='0.7'/%3Ccircle cx='102' cy='32' r='1.2'/%3E"
+             "%3Ccircle cx='38' cy='52' r='0.8'/%3Ccircle cx='88' cy='72' r='1'/%3Ccircle cx='10' cy='88' r='0.7'/%3E"
+             "%3Ccircle cx='56' cy='106' r='1.1'/%3Ccircle cx='112' cy='112' r='0.6'/%3E%3C/g%3E%3C/svg%3E")
+
 BASE_CSS = """*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 @font-face{font-family:Vazirmatn;src:url(../../fonts/Vazirmatn-Regular.woff2) format('woff2');font-weight:400;font-display:swap}
 @font-face{font-family:Vazirmatn;src:url(../../fonts/Vazirmatn-Bold.woff2) format('woff2');font-weight:700;font-display:swap}
-body{font-family:Vazirmatn,Tahoma,sans-serif;background:linear-gradient(160deg,#101a2e,#0b1220);color:#f3ead8;min-height:100dvh;user-select:none;display:flex;flex-direction:column;align-items:center;padding:12px;padding-top:56px;overflow-x:hidden}
-a.wog-home{position:fixed;top:10px;inset-inline-start:12px;z-index:99;background:rgba(217,164,65,.12);border:1px solid rgba(217,164,65,.45);color:#e8c073;text-decoration:none;padding:6px 12px;border-radius:10px;font-size:.85rem;font-weight:700}
-a.wog-home:hover{background:rgba(217,164,65,.3)}
-header{text-align:center;margin-bottom:8px}
-h1{font-size:1.2rem;color:#d9a441}
-.hud{color:#a8b3c9;font-size:.9rem;margin-top:2px;min-height:1.4em}
-.hud b{color:#e8c073}
-button,.wbtn{font-family:inherit;background:#d9a441;color:#221806;border:0;border-radius:10px;font-weight:700;padding:8px 16px;font-size:.95rem;cursor:pointer;touch-action:manipulation}
-button.sec,.wbtn.sec{background:#14203a;color:#f3ead8;border:1px solid rgba(217,164,65,.35)}
-button:disabled{opacity:.45;cursor:default}
-#hint{color:#a8b3c9;font-size:.85rem;margin-top:10px;text-align:center;max-width:680px;line-height:1.9}
-.wpanel{background:#14203a;border:1px solid rgba(217,164,65,.35);border-radius:14px;padding:14px}
+:root{--gold:#d9a441;--gold2:#e8c073;--turq:#3fb8af;--ink:#f3ead8;--dim:#a8b3c9;--panel:#131f38;--panel2:#0f1930}
+html{height:100%}
+body{font-family:Vazirmatn,Tahoma,sans-serif;color:var(--ink);min-height:100dvh;user-select:none;display:flex;flex-direction:column;align-items:center;padding:14px;padding-top:64px;overflow-x:hidden;position:relative;
+background:
+ radial-gradient(900px 420px at 50% -80px,var(--g1a),transparent 68%),
+ radial-gradient(720px 480px at 108% 112%,var(--g2a),transparent 60%),
+ radial-gradient(560px 320px at -8% 96%,var(--g1a),transparent 62%),
+ linear-gradient(168deg,#111c33 0%,#0b1220 58%,#0a0f1d 100%);
+background-attachment:fixed}
+body:before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.5;background-image:url("__GIRIH__");background-size:72px 72px}
+body:after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(120% 90% at 50% 30%,transparent 55%,rgba(4,7,14,.55) 100%)}
+a.wog-home,header,#app,#hint,.wog-toast,.wovl{position:relative;z-index:1}
+a.wog-home{position:fixed;top:12px;inset-inline-start:14px;z-index:99;display:inline-flex;align-items:center;gap:6px;background:linear-gradient(140deg,rgba(217,164,65,.16),rgba(217,164,65,.06));border:1px solid rgba(217,164,65,.5);color:#e8c073;text-decoration:none;padding:7px 14px;border-radius:12px;font-size:.85rem;font-weight:700;box-shadow:0 2px 10px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.06);transition:.18s}
+a.wog-home:hover{background:rgba(217,164,65,.3);transform:translateY(-1px)}
+header{text-align:center;margin-bottom:12px;width:100%;max-width:720px}
+h1{font-size:1.3rem;font-weight:800;letter-spacing:.2px;display:inline-flex;align-items:center;gap:10px;
+background:linear-gradient(180deg,#f6d996,var(--g1c,#e8c073) 55%,var(--g1));-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 2px 8px rgba(217,164,65,.22))}
+h1:before,h1:after{content:'❋';font-size:.85em;color:var(--g1b);-webkit-text-fill-color:var(--g1b)}
+.hud{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:8px;color:var(--dim);font-size:.88rem;min-height:1.4em}
+.hud b{color:var(--gold2);font-weight:700}
+#hint{color:#96a2ba;font-size:.85rem;margin-top:12px;text-align:center;max-width:660px;line-height:2}
+button,.wbtn{font-family:inherit;background:linear-gradient(180deg,#e9bd68,#c8922f);color:#251905;border:0;border-radius:12px;font-weight:800;padding:9px 18px;font-size:.95rem;cursor:pointer;touch-action:manipulation;box-shadow:0 3px 10px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.35),0 0 0 1px rgba(217,164,65,.4);transition:transform .12s,box-shadow .15s,filter .15s}
+button:hover,.wbtn:hover{filter:brightness(1.06)}
+button:active,.wbtn:active{transform:translateY(1px) scale(.985);box-shadow:0 1px 4px rgba(0,0,0,.4)}
+button.sec,.wbtn.sec{background:linear-gradient(180deg,#1a2745,#121d36);color:var(--ink);border:1px solid rgba(217,164,65,.4);box-shadow:0 2px 8px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.05)}
+button:disabled{opacity:.4;cursor:default;transform:none}
+.wpanel{background:linear-gradient(180deg,rgba(23,35,63,.92),rgba(15,25,48,.92));border:1px solid rgba(217,164,65,.35);border-radius:16px;padding:14px;box-shadow:0 6px 24px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.05)}
 .wrow{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;align-items:center;margin:8px 0}
-.wovl{position:fixed;inset:0;background:rgba(5,9,18,.85);display:flex;align-items:center;justify-content:center;z-index:90}
-.wovl .box{background:#14203a;border:2px solid rgba(217,164,65,.5);border-radius:16px;padding:22px 28px;text-align:center;max-width:88vw}
-.wovl h2{color:#e8c073;margin-bottom:8px}
-.wovl p{color:#a8b3c9;margin-bottom:14px}
-.wog-toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#14203a;border:1px solid rgba(217,164,65,.5);color:#f3ead8;padding:8px 18px;border-radius:12px;opacity:0;transition:.25s;z-index:95;pointer-events:none;font-size:.9rem}
+.wovl{position:fixed;inset:0;background:rgba(5,8,16,.72);backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);display:flex;align-items:center;justify-content:center;z-index:90;animation:wogfade .22s ease}
+@keyframes wogfade{from{opacity:0}to{opacity:1}}
+.wovl .box{background:linear-gradient(180deg,#182646,#101a30);border:1px solid rgba(217,164,65,.55);border-radius:20px;padding:26px 30px;text-align:center;max-width:88vw;box-shadow:0 20px 60px rgba(0,0,0,.6),0 0 0 1px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.07);animation:wogpop .26s cubic-bezier(.2,1.4,.4,1)}
+@keyframes wogpop{from{transform:scale(.82);opacity:0}to{transform:scale(1);opacity:1}}
+.wovl h2{color:var(--gold2);margin-bottom:8px;font-size:1.35rem;text-shadow:0 0 18px rgba(217,164,65,.35)}
+.wovl p{color:var(--dim);margin-bottom:16px;line-height:2}
+.wog-toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:rgba(20,32,58,.94);border:1px solid rgba(217,164,65,.55);color:var(--ink);padding:9px 20px;border-radius:14px;opacity:0;transition:.25s;z-index:95;pointer-events:none;font-size:.9rem;box-shadow:0 8px 24px rgba(0,0,0,.5)}
 .wog-toast.on{opacity:1}
-.wgrid{display:grid;border:2px solid rgba(217,164,65,.5);border-radius:10px;overflow:hidden;direction:ltr;touch-action:manipulation}
-.wgrid .cell{display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative}
-.cell.light{background:#e8dcc0}.cell.dark{background:#41527a}
-.wcard{display:inline-flex;flex-direction:column;justify-content:space-between;width:52px;height:74px;background:#f6efe0;color:#1c2438;border-radius:7px;padding:3px 5px;font-weight:700;font-size:.9rem;line-height:1;box-shadow:0 2px 5px rgba(0,0,0,.45);cursor:pointer;touch-action:manipulation;flex:none}
-.wcard.red{color:#c0392b}
-.wcard.back{background:linear-gradient(135deg,#2c3a5e,#41527a);border:2px solid rgba(217,164,65,.5)}
-.wcard.back:before{content:'❋';color:rgba(232,192,115,.55);align-self:center;font-size:1.3rem}
-.wcard.small{width:38px;height:54px;font-size:.75rem;border-radius:5px}
-.wcard.tiny{width:30px;height:44px;font-size:.65rem;border-radius:4px;padding:2px 3px}
-.wcard.sel{outline:3px solid #e8c073;transform:translateY(-6px)}
-.wcard .cn{font-size:.7rem;opacity:.85}.wcard .cv{align-self:flex-start}
+.wgrid{display:grid;border-radius:12px;overflow:hidden;direction:ltr;touch-action:manipulation;border:2px solid rgba(217,164,65,.55);outline:1px solid rgba(0,0,0,.6);box-shadow:0 10px 30px rgba(0,0,0,.5),0 0 0 5px rgba(23,35,63,.85),0 0 0 6px rgba(217,164,65,.25),inset 0 0 0 1px rgba(0,0,0,.35)}
+.wgrid .cell{display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;transition:filter .12s}
+.cell.light{background:linear-gradient(145deg,#f0e5cb,#dccfae)}
+.cell.dark{background:linear-gradient(145deg,#3d4e77,#2c3a5c)}
+.wgrid .cell:hover{filter:brightness(1.1)}
+.wcard{display:inline-flex;flex-direction:column;justify-content:space-between;width:54px;height:76px;background:linear-gradient(160deg,#fdf9ee,#efe6cf);color:#1c2438;border-radius:8px;padding:4px 6px;font-weight:800;font-size:.92rem;line-height:1;box-shadow:0 3px 7px rgba(0,0,0,.5),inset 0 0 0 1px rgba(255,255,255,.6),inset 0 0 0 2px rgba(28,36,56,.08);cursor:pointer;touch-action:manipulation;flex:none;transition:transform .14s,box-shadow .14s}
+.wcard:hover{transform:translateY(-2px)}
+.wcard.red{color:#bf2f3a}
+.wcard.back{background:linear-gradient(150deg,#31406b,#1d2a4a 55%,#2a3a63);border:1px solid rgba(217,164,65,.55)}
+.wcard.back:before{content:'❋';color:rgba(232,192,115,.6);align-self:center;font-size:1.35rem;text-shadow:0 0 8px rgba(217,164,65,.4)}
+.wcard.small{width:40px;height:57px;font-size:.78rem;border-radius:6px}
+.wcard.tiny{width:31px;height:46px;font-size:.68rem;border-radius:5px;padding:2px 3px}
+.wcard.sel{outline:3px solid var(--gold2);transform:translateY(-7px);box-shadow:0 10px 22px rgba(0,0,0,.5),0 0 18px rgba(232,192,115,.4)}
+.wcard .cn{font-size:.72rem;opacity:.9}.wcard .cv{align-self:flex-start;opacity:.95}
 .wcard.back .cn,.wcard.back .cv{display:none}
-.wdpad{display:none;grid-template-columns:repeat(3,58px);grid-auto-rows:50px;gap:6px;margin-top:12px}
+.wdpad{display:none;grid-template-columns:repeat(3,60px);grid-auto-rows:52px;gap:7px;margin-top:12px}
 .wdpad.on{display:grid}
-.wdpad button{font-size:1.15rem}
+.wdpad button{font-size:1.15rem;border-radius:14px}
 @media(pointer:coarse){.wdpad{display:grid}}
-canvas{touch-action:none;border-radius:10px;border:2px solid rgba(217,164,65,.35);background:#0d1526}
+canvas{touch-action:none;border-radius:14px;background:#0d1526;box-shadow:0 12px 36px rgba(0,0,0,.55),0 0 0 2px rgba(217,164,65,.4),0 0 0 6px rgba(15,22,40,.9),0 0 26px rgba(217,164,65,.12)}
 """
+
+# Category-scoped scene CSS (body[data-cat])
+CAT_CSS = {
+"board": """body[data-cat="board"]{background:
+ radial-gradient(820px 380px at 50% -60px,var(--g1a),transparent 66%),
+ radial-gradient(680px 460px at 110% 114%,var(--g2a),transparent 58%),
+ linear-gradient(168deg,#131e35,#0b1220 60%,#0a0e1a)}
+body[data-cat="board"]:before{background-image:url("__GIRIH__");background-size:84px 84px;opacity:.55}""",
+"cards": """body[data-cat="cards"]{background:
+ radial-gradient(1100px 520px at 50% 118%,rgba(28,92,84,.4),transparent 62%),
+ radial-gradient(760px 380px at 50% -100px,var(--g1a),transparent 68%),
+ linear-gradient(170deg,#0f2230,#0b1420 55%,#0a101a)}
+body[data-cat="cards"]:after{background:radial-gradient(90% 70% at 50% 38%,transparent 52%,rgba(2,8,10,.6) 100%)}""",
+"puzzle": """body[data-cat="puzzle"]{background:
+ radial-gradient(880px 420px at 16% -70px,var(--g1a),transparent 64%),
+ radial-gradient(720px 480px at 104% 110%,var(--g2a),transparent 60%),
+ linear-gradient(165deg,#131a33,#0b1220 58%,#0a0f1c)}
+body[data-cat="puzzle"]:before{opacity:.35}""",
+"arcade": """body[data-cat="arcade"]{background:
+ radial-gradient(880px 400px at 50% -90px,var(--g1a),transparent 66%),
+ radial-gradient(700px 460px at 106% 112%,var(--g2a),transparent 58%),
+ linear-gradient(180deg,#0a1024,#080d1b 52%,#060a15)}
+body[data-cat="arcade"]:before{background-image:url("__STARS__");background-size:130px 130px;opacity:.8}
+body[data-cat="arcade"]:after{background:radial-gradient(130% 84% at 50% 118%,var(--g2a),transparent 55%)}""",
+"word": """body[data-cat="word"]{background:
+ radial-gradient(900px 420px at 84% -70px,var(--g1a),transparent 64%),
+ radial-gradient(680px 420px at -6% 106%,var(--g2a),transparent 58%),
+ linear-gradient(166deg,#171c2e,#0e1220 56%,#0b0e18)}
+body[data-cat="word"]:before{background-image:url("__GIRIH__");background-size:96px 96px;opacity:.3}""",
+"luck": """body[data-cat="luck"]{background:
+ radial-gradient(1000px 500px at 50% 120%,rgba(84,32,66,.45),transparent 62%),
+ radial-gradient(760px 400px at 50% -100px,var(--g1a),transparent 66%),
+ linear-gradient(168deg,#181428,#100c1c 55%,#0c0916)}
+body[data-cat="luck"]:before{opacity:.45}""",
+}
 
 COMMON_JS = """function $(s){return document.querySelector(s)}
 function $$(s){return Array.prototype.slice.call(document.querySelectorAll(s))}
@@ -101,14 +183,15 @@ TEMPLATE = """<!DOCTYPE html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<meta name="theme-color" content="#0b1220">
 <title>{title} | دنیای بازی‌ها</title>
 <meta name="description" content="{desc}">
-<style>{base_css}{css}
+<style>{base_css}{cat_css}{css}
 </style>
 </head>
-<body>
+<body data-cat="{cat}" data-slug="{slug}" style="--g1:{g1};--g2:{g2};--g1a:{g1a};--g2a:{g2a};--g1b:{g1b}">
 <a class="wog-home" href="../../index.html">⌂ خانه</a>
-<header><h1>❋ {title} ❋</h1><div class="hud" id="hud"></div></header>
+<header><h1>{title}</h1><div class="hud" id="hud"></div></header>
 <div id="app"></div>
 <p id="hint"></p>
 <div class="wog-toast" id="wog-toast"></div>
@@ -150,9 +233,16 @@ class G(object):
             raise ValueError("game %s logic must define WOG_LOGIC" % self.slug)
         if "localStorage" in self.ui or "localStorage" in self.logic:
             raise ValueError("game %s must use store, not localStorage directly" % self.slug)
+        base_css = BASE_CSS.replace("__GIRIH__", GIRIH_SVG).replace("__STARS__", STARS_SVG)
+        cat_css = CAT_CSS.get(self.cat, "").replace("__GIRIH__", GIRIH_SVG).replace("__STARS__", STARS_SVG)
+        theme_extra = THEMES.get(self.slug, "")
         return TEMPLATE.format(
             title=self.title, desc=self.desc.replace('"', "'"),
-            base_css=BASE_CSS, css=self.css, logic=self.logic, ui=js + "\n" + self.ui)
+            cat=self.cat, slug=self.slug,
+            g1=self.g1, g2=self.g2,
+            g1a=_hex2rgba(self.g1, 0.30), g2a=_hex2rgba(self.g2, 0.42), g1b=self.g2,
+            base_css=base_css, cat_css=cat_css, css=self.css + "\n" + theme_extra,
+            logic=self.logic, ui=js + "\n" + self.ui)
 
     def logic_export(self):
         return self.logic
@@ -161,7 +251,8 @@ class G(object):
 def check_spec_violations(html, slug):
     """Return list of spec violations for a rendered game html."""
     errs = []
-    if re.search(r'https?://', html):
+    stripped = re.sub(r'data:[a-z]+/[a-z+.-]+[,;][^"]*', '', html)  # strip whole data URI (double-quoted)
+    if re.search(r'https?://', stripped):
         errs.append("%s: contains http(s) URL" % slug)
     for bad in ["alert(", "confirm(", "prompt(", "document.cookie", "window.top", "window.parent", "fetch(", "XMLHttpRequest"]:
         if bad in html:

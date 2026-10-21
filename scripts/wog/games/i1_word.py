@@ -56,6 +56,7 @@ HANGMAN_LOGIC = r"""
 var FA='ابپتثجچحخدذرزژسشصضطظعغفقکگلمنوهی';
 var WORDS=[{w:'خرگوش',cat:'حیوان'},{w:'سنجاب',cat:'حیوان'},{w:'زرافه',cat:'حیوان'},{w:'میمون',cat:'حیوان'},{w:'دلفین',cat:'حیوان'},{w:'تمساح',cat:'حیوان'},{w:'گنجشک',cat:'حیوان'},{w:'کرگدن',cat:'حیوان'},{w:'روباه',cat:'حیوان'},{w:'زنبور',cat:'حیوان'},{w:'شترمرغ',cat:'حیوان'},{w:'عنکبوت',cat:'حیوان'},{w:'انگور',cat:'میوه'},{w:'انجیر',cat:'میوه'},{w:'نارنج',cat:'میوه'},{w:'زیتون',cat:'میوه'},{w:'بادام',cat:'میوه'},{w:'گیلاس',cat:'میوه'},{w:'خربزه',cat:'میوه'},{w:'طالبی',cat:'میوه'},{w:'هندوانه',cat:'میوه'},{w:'نارنگی',cat:'میوه'},{w:'تبریز',cat:'شهر'},{w:'شیراز',cat:'شهر'},{w:'اصفهان',cat:'شهر'},{w:'کاشان',cat:'شهر'},{w:'سمنان',cat:'شهر'},{w:'قزوین',cat:'شهر'},{w:'همدان',cat:'شهر'},{w:'کرمان',cat:'شهر'},{w:'سنندج',cat:'شهر'},{w:'بوشهر',cat:'شهر'},{w:'زاهدان',cat:'شهر'},{w:'ماشین',cat:'شیء'},{w:'رادیو',cat:'شیء'},{w:'لیوان',cat:'شیء'},{w:'فنجان',cat:'شیء'},{w:'چمدان',cat:'شیء'},{w:'جوراب',cat:'شیء'},{w:'شلوار',cat:'شیء'},{w:'دستکش',cat:'شیء'},{w:'چنگال',cat:'شیء'},{w:'بشقاب',cat:'شیء'},{w:'سماور',cat:'شیء'}];
 var MAXL=6;
+function norm(s){return String(s||'').replace(/ي/g,'ی').replace(/ك/g,'ک').replace(/[\s\u200c]+/g,'');}
 function reveal(w,g){var o='',i;for(i=0;i<w.length;i++){o+=(g.indexOf(w[i])>=0?w[i]:'_');}return o;}
 function livesAfter(l,hit){return hit?l:l-1;}
 function isWin(w,g){if(!w||!w.length)return false;for(var i=0;i<w.length;i++){if(g.indexOf(w[i])<0)return false;}return true;}
@@ -63,7 +64,7 @@ function isDead(l){return l<=0;}
 function guess(g,ch){return g.indexOf(ch)>=0?g:g+ch;}
 function hitIn(w,ch){return w.indexOf(ch)>=0;}
 function pickWord(rng){var i=rng?Math.floor(rng()*WORDS.length):Math.floor(Math.random()*WORDS.length);return WORDS[i];}
-var WOG_LOGIC={FA:FA,WORDS:WORDS,MAXL:MAXL,reveal:reveal,livesAfter:livesAfter,isWin:isWin,isDead:isDead,guess:guess,hitIn:hitIn,pickWord:pickWord};
+var WOG_LOGIC={FA:FA,WORDS:WORDS,MAXL:MAXL,norm:norm,reveal:reveal,livesAfter:livesAfter,isWin:isWin,isDead:isDead,guess:guess,hitIn:hitIn,pickWord:pickWord};
 """
 
 HANGMAN_UI = r"""

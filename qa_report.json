@@ -1,0 +1,511 @@
+[
+ {
+  "slug": "water-sort",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "reversi",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "game-of-ur",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "higher-lower",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "hanoi",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "stacker",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "blockudoku",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "blackjack",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "pig",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "rush-hour",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "stroop",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "invaders",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "breakout",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "aim",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "kite",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "war",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "akhaemenid-memory",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "emoji-quiz",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "guess-number",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "hokm",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "dodge",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "tic-tac-toe",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "dominoes",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "runner",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "digits",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "mastermind",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "fox-and-hounds",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "math-sprint",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "word-chain",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "clock",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "typing",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "rps",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "plinko",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "chuck-a-luck",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "tripeaks",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "cups",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "sudoku",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "solitaire",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "spider",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "sokoban",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "coin-flip",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "asteroids",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "simon",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "thirty-one",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "memory-grid",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "chess",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "meteor",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "coin-catch",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "proverb",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "flood",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "reaction",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "freecell",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "frogger",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "lotto",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "ludo",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "snakes-ladders",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "snake",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "antonym",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "hangman",
+  "status": "FAIL",
+  "errs": [
+   "PAGEERROR: L.norm is not a function",
+   "PAGEERROR: L.norm is not a function",
+   "PAGEERROR: L.norm is not a function",
+   "PAGEERROR: L.norm is not a function",
+   "PAGEERROR: L.norm is not a function",
+   "PAGEERROR: L.norm is not a function",
+   "PAGEERROR: L.norm is not a function",
+   "PAGEERROR: L.norm is not a function"
+  ]
+ },
+ {
+  "slug": "mancala",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "morris9",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "whack",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "minesweeper",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "battleship",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "backgammon",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "dots-boxes",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "nonogram",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "nim",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "pyramid",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "maze",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "crazy-eights",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "8queens",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "hex",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "anagram",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "wordle",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "word-search",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "video-poker",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "p15",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "pasoor",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "capitals",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "alborz-jump",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "flappy",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "flags",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "pentago",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "gomoku",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "peg",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "pong",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "chomp",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "lights-out",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "slots",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "connect4",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "lcr",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "checkers",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "kakuro",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "quarto-mini",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "wheel",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "golf",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "yahtzee",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "g2048",
+  "status": "PASS",
+  "errs": []
+ },
+ {
+  "slug": "calc24",
+  "status": "PASS",
+  "errs": []
+ }
+]

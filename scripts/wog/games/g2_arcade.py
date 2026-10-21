@@ -36,7 +36,7 @@ bindPad([{k:'ArrowLeft',label:'◀'},{k:'ArrowRight',label:'▶'}]);
 var stars=[],i;for(i=0;i<40;i++)stars.push({x:Math.random()*L.W,y:Math.random()*(L.H-80),a:0.25+Math.random()*0.6});
 $('#hint').textContent='با فلش‌ها یا دکمه‌های لمسی حرکت کن؛ از شهاب‌ها فرار کن، بلور فیروزه‌ای ۲۵+ امتیاز و سپر طلایی ۳ ثانیه محافظت می‌کند. سه برخورد = پایان.';
 function render(){var m,i;
- ctx.fillStyle='#0b1226';ctx.fillRect(0,0,L.W,L.H);
+ var mg=ctx.createLinearGradient(0,0,0,L.H);mg.addColorStop(0,'#0a0e24');mg.addColorStop(.6,'#141031');mg.addColorStop(1,'#221233');ctx.fillStyle=mg;ctx.fillRect(0,0,L.W,L.H);var ng=ctx.createRadialGradient(L.W*.7,110,8,L.W*.7,110,190);ng.addColorStop(0,'rgba(226,109,92,.16)');ng.addColorStop(1,'rgba(226,109,92,0)');ctx.fillStyle=ng;ctx.fillRect(0,0,L.W,L.H);
  ctx.fillStyle='#d9a441';
  for(i=0;i<stars.length;i++){ctx.globalAlpha=stars[i].a;ctx.fillRect(stars[i].x,stars[i].y,2,2)}
  ctx.globalAlpha=1;
@@ -168,7 +168,7 @@ $('#app').appendChild(b1);$('#app').appendChild(b2);
 var keys=keyState(),ps=false;
 $('#hint').textContent='بلوک خودکار می‌لغزد؛ با لمس بوم، دکمه یا Space رهایش کن. هم‌پوشانی با بالای برج عرض بعدی را می‌سازد و چیدمان کامل ۴+ عرض و زنجیره می‌دهد. خطای کامل = پایان.';
 function render(){var i,b;
- ctx.fillStyle='#0b1226';ctx.fillRect(0,0,L.W,440);
+ var stg=ctx.createLinearGradient(0,0,0,440);stg.addColorStop(0,'#0c1128');stg.addColorStop(1,'#160f2e');ctx.fillStyle=stg;ctx.fillRect(0,0,L.W,440);var slg=ctx.createRadialGradient(L.W/2,380,10,L.W/2,380,240);slg.addColorStop(0,'rgba(63,184,175,.15)');slg.addColorStop(1,'rgba(63,184,175,0)');ctx.fillStyle=slg;ctx.fillRect(0,0,L.W,440);var ng=ctx.createRadialGradient(L.W*.7,110,8,L.W*.7,110,190);ng.addColorStop(0,'rgba(226,109,92,.16)');ng.addColorStop(1,'rgba(226,109,92,0)');ctx.fillStyle=ng;ctx.fillRect(0,0,L.W,440);
  var n=s.tower.length,baseY=416,off=Math.max(0,n-14)*BH;
  for(i=0;i<n;i++){b=s.tower[i];var y=baseY-i*BH+off;if(y<-BH)continue;
   ctx.fillStyle=i===n-1?'#d9a441':(i%2?'#2a3c63':'#3fb8af');
@@ -309,7 +309,7 @@ function step(s,dt,target){if(s.over)return s;s.t+=dt;if(s.cd>0)s.cd=Math.max(0,
   else if(s.meT<=0){s.over=true;s.winner='ai'}}
  return s}
 function tension(s){return{me:s.meT,ai:s.aiT}}
-return{newState:newState,step:step,checkCut:checkCut,tension:tension,segIntersect:segIntersect,segDist:segDist,pos:pos,clampP:clampP,AM:AM,AA:AA,AMIN:AMIN,AMAX:AMAX,RMIN:RMIN,RMAX:RMAX,EPS:EPS,KHIT:KHIT}})();
+return{newState:newState,step:step,checkCut:checkCut,tension:tension,segIntersect:segIntersect,segDist:segDist,pos:pos,clampP:clampP,AM:AM,AA:AA,AMIN:AMIN,AMAX:AMAX,RMIN:RMIN,RMAX:RMAX,EPS:EPS,KHIT:KHIT,W:W,H:H}})();
 """
 
 kite_ui = r"""
@@ -327,7 +327,7 @@ $('#hint').textContent='نشانگر را روی بوم حرکت بده (یا ف
 function drawKite(x,y,col){ctx.fillStyle=col;ctx.beginPath();ctx.moveTo(x,y-16);ctx.lineTo(x+11,y);ctx.lineTo(x,y+20);ctx.lineTo(x-11,y);ctx.closePath();ctx.fill();
  ctx.strokeStyle=col;ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(x,y+20);ctx.lineTo(x+3,y+30);ctx.lineTo(x-2,y+38);ctx.stroke()}
 function render(){var mp=L.pos(s.me,L.AM),ap=L.pos(s.ai,L.AA),i;
- ctx.fillStyle='#0b1226';ctx.fillRect(0,0,L.W,500);
+ var ky=ctx.createLinearGradient(0,0,0,500);ky.addColorStop(0,'#274b76');ky.addColorStop(.6,'#4a6a92');ky.addColorStop(1,'#7aa0b8');ctx.fillStyle=ky;ctx.fillRect(0,0,L.W,500);ctx.fillStyle='rgba(255,255,255,.12)';ctx.beginPath();ctx.ellipse(L.W*.2,90,44,11,0,0,6.283);ctx.ellipse(L.W*.28,96,32,8,0,0,6.283);ctx.ellipse(L.W*.75,60,50,12,0,0,6.283);ctx.ellipse(L.W*.84,66,34,9,0,0,6.283);ctx.fill();var slg=ctx.createRadialGradient(L.W/2,430,10,L.W/2,430,240);slg.addColorStop(0,'rgba(63,184,175,.14)');slg.addColorStop(1,'rgba(63,184,175,0)');ctx.fillStyle=slg;ctx.fillRect(0,0,L.W,500);
  ctx.strokeStyle='#1d2b4a';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(0,470);ctx.lineTo(L.W,470);ctx.stroke();
  ctx.strokeStyle='#3fb8af';ctx.beginPath();ctx.moveTo(L.AM.x,L.AM.y);ctx.lineTo(mp.x,mp.y);ctx.stroke();
  ctx.strokeStyle='#e26d5c';ctx.beginPath();ctx.moveTo(L.AA.x,L.AA.y);ctx.lineTo(ap.x,ap.y);ctx.stroke();

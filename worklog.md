@@ -473,3 +473,23 @@ Stage Summary:
 - دکمه «⌂ خانه» در هر ۱۰۰ صفحه (href نسبی ../../index.html)
 - تست منطق: هر بازی جدید WOG_LOGIC خالص + تست واحد (۴۷۹ تست)؛ بازی‌های قدیمی: تست تعاملی مرورگر
 - ابزار بازتولید کامل: scripts/wog/build.py (بیلد + لندینگ + sitemap) و backup/games
+
+---
+Task ID: 5
+Agent: main (Z.ai)
+Task: گرافیک بازی‌ها بر اساس فضا و سبک هر بازی + رفع بازی‌های باگ‌دار (درخواست کاربر)
+
+Work Log:
+- باگ‌یابی: qa_deep (۱۰۰ صفحه، خطاهای JS) → hangman (L.norm نبود) و kite (L.W/L.H اکسپورت نبود) — هر دو در منبع دسته‌ای رفع شد.
+- static_check.mjs نويسه شد: ارزیابی WOG_LOGIC هر بازی در Node + تطبیق L.* با کلیدهای اکسپورت‌شده + بررسی موتورهای لازم — ۱۳ هشدار فقط legacy ها (بدون مارکر؛ طبیعی).
+- کشف نویز FS: pages-site بین دو نسخه نوسان داشت (merge-back جلسه قبل)؛ با rebuild کامل و md5 پایدار شد؛ منابع دسته‌ای سالم‌اند (۴۷۹ تست سبز).
+- Design System v2 در lib.py: تزریق --g1/--g2 (رنگ هویت هر بازی که تعریف شده ولی بلااستفاده بود)، پس‌زمینه چندلایه، نقش گرهی فارسی (SVG data-URI)، صحنه‌های دسته‌ای (cards/board/puzzle/arcade/word/luck)، کارت‌ها/دکمه‌ها/اورلی/توست/بوردها ارتقا یافت.
+- themes.py نويسه شد: ~۵۰ تم اختصاصی (منکالا چوبی، هانوی برنجی، سینس نئون، کشتی جنگی رادار، اور لاریس بابل، سودوکو شسته‌کار، راش‌اور آسفالت، سلات شیشه آزمایشگاهی، اسلاتس کابینت نئون، ...)
+- restyle_legacy.py: ۱۳ بازی قدیمی با همان v2 (متغیر هویت + صحنه + کامپوننت) بازآرایی شدند.
+- art_legacy.py + art_arcade.py + art_fix.py: صحنه‌های canvas (flappy گرگ‌ومیش، runner کویر، kite آسمان روز، frogger موج آب، meteor سحابی، stacker نئون، invaders/asteroids ستاره‌باران، dodge هشدار، plinkو گردو، snake جنگلی با غذای درخشان...).
+- فیکس چیدمان hanoi (برچسب برج‌ها روی نوار کنترل می‌افتاد → margin 38px).
+- SeedGames هر ۱۳ بازی قدیمی از نسخه استایل‌شده همگام شد.
+
+Stage Summary:
+- منبع: scripts/wog/{lib.py,themes.py,restyle_legacy.py,art_legacy.py,art_arcade.py,art_fix.py,static_check.mjs,qa_deep.py,interact_final.py}
+- وضعیت: build ۸۷ + landing سبز؛ ۴۷۹/۴۷۹ تست منطق؛ QA تعاملی نهایی در جریان؛ استقرار پس از سبز شدن QA.

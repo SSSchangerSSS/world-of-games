@@ -256,7 +256,7 @@ function layout() {
   return { top: top, gap: gap, pw: pw };
 }
 function render() {
-  ctx.fillStyle = '#0d1526'; ctx.fillRect(0, 0, W, H);
+  var plg=ctx.createLinearGradient(0,0,0,H);plg.addColorStop(0,'#1c1430');plg.addColorStop(1,'#241636');ctx.fillStyle=plg;ctx.fillRect(0,0,W,H);
   var ly = layout();
   ctx.fillStyle = '#8fa1c7';
   for (var r = 0; r < ROWS; r++) for (var c = 0; c <= r; c++) {
@@ -267,7 +267,7 @@ function render() {
   for (var s = 0; s < slots; s++) {
     ctx.fillStyle = 'rgba(217,164,65,' + (0.25 + 0.5 * (1 - Math.abs(s - (slots - 1) / 2) / (slots / 2))) + ')';
     ctx.fillRect(s * sw, H - 40, sw - 2, 30);
-    ctx.fillStyle = '#0d1526'; ctx.font = 'bold 11px Vazirmatn,Tahoma'; ctx.textAlign = 'center';
+    ctx.fillStyle = 'rgba(255,225,160,.9)'; ctx.font = 'bold 11px Vazirmatn,Tahoma'; ctx.textAlign = 'center';
     ctx.fillText(slots[s] + '×', s * sw + sw / 2 - 1, H - 21);
   }
   balls.forEach(function (b) {

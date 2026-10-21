@@ -133,7 +133,7 @@ $('#hint').textContent = 'اول روی برج مبدأ بزن، بعد روی �
 """
 
 hanoi_css = r"""
-.h-wrap{display:flex;justify-content:center;gap:16px;margin:20px 0 10px}
+.h-wrap{display:flex;justify-content:center;gap:16px;margin:20px 0 38px}
 .h-col{position:relative;width:108px;height:238px;background:#14203a;border:2px solid #223252;border-radius:12px;cursor:pointer;touch-action:manipulation}
 .h-col.h-sel{border-color:#d9a441;box-shadow:0 0 0 3px rgba(217,164,65,.25)}
 .h-base{position:absolute;bottom:10px;left:6px;right:6px;height:8px;border-radius:4px;background:#3fb8af}

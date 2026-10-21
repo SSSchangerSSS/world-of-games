@@ -50,7 +50,7 @@ bindPad([{k:'ArrowLeft',label:'◀'},{k:'ArrowRight',label:'▶'},{k:'ArrowUp',l
 $('#hint').textContent='چپ/راست چرخش، بالا پیشران، فاصله شلیک؛ سیارک بزرگ با هر شلیک به دو تکه کوچک‌تر می‌شکند.';
 function newGame(){s=L.newState(Math.random);ended=false;rep();}
 function rep(){hud('امتیاز '+fa(s.score)+' · رکورد '+fa(Math.max(best,s.score))+' · جان '+fa(s.lives)+' · موج '+fa(s.wave));}
-function draw(){ctx.fillStyle='#0b1220';ctx.fillRect(0,0,480,640);var i,a;
+function draw(){var asg=ctx.createLinearGradient(0,0,0,640);asg.addColorStop(0,'#070a18');asg.addColorStop(1,'#10142a');ctx.fillStyle=asg;ctx.fillRect(0,0,480,640);ctx.fillStyle='rgba(255,255,255,.22)';for(var as2=0;as2<40;as2++){ctx.fillRect((as2*113)%480,(as2*61)%640,1.3,1.3);}var i,a;
  ctx.lineWidth=2;ctx.strokeStyle='#3fb8af';
  for(i=0;i<s.asteroids.length;i++){a=s.asteroids[i];ctx.beginPath();ctx.arc(a.x,a.y,a.r,0,6.2832);ctx.stroke();}
  ctx.fillStyle='#d9a441';
@@ -176,7 +176,7 @@ bindPad([{k:'ArrowLeft',label:'◀'},{k:'ArrowRight',label:'▶'},{k:'Space',lab
 $('#hint').textContent='صف بیگانگان را نابود کن؛ به لبه که برسند یک ردیف پایین می‌آیند و با رسیدن به تو می‌بازی.';
 function newGame(){s=L.newState(1,Math.random);ended=false;rep();}
 function rep(){hud('امتیاز '+fa(s.score)+' · رکورد '+fa(Math.max(best,s.score))+' · جان '+fa(s.lives)+' · موج '+fa(s.wave));}
-function draw(){ctx.fillStyle='#0b1220';ctx.fillRect(0,0,360,560);var i,a;
+function draw(){var ivg=ctx.createLinearGradient(0,0,0,560);ivg.addColorStop(0,'#080c1c');ivg.addColorStop(1,'#0e1a26');ctx.fillStyle=ivg;ctx.fillRect(0,0,360,560);ctx.fillStyle='rgba(255,255,255,.2)';for(var iv2=0;iv2<26;iv2++){ctx.fillRect((iv2*97)%360,(iv2*53)%560,1.2,1.2);}var i,a;
  ctx.fillStyle='#3fb8af';
  for(i=0;i<s.ali.length;i++){a=s.ali[i];if(a.a)ctx.fillRect(a.x-12,a.y-7,24,14);}
  ctx.fillStyle='#e26d5c';
@@ -316,7 +316,7 @@ cv.cv.addEventListener('pointerup',function(){pt.on=false;});
 $('#hint').textContent='با کلیدها، دکمه‌ها یا کشیدن انگشت فرار کن؛ هر ثانیه ۱۰ امتیاز و توپ‌ها بیشتر می‌شوند. ۲ ثانیه سپر داری.';
 function newGame(){s=L.newState(Math.random);ended=false;rep();}
 function rep(){hud('امتیاز '+fa(s.score)+' · رکورد '+fa(Math.max(best,s.score))+' · توپ‌ها '+fa(s.balls.length)+(s.grace>0?' · سپر '+fa(Math.ceil(s.grace)):''));}
-function draw(){ctx.fillStyle='#0b1220';ctx.fillRect(0,0,360,480);var i,b;
+function draw(){var ddg=ctx.createLinearGradient(0,0,0,480);ddg.addColorStop(0,'#1a0c14');ddg.addColorStop(1,'#0e101e');ctx.fillStyle=ddg;ctx.fillRect(0,0,360,480);var i,b;
  ctx.fillStyle='#3fb8af';
  for(i=0;i<s.balls.length;i++){b=s.balls[i];ctx.beginPath();ctx.arc(b.x,b.y,b.r,0,6.2832);ctx.fill();}
  if(!s.over){if(s.grace>0){ctx.strokeStyle='#67b98a';ctx.lineWidth=2;ctx.strokeRect(s.px-15,s.py-15,30,30);}
