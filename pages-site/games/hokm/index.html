@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<title>حکم | دنیای بازی‌ها</title>
+<meta name="description" content="حکم چهارنفره تیمی؛ تعیین حاکم با آک، تبعیت از خال و گرفتن ترفندها.">
+<style>*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+@font-face{font-family:Vazirmatn;src:url(../../fonts/Vazirmatn-Regular.woff2) format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:Vazirmatn;src:url(../../fonts/Vazirmatn-Bold.woff2) format('woff2');font-weight:700;font-display:swap}
+body{font-family:Vazirmatn,Tahoma,sans-serif;background:linear-gradient(160deg,#101a2e,#0b1220);color:#f3ead8;min-height:100dvh;user-select:none;display:flex;flex-direction:column;align-items:center;padding:12px;padding-top:56px;overflow-x:hidden}
+a.wog-home{position:fixed;top:10px;inset-inline-start:12px;z-index:99;background:rgba(217,164,65,.12);border:1px solid rgba(217,164,65,.45);color:#e8c073;text-decoration:none;padding:6px 12px;border-radius:10px;font-size:.85rem;font-weight:700}
+a.wog-home:hover{background:rgba(217,164,65,.3)}
+header{text-align:center;margin-bottom:8px}
+h1{font-size:1.2rem;color:#d9a441}
+.hud{color:#a8b3c9;font-size:.9rem;margin-top:2px;min-height:1.4em}
+.hud b{color:#e8c073}
+button,.wbtn{font-family:inherit;background:#d9a441;color:#221806;border:0;border-radius:10px;font-weight:700;padding:8px 16px;font-size:.95rem;cursor:pointer;touch-action:manipulation}
+button.sec,.wbtn.sec{background:#14203a;color:#f3ead8;border:1px solid rgba(217,164,65,.35)}
+button:disabled{opacity:.45;cursor:default}
+#hint{color:#a8b3c9;font-size:.85rem;margin-top:10px;text-align:center;max-width:680px;line-height:1.9}
+.wpanel{background:#14203a;border:1px solid rgba(217,164,65,.35);border-radius:14px;padding:14px}
+.wrow{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;align-items:center;margin:8px 0}
+.wovl{position:fixed;inset:0;background:rgba(5,9,18,.85);display:flex;align-items:center;justify-content:center;z-index:90}
+.wovl .box{background:#14203a;border:2px solid rgba(217,164,65,.5);border-radius:16px;padding:22px 28px;text-align:center;max-width:88vw}
+.wovl h2{color:#e8c073;margin-bottom:8px}
+.wovl p{color:#a8b3c9;margin-bottom:14px}
+.wog-toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#14203a;border:1px solid rgba(217,164,65,.5);color:#f3ead8;padding:8px 18px;border-radius:12px;opacity:0;transition:.25s;z-index:95;pointer-events:none;font-size:.9rem}
+.wog-toast.on{opacity:1}
+.wgrid{display:grid;border:2px solid rgba(217,164,65,.5);border-radius:10px;overflow:hidden;direction:ltr;touch-action:manipulation}
+.wgrid .cell{display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative}
+.cell.light{background:#e8dcc0}.cell.dark{background:#41527a}
+.wcard{display:inline-flex;flex-direction:column;justify-content:space-between;width:52px;height:74px;background:#f6efe0;color:#1c2438;border-radius:7px;padding:3px 5px;font-weight:700;font-size:.9rem;line-height:1;box-shadow:0 2px 5px rgba(0,0,0,.45);cursor:pointer;touch-action:manipulation;flex:none}
+.wcard.red{color:#c0392b}
+.wcard.back{background:linear-gradient(135deg,#2c3a5e,#41527a);border:2px solid rgba(217,164,65,.5)}
+.wcard.back:before{content:'❋';color:rgba(232,192,115,.55);align-self:center;font-size:1.3rem}
+.wcard.small{width:38px;height:54px;font-size:.75rem;border-radius:5px}
+.wcard.tiny{width:30px;height:44px;font-size:.65rem;border-radius:4px;padding:2px 3px}
+.wcard.sel{outline:3px solid #e8c073;transform:translateY(-6px)}
+.wcard .cn{font-size:.7rem;opacity:.85}.wcard .cv{align-self:flex-start}
+.wcard.back .cn,.wcard.back .cv{display:none}
+.wdpad{display:none;grid-template-columns:repeat(3,58px);grid-auto-rows:50px;gap:6px;margin-top:12px}
+.wdpad.on{display:grid}
+.wdpad button{font-size:1.15rem}
+@media(pointer:coarse){.wdpad{display:grid}}
+canvas{touch-action:none;border-radius:10px;border:2px solid rgba(217,164,65,.35);background:#0d1526}
+.hk-row{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;align-items:center;margin:10px 0}
+.hk-btn{padding:7px 16px;border-radius:9px;border:1px solid #567;cursor:pointer;font-family:inherit;background:#fff}
+.hk-suit{font-size:18px;padding:10px 18px;border-radius:10px;border:2px solid #8899aa;cursor:pointer;background:#fff;font-family:inherit}
+.hk-dim{opacity:.4}
+.hk-ai-box{display:flex;align-items:center;gap:4px;font-size:13px;border:1px solid #ccd;border-radius:8px;padding:4px 8px}
+.hk-slot{min-width:72px;min-height:98px;border:1px dashed #99a;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:12px;padding:4px;gap:4px}
+.hk-hand{min-height:102px}
+.hk-info{font-size:15px}
+</style>
+</head>
+<body>
+<a class="wog-home" href="../../index.html">⌂ خانه</a>
+<header><h1>❋ حکم ❋</h1><div class="hud" id="hud"></div></header>
+<div id="app"></div>
+<p id="hint"></p>
+<div class="wog-toast" id="wog-toast"></div>
+<script>
+(function () {
+'use strict';
+var store = {
+  get: function (k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+  set: function (k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+};
+/*WOG_LOGIC_START*/
+function hShuffle(a,rng){rng=rng||Math.random;for(var i=a.length-1;i>0;i--){var j=Math.floor(rng()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+function hDeck(){var d=[],s,r;for(s=0;s<4;s++)for(r=1;r<=13;r++)d.push({s:s,r:r});return d;}
+function hV(r){return r===1?14:r;}
+function hT(p){return p%2;}
+function hNewGame(rng){
+  rng=rng||Math.random;
+  var st={hands:[[],[],[],[]],deck:[],trick:[],turn:0,dealer:Math.floor(rng()*4),hokm:-1,hakam:-1,phase:'hokm',roundTricks:[0,0],trickNo:0,scores:[0,0],history:[],matchOver:false,roundWinner:-1,_rng:rng};
+  hDeal5(st);
+  return st;
+}
+function hDeal5(st){
+  var rng=st._rng||Math.random,ok=false,tries=0,d,i,j;
+  do{
+    d=hShuffle(hDeck(),rng);
+    for(i=0;i<4;i++)st.hands[i]=d.slice(i*5,i*5+5);
+    st.deck=d.slice(20);
+    ok=false;
+    for(i=0;i<4;i++){for(j=0;j<5;j++){if(st.hands[i][j].r===1){ok=true;break;}}if(ok)break;}
+    tries++;
+  }while(!ok&&tries<40);
+}
+function hHakam(st){
+  for(var i=0;i<4;i++){
+    var p=(st.dealer+1+i)%4;
+    for(var j=0;j<st.hands[p].length;j++)if(st.hands[p][j].r===1)return p;
+  }
+  return (st.dealer+1)%4;
+}
+function hAiHokm(st,pi){
+  var cnt=[0,0,0,0],i;
+  for(i=0;i<st.hands[pi].length;i++)cnt[st.hands[pi][i].s]++;
+  var b=0;
+  for(i=1;i<4;i++)if(cnt[i]>cnt[b])b=i;
+  return b;
+}
+function hDealRest(st,suit){
+  st.hokm=suit;
+  for(var i=0;i<4;i++){
+    var more=st.deck.splice(0,8);
+    for(var j=0;j<more.length;j++)st.hands[i].push(more[j]);
+  }
+  if(st.hakam<0)st.hakam=hHakam(st);
+  st.phase='play';st.turn=st.hakam;
+}
+function hLegal(st,pi){
+  if(st.phase!=='play')return [];
+  var hand=st.hands[pi],out=[],i;
+  if(!st.trick.length)return hand.slice();
+  var led=st.trick[0].c.s;
+  for(i=0;i<hand.length;i++)if(hand[i].s===led)out.push(hand[i]);
+  return out.length?out:hand.slice();
+}
+function hWinner(trick,hokm){
+  var best=trick[0],i;
+  for(i=1;i<trick.length;i++){
+    var bc=best.c,ec=trick[i].c;
+    if(ec.s===hokm&&bc.s!==hokm)best=trick[i];
+    else if(bc.s===ec.s&&hV(ec.r)>hV(bc.r))best=trick[i];
+  }
+  return best.p;
+}
+function hPlay(st,pi,card){
+  if(st.phase!=='play')throw new Error('round not active');
+  if(pi!==st.turn)throw new Error('not your turn');
+  var legal=hLegal(st,pi),idx=-1,ok=false,i;
+  for(i=0;i<st.hands[pi].length;i++){
+    if(st.hands[pi][i].s===card.s&&st.hands[pi][i].r===card.r){idx=i;break;}
+  }
+  if(idx<0)throw new Error('card not in hand');
+  for(i=0;i<legal.length;i++){
+    if(legal[i].s===card.s&&legal[i].r===card.r){ok=true;break;}
+  }
+  if(!ok)throw new Error('must follow suit');
+  st.hands[pi].splice(idx,1);
+  st.trick.push({p:pi,c:{s:card.s,r:card.r}});
+  if(st.trick.length===4){
+    var w=hWinner(st.trick,st.hokm),t=hT(w);
+    st.roundTricks[t]++;st.trickNo++;
+    if(st.roundTricks[t]>=7&&st.roundWinner<0)st.roundWinner=t;
+    st.trick=[];st.turn=w;
+  }else{
+    st.turn=(pi+1)%4;
+  }
+}
+function hOver(st){return st.trickNo>=13;}
+function hPoints(st){
+  if(st.trickNo<13)return st;
+  var w=st.roundTricks[0]>=7?0:1,pts=st.roundTricks[1-w]===0?2:1;
+  st.scores[w]+=pts;
+  st.history.push({hokm:st.hokm,tricks:[st.roundTricks[0],st.roundTricks[1]],winner:w,points:pts});
+  st.roundWinner=-1;
+  if(st.scores[w]>=7){st.matchOver=true;st.phase='matchover';return st;}
+  st.dealer=(st.dealer+1)%4;
+  st.hokm=-1;st.hakam=-1;st.phase='hokm';st.trick=[];st.trickNo=0;st.roundTricks=[0,0];
+  st.turn=(st.dealer+1)%4;
+  hDeal5(st);
+  return st;
+}
+function hMn(a,f){var b=a[0];for(var i=1;i<a.length;i++)if(f(a[i])<f(b))b=a[i];return b;}
+function hMx(a,f){var b=a[0];for(var i=1;i<a.length;i++)if(f(a[i])>f(b))b=a[i];return b;}
+function hAi(st,pi){
+  var legal=hLegal(st,pi),i,i2;
+  if(!legal.length)return null;
+  if(!st.trick.length){
+    var cnt=[0,0,0,0],best=0,sc=[];
+    for(i=0;i<legal.length;i++)cnt[legal[i].s]++;
+    for(i=1;i<4;i++)if(cnt[i]>cnt[best])best=i;
+    for(i=0;i<legal.length;i++)if(legal[i].s===best)sc.push(legal[i]);
+    if(cnt[best]>=3)return hMx(sc,function(c){return hV(c.r);});
+    return hMn(legal,function(c){return hV(c.r);});
+  }
+  var led=st.trick[0].c.s,w=hWinner(st.trick,st.hokm),pw=hT(w)===hT(pi),wc=null;
+  for(i=0;i<st.trick.length;i++)if(st.trick[i].p===w)wc=st.trick[i].c;
+  var follow=[];
+  for(i=0;i<legal.length;i++)if(legal[i].s===led)follow.push(legal[i]);
+  if(follow.length){
+    var beat=[];
+    if(wc.s===led)for(i2=0;i2<follow.length;i2++)if(hV(follow[i2].r)>hV(wc.r))beat.push(follow[i2]);
+    if(!pw&&beat.length)return hMn(beat,function(c){return hV(c.r);});
+    return hMn(follow,function(c){return hV(c.r);});
+  }
+  var tr=[];
+  for(i=0;i<legal.length;i++)if(legal[i].s===st.hokm)tr.push(legal[i]);
+  if(!pw&&tr.length){
+    var bt=[];
+    for(i2=0;i2<tr.length;i2++)if(wc.s!==st.hokm||hV(tr[i2].r)>hV(wc.r))bt.push(tr[i2]);
+    if(bt.length)return hMn(bt,function(c){return hV(c.r);});
+  }
+  return hMn(legal,function(c){return hV(c.r);});
+}
+var WOG_LOGIC={
+  newGame:hNewGame,
+  determineHakam:hHakam,
+  aiPickHokm:hAiHokm,
+  dealRest:hDealRest,
+  legalPlays:hLegal,
+  playCard:hPlay,
+  trickWinner:hWinner,
+  aiChoose:hAi,
+  isRoundOver:hOver,
+  applyRoundPoints:hPoints
+};
+/*WOG_LOGIC_END*/
+var L = WOG_LOGIC;
+function $(s){return document.querySelector(s)}
+function $$(s){return Array.prototype.slice.call(document.querySelectorAll(s))}
+function ce(tag,cls,html){var e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;return e}
+var FA_D='۰۱۲۳۴۵۶۷۸۹';
+function fa(n){return String(n).replace(/\d/g,function(d){return FA_D[+d]})}
+function shuffle(a,rng){a=a.slice();rng=rng||Math.random;for(var i=a.length-1;i>0;i--){var j=Math.floor(rng()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a}
+function rint(a,b,rng){rng=rng||Math.random;return a+Math.floor(rng()*(b-a+1))}
+function pick(arr,rng){rng=rng||Math.random;return arr[Math.floor(rng()*arr.length)]}
+function clamp(v,a,b){return v<a?a:v>b?b:v}
+var _toastT=0;
+function toast(msg,ms){var t=$('#wog-toast');if(!t)return;t.textContent=msg;t.classList.add('on');clearTimeout(_toastT);_toastT=setTimeout(function(){t.classList.remove('on')},ms||1800)}
+function hud(html){var h=$('#hud');if(h)h.innerHTML=html}
+function ovl(title,sub,btn,cb){var o=ce('div','wovl');var b=ce('div','box');b.appendChild(ce('h2',null,title));if(sub)b.appendChild(ce('p',null,sub));var bt=ce('button',null,btn);bt.setAttribute('data-smoke','');bt.addEventListener('click',function(){o.remove();cb&&cb()});b.appendChild(bt);o.appendChild(b);document.body.appendChild(o);return o}
+function bestOf(key,val){var b=parseInt(store.get(key)||'0',10)||0;if(val>b)store.set(key,String(val));return Math.max(b,val)}
+function storeBest(key){return parseInt(store.get(key)||'0',10)||0}
+var SUITS='♠♥♦♣';
+function makeDeck(){var d=[];for(var s=0;s<4;s++)for(var r=1;r<=13;r++)d.push({s:s,r:r});return d}
+function isRed(c){return c.s===1||c.s===2}
+function suitOf(c){return SUITS[c.s]}
+function rankShort(r){return r===1?'A':r===11?'J':r===12?'Q':r===13?'K':String(r)}
+function rankFa(r){return r===1?'آس':r===11?'سرباز':r===12?'بی‌بی':r===13?'شاه':fa(r)}
+function cardEl(c,faceUp,size){var e=ce('div','wcard'+(faceUp?(isRed(c)?' red':''):' back')+(size?' '+size:''));if(faceUp)e.innerHTML='<span class="cn">'+rankShort(c.r)+suitOf(c)+'</span><span class="cv">'+suitOf(c)+'</span>';return e}
+function cardStack(el,cs,faceUp,size){cs.forEach(function(c){el.appendChild(cardEl(c,faceUp,size))});return el}
+
+var st=null;
+var SN=['پیک','دل','خشت','گشنیز'];
+var PN=['شما','حریف راست','یار شما','حریف چپ'];
+function newMatch(){st=L.newGame();phaseHokm();}
+function phaseHokm(){
+  st.hakam=L.determineHakam(st);
+  if(st.hakam===0){render();return;}
+  L.dealRest(st,L.aiPickHokm(st,st.hakam));
+  render();
+  if(st.turn!==0)setTimeout(aiStep,500);
+}
+function pickSuit(su){
+  if(!st||st.phase!=='hokm')return;
+  L.dealRest(st,su);
+  render();
+  if(st.turn!==0)setTimeout(aiStep,500);
+}
+function tapCard(c){
+  if(st.phase!=='play'||st.turn!==0)return;
+  var legal=L.legalPlays(st,0),ok=false,i;
+  for(i=0;i<legal.length;i++)if(legal[i].s===c.s&&legal[i].r===c.r){ok=true;break;}
+  if(!ok){toast('باید خال '+SN[st.trick[0].c.s]+' بازی کنید');return;}
+  L.playCard(st,0,c);
+  post();
+}
+function post(){
+  render();
+  if(L.isRoundOver(st)){setTimeout(roundEnd,800);return;}
+  if(st.turn!==0)setTimeout(aiStep,430);
+}
+function aiStep(){
+  if(st.phase!=='play'||st.turn===0){render();return;}
+  var before=st.trick.length;
+  var c=L.aiChoose(st,st.turn);
+  if(c)L.playCard(st,st.turn,c);
+  render();
+  if(L.isRoundOver(st)){setTimeout(roundEnd,850);return;}
+  setTimeout(aiStep,(before===3&&st.trick.length===0)?950:430);
+}
+function roundEnd(){
+  L.applyRoundPoints(st);
+  render();
+  if(st.matchOver){
+    ovl(st.scores[0]>=7?'برد تیم شما!':'برد تیم حریف','نتیجه نهایی: تیم شما '+fa(st.scores[0])+' - حریف '+fa(st.scores[1]),'بازی جدید',newMatch);
+    return;
+  }
+  toast('امتیاز این دست ثبت شد؛ دست بعد...');
+  phaseHokm();
+}
+function render(){
+  if(!st)return;
+  var app=$('#app');app.innerHTML='';
+  var i,q;
+  hud('دور '+fa(st.history.length+1)+' | امتیاز: ما '+fa(st.scores[0])+' - حریف '+fa(st.scores[1])+' | ترفندها: '+fa(st.roundTricks[0])+' - '+fa(st.roundTricks[1])+' | حکم: '+(st.hokm>=0?SUITS[st.hokm]:'؟'));
+  $('#hint').textContent=st.phase==='hokm'?(st.hakam===0?'شما حاکم هستید؛ خال حکم را انتخاب کنید':'در حال تعیین حاکم...'):(st.turn===0?'نوبت شماست':'نوبت '+PN[st.turn]);
+  var nb=ce('button','hk-btn','بازی جدید');
+  nb.setAttribute('data-smoke','new');nb.onclick=newMatch;
+  app.appendChild(nb);
+  if(st.phase==='hokm'){
+    var hd=ce('div','hk-row','');
+    for(i=0;i<st.hands[0].length;i++)hd.appendChild(cardEl(st.hands[0][i],true));
+    app.appendChild(hd);
+    if(st.hakam===0){
+      var pk=ce('div','hk-row','');
+      for(i=0;i<4;i++){
+        (function(su){
+          var b=ce('button','hk-suit',SUITS[su]+' '+SN[su]);
+          b.setAttribute('data-smoke','suit'+su);
+          b.onclick=function(){pickSuit(su);};
+          pk.appendChild(b);
+        })(i);
+      }
+      app.appendChild(pk);
+    }
+    return;
+  }
+  if(st.phase==='matchover'){
+    app.appendChild(ce('div','hk-row hk-info','بازی تمام شد'));
+    return;
+  }
+  var opp=ce('div','hk-row','');
+  for(q=1;q<4;q++){
+    var box=ce('div','hk-ai-box',PN[q]+' ('+fa(st.hands[q].length)+') ');
+    box.appendChild(cardEl({s:0,r:2},false,'tiny'));
+    opp.appendChild(box);
+  }
+  app.appendChild(opp);
+  var tr=ce('div','hk-row','');
+  var slots=[null,null,null,null];
+  for(i=0;i<st.trick.length;i++)slots[st.trick[i].p]=st.trick[i].c;
+  for(i=0;i<4;i++){
+    var cell=ce('div','hk-slot',PN[i]);
+    if(slots[i])cell.appendChild(cardEl(slots[i],true));
+    tr.appendChild(cell);
+  }
+  app.appendChild(tr);
+  var hd2=ce('div','hk-row hk-hand','');
+  var legal=st.turn===0?L.legalPlays(st,0):[];
+  for(i=0;i<st.hands[0].length;i++){
+    (function(c){
+      var e=cardEl(c,true),isL=false,q2;
+      for(q2=0;q2<legal.length;q2++)if(legal[q2].s===c.s&&legal[q2].r===c.r){isL=true;break;}
+      if(isL){
+        e.setAttribute('data-smoke','play');
+        e.onclick=function(){tapCard(c);};
+      }else{
+        e.classList.add('hk-dim');
+      }
+      hd2.appendChild(e);
+    })(st.hands[0][i]);
+  }
+  app.appendChild(hd2);
+}
+newMatch();
+})();
+</script>
+</body>
+</html>

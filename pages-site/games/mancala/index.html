@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<title>منقله | دنیای بازی‌ها</title>
+<meta name="description" content="منقلهٔ کلاسیک با ۱۲ گودال و ۴۸ دانه؛ دانه‌ها را در جهت پادساعتگرد بپاش، با افتادن آخرین دانه در انبارت نوبت اضافه بگیر و دانه‌های حریف را بگیر. بیشترین دانه برنده است.">
+<style>*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+@font-face{font-family:Vazirmatn;src:url(../../fonts/Vazirmatn-Regular.woff2) format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:Vazirmatn;src:url(../../fonts/Vazirmatn-Bold.woff2) format('woff2');font-weight:700;font-display:swap}
+body{font-family:Vazirmatn,Tahoma,sans-serif;background:linear-gradient(160deg,#101a2e,#0b1220);color:#f3ead8;min-height:100dvh;user-select:none;display:flex;flex-direction:column;align-items:center;padding:12px;padding-top:56px;overflow-x:hidden}
+a.wog-home{position:fixed;top:10px;inset-inline-start:12px;z-index:99;background:rgba(217,164,65,.12);border:1px solid rgba(217,164,65,.45);color:#e8c073;text-decoration:none;padding:6px 12px;border-radius:10px;font-size:.85rem;font-weight:700}
+a.wog-home:hover{background:rgba(217,164,65,.3)}
+header{text-align:center;margin-bottom:8px}
+h1{font-size:1.2rem;color:#d9a441}
+.hud{color:#a8b3c9;font-size:.9rem;margin-top:2px;min-height:1.4em}
+.hud b{color:#e8c073}
+button,.wbtn{font-family:inherit;background:#d9a441;color:#221806;border:0;border-radius:10px;font-weight:700;padding:8px 16px;font-size:.95rem;cursor:pointer;touch-action:manipulation}
+button.sec,.wbtn.sec{background:#14203a;color:#f3ead8;border:1px solid rgba(217,164,65,.35)}
+button:disabled{opacity:.45;cursor:default}
+#hint{color:#a8b3c9;font-size:.85rem;margin-top:10px;text-align:center;max-width:680px;line-height:1.9}
+.wpanel{background:#14203a;border:1px solid rgba(217,164,65,.35);border-radius:14px;padding:14px}
+.wrow{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;align-items:center;margin:8px 0}
+.wovl{position:fixed;inset:0;background:rgba(5,9,18,.85);display:flex;align-items:center;justify-content:center;z-index:90}
+.wovl .box{background:#14203a;border:2px solid rgba(217,164,65,.5);border-radius:16px;padding:22px 28px;text-align:center;max-width:88vw}
+.wovl h2{color:#e8c073;margin-bottom:8px}
+.wovl p{color:#a8b3c9;margin-bottom:14px}
+.wog-toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#14203a;border:1px solid rgba(217,164,65,.5);color:#f3ead8;padding:8px 18px;border-radius:12px;opacity:0;transition:.25s;z-index:95;pointer-events:none;font-size:.9rem}
+.wog-toast.on{opacity:1}
+.wgrid{display:grid;border:2px solid rgba(217,164,65,.5);border-radius:10px;overflow:hidden;direction:ltr;touch-action:manipulation}
+.wgrid .cell{display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative}
+.cell.light{background:#e8dcc0}.cell.dark{background:#41527a}
+.wcard{display:inline-flex;flex-direction:column;justify-content:space-between;width:52px;height:74px;background:#f6efe0;color:#1c2438;border-radius:7px;padding:3px 5px;font-weight:700;font-size:.9rem;line-height:1;box-shadow:0 2px 5px rgba(0,0,0,.45);cursor:pointer;touch-action:manipulation;flex:none}
+.wcard.red{color:#c0392b}
+.wcard.back{background:linear-gradient(135deg,#2c3a5e,#41527a);border:2px solid rgba(217,164,65,.5)}
+.wcard.back:before{content:'❋';color:rgba(232,192,115,.55);align-self:center;font-size:1.3rem}
+.wcard.small{width:38px;height:54px;font-size:.75rem;border-radius:5px}
+.wcard.tiny{width:30px;height:44px;font-size:.65rem;border-radius:4px;padding:2px 3px}
+.wcard.sel{outline:3px solid #e8c073;transform:translateY(-6px)}
+.wcard .cn{font-size:.7rem;opacity:.85}.wcard .cv{align-self:flex-start}
+.wcard.back .cn,.wcard.back .cv{display:none}
+.wdpad{display:none;grid-template-columns:repeat(3,58px);grid-auto-rows:50px;gap:6px;margin-top:12px}
+.wdpad.on{display:grid}
+.wdpad button{font-size:1.15rem}
+@media(pointer:coarse){.wdpad{display:grid}}
+canvas{touch-action:none;border-radius:10px;border:2px solid rgba(217,164,65,.35);background:#0d1526}
+.mboard{max-width:560px;margin:0 auto;background:#14203a;border:1px solid #2a3a5c;border-radius:16px;padding:12px}
+.plab{text-align:center;font-size:12px;color:#8fa3c8;margin:4px 0}
+.mrow{display:flex;justify-content:center;gap:8px;margin:8px 0;align-items:center}
+.pit{width:52px;min-height:72px;border-radius:12px;background:#0f1a33;border:1px solid #2a3a5c;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:4px;touch-action:manipulation}
+.pit.clickable{border-color:#d9a441;cursor:pointer;box-shadow:0 0 0 2px rgba(217,164,65,.25)}
+.store{width:58px;min-height:150px;border-radius:14px;background:#0f1a33;border:2px solid #3fb8af;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;margin:0 6px}
+.cnt{font-size:18px;font-weight:700;color:#e8eefc}
+.store .cnt{color:#3fb8af;font-size:20px}
+.spips{display:flex;flex-wrap:wrap;gap:3px;justify-content:center;max-width:44px}
+.seed{width:7px;height:7px;border-radius:50%;background:#d9a441;display:inline-block}
+button{font-family:inherit}
+.newbtn{display:block;margin:16px auto 0;min-height:44px;padding:0 22px;border-radius:12px;border:1px solid #d9a441;background:transparent;color:#d9a441;font-size:15px;cursor:pointer;touch-action:manipulation}
+</style>
+</head>
+<body>
+<a class="wog-home" href="../../index.html">⌂ خانه</a>
+<header><h1>❋ منقله ❋</h1><div class="hud" id="hud"></div></header>
+<div id="app"></div>
+<p id="hint"></p>
+<div class="wog-toast" id="wog-toast"></div>
+<script>
+(function () {
+'use strict';
+var store = {
+  get: function (k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+  set: function (k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+};
+/*WOG_LOGIC_START*/
+function mgLegal(st,pl){var a=pl===0?0:7,r=[],i;for(i=a;i<a+6;i++)if(st.p[i]>0)r.push(i);return r;}
+function mgEmpty(st,pl){var a=pl===0?0:7,s=0,i;for(i=a;i<a+6;i++)s+=st.p[i];return s===0;}
+function mgFinish(st){var pl,i,a,s;for(pl=0;pl<2;pl++){a=pl===0?0:7;s=0;for(i=a;i<a+6;i++){s+=st.p[i];st.p[i]=0;}st.p[pl===0?6:13]+=s;}st.over=true;}
+function mgSow(st,pit){
+  var pl=st.turn;
+  if(st.over||pit<0||pit>13||mgLegal(st,pl).indexOf(pit)<0)return null;
+  var p=st.p,my=pl===0?6:13,os=pl===0?13:6,hand=p[pit],extra=false,cap=0;
+  p[pit]=0;
+  while(hand>0){
+    pit=(pit+1)%14;
+    if(pit===os)continue;
+    p[pit]++;hand--;
+    if(hand===0){
+      if(pit===my)extra=true;
+      else if(pl===0?pit<6:pit>6){
+        if(p[pit]===1){var op=12-pit;
+          if(p[op]>0){cap=p[op]+1;p[my]+=cap;p[op]=0;p[pit]=0;}}
+      }
+    }
+  }
+  if(mgEmpty(st,0)||mgEmpty(st,1))mgFinish(st);
+  else if(!extra)st.turn=1-pl;
+  return{extra:extra,captured:cap};
+}
+var WOG_LOGIC={
+initial:function(){var p=[],i;for(i=0;i<14;i++)p[i]=(i===6||i===13)?0:4;return{p:p,turn:0,over:false};},
+legalPits:mgLegal,
+sideEmpty:mgEmpty,
+finishGame:mgFinish,
+sow:mgSow,
+winner:function(st){if(!st.over)return -2;if(st.p[6]>st.p[13])return 0;if(st.p[13]>st.p[6])return 1;return -1;},
+aiMove:function(st,rng){
+  var pl=st.turn,my=pl===0?6:13,os=pl===0?13:6,pits=mgLegal(st,pl);
+  if(!pits.length)return null;
+  function cp(s){return{p:s.p.slice(),turn:s.turn,over:s.over};}
+  var cands=[],best=-1e9,i;
+  for(i=0;i<pits.length;i++){
+    var s1=cp(st),r=mgSow(s1,pits[i]);
+    if(!r)continue;
+    var sc;
+    if(s1.over)sc=s1.p[my]-s1.p[os];
+    else{
+      var op=1-pl,ol=mgLegal(s1,op),bv=-1e9,bs=null,j;
+      for(j=0;j<ol.length;j++){var s2=cp(s1);s2.turn=op;mgSow(s2,ol[j]);
+        var d=s2.p[os]-s2.p[my];if(d>bv){bv=d;bs=s2;}}
+      sc=bs?(bs.p[my]-bs.p[os]):(s1.p[my]-s1.p[os]);
+    }
+    sc+=0.5*(r.extra?1:0)+0.4*r.captured;
+    if(sc>best+1e-9){best=sc;cands=[pits[i]];}
+    else if(sc>best-1e-9)cands.push(pits[i]);
+  }
+  if(!cands.length)return null;
+  var pick=cands[0];
+  if(rng&&cands.length>1)pick=cands[Math.floor(rng()*cands.length)];
+  return{pit:pick,score:best};
+}};
+/*WOG_LOGIC_END*/
+var L = WOG_LOGIC;
+function $(s){return document.querySelector(s)}
+function $$(s){return Array.prototype.slice.call(document.querySelectorAll(s))}
+function ce(tag,cls,html){var e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;return e}
+var FA_D='۰۱۲۳۴۵۶۷۸۹';
+function fa(n){return String(n).replace(/\d/g,function(d){return FA_D[+d]})}
+function shuffle(a,rng){a=a.slice();rng=rng||Math.random;for(var i=a.length-1;i>0;i--){var j=Math.floor(rng()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a}
+function rint(a,b,rng){rng=rng||Math.random;return a+Math.floor(rng()*(b-a+1))}
+function pick(arr,rng){rng=rng||Math.random;return arr[Math.floor(rng()*arr.length)]}
+function clamp(v,a,b){return v<a?a:v>b?b:v}
+var _toastT=0;
+function toast(msg,ms){var t=$('#wog-toast');if(!t)return;t.textContent=msg;t.classList.add('on');clearTimeout(_toastT);_toastT=setTimeout(function(){t.classList.remove('on')},ms||1800)}
+function hud(html){var h=$('#hud');if(h)h.innerHTML=html}
+function ovl(title,sub,btn,cb){var o=ce('div','wovl');var b=ce('div','box');b.appendChild(ce('h2',null,title));if(sub)b.appendChild(ce('p',null,sub));var bt=ce('button',null,btn);bt.setAttribute('data-smoke','');bt.addEventListener('click',function(){o.remove();cb&&cb()});b.appendChild(bt);o.appendChild(b);document.body.appendChild(o);return o}
+function bestOf(key,val){var b=parseInt(store.get(key)||'0',10)||0;if(val>b)store.set(key,String(val));return Math.max(b,val)}
+function storeBest(key){return parseInt(store.get(key)||'0',10)||0}
+
+var st=L.initial();
+function pips(n){var s='',i;for(i=0;i<Math.min(n,8);i++)s+='<span class="seed"></span>';return s;}
+function storeEl(idx){var d=ce('div','store');d.appendChild(ce('div','cnt',fa(st.p[idx])));d.appendChild(ce('div','spips',pips(st.p[idx])));return d;}
+function pitEl(idx){var d=ce('div','pit');d.appendChild(ce('div','cnt',fa(st.p[idx])));d.appendChild(ce('div','spips',pips(st.p[idx])));
+  if(!st.over&&st.turn===0&&idx<6&&st.p[idx]>0){d.classList.add('clickable');d.onclick=function(){mv(idx);};}
+  return d;}
+function draw(){
+  var app=$('#app');app.innerHTML='';
+  var b=ce('div','mboard');
+  b.appendChild(ce('div','plab','گودال‌های رایانه'));
+  var top=ce('div','mrow');
+  top.appendChild(storeEl(13));
+  for(var i=12;i>=7;i--)top.appendChild(pitEl(i));
+  b.appendChild(top);
+  var bot=ce('div','mrow');
+  for(var j=0;j<6;j++)bot.appendChild(pitEl(j));
+  bot.appendChild(storeEl(6));
+  b.appendChild(bot);
+  b.appendChild(ce('div','plab','گودال‌های تو — انبار تو سمت چپ'));
+  app.appendChild(b);
+  var ng=ce('button','newbtn','بازی جدید');ng.setAttribute('data-smoke','1');ng.onclick=function(){newGame();};
+  app.appendChild(ng);
+  hud('شما '+fa(st.p[6])+' — رایانه '+fa(st.p[13])+(st.over?' | پایان':' | نوبت: '+(st.turn===0?'شما':'رایانه')));
+  $('#hint').textContent='از گودال‌های خودت دانه بپاش؛ آخرین دانه در انبارت = نوبت اضافه، در گودال خالی‌ات = گرفتن دانه‌های روبه‌رو.';
+}
+function mv(idx){if(st.over||st.turn!==0)return;var r=L.sow(st,idx);if(!r)return;draw();
+  if(st.over){setTimeout(end,300);return;}
+  if(r.extra){toast('نوبت اضافه!');return;}
+  setTimeout(aiTurn,750);}
+function aiTurn(){if(st.over)return;var m=L.aiMove(st,null);if(!m)return;var r=L.sow(st,m.pit);draw();
+  if(st.over){setTimeout(end,300);return;}
+  if(r&&r.extra)setTimeout(aiTurn,750);}
+function newGame(){st=L.initial();draw();}
+function end(){var w=L.winner(st);
+  ovl(w===0?'بردی!':(w===1?'باختی!':'مساوی'),'شما '+fa(st.p[6])+' — رایانه '+fa(st.p[13]),'بازی جدید',function(){newGame();});}
+draw();
+})();
+</script>
+</body>
+</html>

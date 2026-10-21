@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<title>کواترو مینی | دنیای بازی‌ها</title>
+<meta name="description" content="کواتروی مینی روی صفحهٔ ۴×۴ با ۸ قطعه در دو اندازه (کوچک/بزرگ) و دو رنگ (نقره‌ای/طلایی). قطعه‌ای را که حریف دست می‌دهد بگذارید و بعد قطعهٔ بعدی را خودتان به او بدهید.">
+<style>*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+@font-face{font-family:Vazirmatn;src:url(../../fonts/Vazirmatn-Regular.woff2) format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:Vazirmatn;src:url(../../fonts/Vazirmatn-Bold.woff2) format('woff2');font-weight:700;font-display:swap}
+body{font-family:Vazirmatn,Tahoma,sans-serif;background:linear-gradient(160deg,#101a2e,#0b1220);color:#f3ead8;min-height:100dvh;user-select:none;display:flex;flex-direction:column;align-items:center;padding:12px;padding-top:56px;overflow-x:hidden}
+a.wog-home{position:fixed;top:10px;inset-inline-start:12px;z-index:99;background:rgba(217,164,65,.12);border:1px solid rgba(217,164,65,.45);color:#e8c073;text-decoration:none;padding:6px 12px;border-radius:10px;font-size:.85rem;font-weight:700}
+a.wog-home:hover{background:rgba(217,164,65,.3)}
+header{text-align:center;margin-bottom:8px}
+h1{font-size:1.2rem;color:#d9a441}
+.hud{color:#a8b3c9;font-size:.9rem;margin-top:2px;min-height:1.4em}
+.hud b{color:#e8c073}
+button,.wbtn{font-family:inherit;background:#d9a441;color:#221806;border:0;border-radius:10px;font-weight:700;padding:8px 16px;font-size:.95rem;cursor:pointer;touch-action:manipulation}
+button.sec,.wbtn.sec{background:#14203a;color:#f3ead8;border:1px solid rgba(217,164,65,.35)}
+button:disabled{opacity:.45;cursor:default}
+#hint{color:#a8b3c9;font-size:.85rem;margin-top:10px;text-align:center;max-width:680px;line-height:1.9}
+.wpanel{background:#14203a;border:1px solid rgba(217,164,65,.35);border-radius:14px;padding:14px}
+.wrow{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;align-items:center;margin:8px 0}
+.wovl{position:fixed;inset:0;background:rgba(5,9,18,.85);display:flex;align-items:center;justify-content:center;z-index:90}
+.wovl .box{background:#14203a;border:2px solid rgba(217,164,65,.5);border-radius:16px;padding:22px 28px;text-align:center;max-width:88vw}
+.wovl h2{color:#e8c073;margin-bottom:8px}
+.wovl p{color:#a8b3c9;margin-bottom:14px}
+.wog-toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#14203a;border:1px solid rgba(217,164,65,.5);color:#f3ead8;padding:8px 18px;border-radius:12px;opacity:0;transition:.25s;z-index:95;pointer-events:none;font-size:.9rem}
+.wog-toast.on{opacity:1}
+.wgrid{display:grid;border:2px solid rgba(217,164,65,.5);border-radius:10px;overflow:hidden;direction:ltr;touch-action:manipulation}
+.wgrid .cell{display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative}
+.cell.light{background:#e8dcc0}.cell.dark{background:#41527a}
+.wcard{display:inline-flex;flex-direction:column;justify-content:space-between;width:52px;height:74px;background:#f6efe0;color:#1c2438;border-radius:7px;padding:3px 5px;font-weight:700;font-size:.9rem;line-height:1;box-shadow:0 2px 5px rgba(0,0,0,.45);cursor:pointer;touch-action:manipulation;flex:none}
+.wcard.red{color:#c0392b}
+.wcard.back{background:linear-gradient(135deg,#2c3a5e,#41527a);border:2px solid rgba(217,164,65,.5)}
+.wcard.back:before{content:'❋';color:rgba(232,192,115,.55);align-self:center;font-size:1.3rem}
+.wcard.small{width:38px;height:54px;font-size:.75rem;border-radius:5px}
+.wcard.tiny{width:30px;height:44px;font-size:.65rem;border-radius:4px;padding:2px 3px}
+.wcard.sel{outline:3px solid #e8c073;transform:translateY(-6px)}
+.wcard .cn{font-size:.7rem;opacity:.85}.wcard .cv{align-self:flex-start}
+.wcard.back .cn,.wcard.back .cv{display:none}
+.wdpad{display:none;grid-template-columns:repeat(3,58px);grid-auto-rows:50px;gap:6px;margin-top:12px}
+.wdpad.on{display:grid}
+.wdpad button{font-size:1.15rem}
+@media(pointer:coarse){.wdpad{display:grid}}
+canvas{touch-action:none;border-radius:10px;border:2px solid rgba(217,164,65,.35);background:#0d1526}
+*{box-sizing:border-box}
+body{margin:0;background:#0b1424;color:#e8edf5;font-family:Vazirmatn,Tahoma,'Segoe UI',sans-serif;text-align:center}
+header h1{color:#d9a441;font-size:22px;margin:8px 0 4px}
+#hud{color:#9fb0c8;font-size:13px;min-height:18px;padding:0 8px}
+#app{display:flex;flex-direction:column;align-items:center;gap:10px;padding:8px}
+.btn{background:#d9a441;color:#101a2e;border:0;border-radius:10px;padding:10px 20px;font-size:15px;font-weight:700;cursor:pointer;min-height:42px;font-family:inherit;touch-action:manipulation}
+.btn:hover{filter:brightness(1.08)}
+.qctrl{display:flex;gap:10px}
+.qboard{direction:ltr;display:grid;grid-template-columns:repeat(4,min(66px,20vw));grid-auto-rows:min(66px,20vw);gap:6px;background:#14203a;padding:10px;border-radius:14px;border:1px solid #24365c}
+.qcell{background:#0e1930;border:1px solid #22345a;border-radius:10px;display:flex;align-items:center;justify-content:center}
+.qfree{cursor:pointer}
+.qfree:hover{border-color:#3fb8af}
+.qwin{box-shadow:0 0 0 3px #67b98a inset}
+.qp{border-radius:50%;box-shadow:0 2px 6px rgba(0,0,0,.5)}
+.qp-lg{width:46px;height:46px}
+.qp-sm{width:30px;height:30px}
+.qp-gold{background:radial-gradient(circle at 35% 30%,#f6d98a,#c9971f 72%)}
+.qp-slv{background:radial-gradient(circle at 35% 30%,#e9eff8,#8fa2ba 72%)}
+.qside{min-height:92px;display:flex;flex-direction:column;align-items:center;gap:8px}
+.qlabel{color:#9fb0c8;font-size:14px}
+.qpv{display:flex;align-items:center;justify-content:center;width:64px;height:64px;background:#14203a;border:1px dashed #3fb8af;border-radius:12px}
+.qpool{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;max-width:360px}
+.qchip{cursor:pointer;padding:5px;border:2px solid #24365c;border-radius:12px;background:#0e1930}
+.qchip:hover{border-color:#d9a441}
+.qmsg{color:#d9a441;font-size:15px;padding:8px}
+.qok{color:#67b98a}
+.qbad{color:#e26d5c}
+#hint{color:#8fa1b8;font-size:13px;max-width:440px;margin:8px auto;padding:0 10px;line-height:1.7}
+</style>
+</head>
+<body>
+<a class="wog-home" href="../../index.html">⌂ خانه</a>
+<header><h1>❋ کواترو مینی ❋</h1><div class="hud" id="hud"></div></header>
+<div id="app"></div>
+<p id="hint"></p>
+<div class="wog-toast" id="wog-toast"></div>
+<script>
+(function () {
+'use strict';
+var store = {
+  get: function (k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+  set: function (k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+};
+/*WOG_LOGIC_START*/
+var WOG_LOGIC=(function(){
+'use strict';
+var PIECES=[];
+(function(){var a,b;for(a=0;a<2;a++)for(b=0;b<2;b++){PIECES.push({a:a,b:b});PIECES.push({a:a,b:b});}})();
+var LINES=[],i2,j2;
+for(i2=0;i2<4;i2++)LINES.push([4*i2,4*i2+1,4*i2+2,4*i2+3]);
+for(j2=0;j2<4;j2++)LINES.push([j2,j2+4,j2+8,j2+12]);
+LINES.push([0,5,10,15],[3,6,9,12]);
+function eq(p,q){return !!p&&!!q&&p.a===q.a&&p.b===q.b;}
+function cp(p){return p?{a:p.a,b:p.b}:null;}
+function clone(st){var b=[],i;for(i=0;i<16;i++)b.push(cp(st.board[i]));var pl=[],j;for(j=0;j<st.pool.length;j++)pl.push(cp(st.pool[j]));return {board:b,toPlace:cp(st.toPlace),pool:pl,turn:st.turn,phase:st.phase,winner:st.winner,draw:st.draw,winLine:st.winLine?st.winLine.slice():null};}
+function initial(rng){if(!rng)rng=Math.random;var i=Math.floor(rng()*8),tp=PIECES[i],pool=[],j,b=[],k;for(j=0;j<8;j++)if(j!==i)pool.push(cp(PIECES[j]));for(k=0;k<16;k++)b.push(null);return {board:b,toPlace:cp(tp),pool:pool,turn:0,phase:'place',winner:null,draw:false,winLine:null};}
+function winAt(st){var b=st.board,i,k;for(i=0;i<LINES.length;i++){var ln=LINES[i],p0=b[ln[0]];if(!p0)continue;var sa=true,sb=true;for(k=1;k<4;k++){var p=b[ln[k]];if(!p){sa=false;sb=false;break;}if(p.a!==p0.a)sa=false;if(p.b!==p0.b)sb=false;}if(sa||sb)return {win:true,who:st.turn,line:ln.slice()};}return {win:false,who:null,line:null};}
+function poolEmpty(st){return st.pool.length===0;}
+function place(st,r,c){if(st.phase!=='place')throw new Error('phase');if(!st.toPlace)throw new Error('piece');if(!(r>=0&&r<4&&c>=0&&c<4))throw new Error('range');var idx=4*r+c;if(st.board[idx])throw new Error('occupied');var ns=clone(st);ns.board[idx]=cp(st.toPlace);ns.toPlace=null;var w=winAt({board:ns.board,turn:st.turn});if(w.win){ns.phase='over';ns.winner=st.turn;ns.winLine=w.line;return ns;}if(poolEmpty(ns)){ns.phase='over';ns.draw=true;return ns;}ns.phase='hand';return ns;}
+function hand(st,piece){if(st.phase!=='hand')throw new Error('phase');var at=-1,i;for(i=0;i<st.pool.length;i++)if(eq(st.pool[i],piece)){at=i;break;}if(at<0)throw new Error('pool');var ns=clone(st);ns.toPlace=cp(ns.pool[at]);ns.pool.splice(at,1);ns.turn=1-st.turn;ns.phase='place';return ns;}
+function winsWith(board,piece){var i;for(i=0;i<16;i++){if(board[i])continue;board[i]=piece;var w=winAt({board:board,turn:0});board[i]=null;if(w.win)return true;}return false;}
+function aiMove(st,rng){if(!rng)rng=Math.random;var empt=[],i,k;for(i=0;i<16;i++)if(!st.board[i])empt.push(i);
+var tp=cp(st.toPlace);
+for(i=0;i<empt.length;i++){var b2=[];for(k=0;k<16;k++)b2.push(cp(st.board[k]));b2[empt[i]]=cp(tp);if(winAt({board:b2,turn:st.turn}).win){var pp=st.pool.length?st.pool[Math.floor(rng()*st.pool.length)]:null;return {r:Math.floor(empt[i]/4),c:empt[i]%4,piece:cp(pp)};}}
+var safe=[];
+for(i=0;i<empt.length;i++){var b3=[];for(k=0;k<16;k++)b3.push(cp(st.board[k]));b3[empt[i]]=cp(tp);var seen={},j;for(j=0;j<st.pool.length;j++){var pj=st.pool[j],key=pj.a+'-'+pj.b;if(seen[key])continue;seen[key]=1;if(!winsWith(b3,cp(pj)))safe.push({r:Math.floor(empt[i]/4),c:empt[i]%4,piece:cp(pj)});}}
+if(safe.length){var s=safe[Math.floor(rng()*safe.length)];return s;}
+var e=empt[Math.floor(rng()*empt.length)],p2=st.pool.length?st.pool[Math.floor(rng()*st.pool.length)]:null;
+return {r:Math.floor(e/4),c:e%4,piece:cp(p2)};}
+return {PIECES:PIECES,LINES:LINES,initial:initial,place:place,hand:hand,winAt:winAt,poolEmpty:poolEmpty,aiMove:aiMove,eq:eq};
+})();
+/*WOG_LOGIC_END*/
+var L = WOG_LOGIC;
+function $(s){return document.querySelector(s)}
+function $$(s){return Array.prototype.slice.call(document.querySelectorAll(s))}
+function ce(tag,cls,html){var e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;return e}
+var FA_D='۰۱۲۳۴۵۶۷۸۹';
+function fa(n){return String(n).replace(/\d/g,function(d){return FA_D[+d]})}
+function shuffle(a,rng){a=a.slice();rng=rng||Math.random;for(var i=a.length-1;i>0;i--){var j=Math.floor(rng()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a}
+function rint(a,b,rng){rng=rng||Math.random;return a+Math.floor(rng()*(b-a+1))}
+function pick(arr,rng){rng=rng||Math.random;return arr[Math.floor(rng()*arr.length)]}
+function clamp(v,a,b){return v<a?a:v>b?b:v}
+var _toastT=0;
+function toast(msg,ms){var t=$('#wog-toast');if(!t)return;t.textContent=msg;t.classList.add('on');clearTimeout(_toastT);_toastT=setTimeout(function(){t.classList.remove('on')},ms||1800)}
+function hud(html){var h=$('#hud');if(h)h.innerHTML=html}
+function ovl(title,sub,btn,cb){var o=ce('div','wovl');var b=ce('div','box');b.appendChild(ce('h2',null,title));if(sub)b.appendChild(ce('p',null,sub));var bt=ce('button',null,btn);bt.setAttribute('data-smoke','');bt.addEventListener('click',function(){o.remove();cb&&cb()});b.appendChild(bt);o.appendChild(b);document.body.appendChild(o);return o}
+function bestOf(key,val){var b=parseInt(store.get(key)||'0',10)||0;if(val>b)store.set(key,String(val));return Math.max(b,val)}
+function storeBest(key){return parseInt(store.get(key)||'0',10)||0}
+
+var st=null,busy=false,gen=0,WKEY='wog-quarto-mini-wins';
+function wins(){var v=store.get(WKEY);return v===null||v===undefined?0:(+v||0);}
+function pieceEl(p,extra){var cls='qp '+(p.a===1?'qp-lg':'qp-sm')+' '+(p.b===1?'qp-gold':'qp-slv');if(extra)cls+=' '+extra;return ce('div',cls);}
+function hudUpd(){if(!st)return;var s;
+ if(st.phase==='over')s=st.draw?'پایان: مساوی':(st.winner===0?'پایان: برد شما':'پایان: برد حریف');
+ else if(busy||st.turn===1)s='نوبت حریف…';
+ else if(st.phase==='place')s='نوبت شما: قطعه را بگذارید';
+ else s='نوبت شما: قطعه‌ای به حریف بدهید';
+ s+=' | قطعه‌های مانده: '+fa(st.pool.length+(st.toPlace?1:0))+' | بردها: '+fa(wins());
+ hud(s);
+ $('#hint').textContent='چهار قطعه با اندازهٔ یکسان یا رنگ یکسان در یک سطر، ستون یا قطر برنده است؛ در دادن قطعه، حریف را در آستانهٔ برد نیندازید.';}
+function render(){var app=$('#app');app.innerHTML='';
+ var ctrl=ce('div','qctrl');var nb=ce('button','btn','بازی جدید');nb.setAttribute('data-smoke','1');nb.addEventListener('click',function(){newGame();});ctrl.appendChild(nb);app.appendChild(ctrl);
+ var bd=ce('div','qboard');
+ for(var i=0;i<16;i++){(function(i){var r=Math.floor(i/4),c=i%4;var cell=ce('div','qcell');
+  if(st.board[i]){cell.appendChild(pieceEl(st.board[i]));if(st.winLine&&st.winLine.indexOf(i)>=0)cell.className+=' qwin';}
+  else if(st.phase==='place'&&st.turn===0&&!busy){cell.className+=' qfree';cell.addEventListener('click',function(){onCell(r,c);});}
+  bd.appendChild(cell);})(i);}
+ app.appendChild(bd);
+ var side=ce('div','qside');
+ if(st.phase==='over'){side.appendChild(ce('div','qmsg '+(st.draw?'':(st.winner===0?'qok':'qbad')),st.draw?'بازی مساوی شد':(st.winner===0?'چهار قطعهٔ هم‌ویژگی در یک راستا — بردی!':'حریف چارتایی را بست — باختی!')));}
+ else if(st.turn===1||busy){side.appendChild(ce('div','qmsg','نوبت حریف…'));}
+ else if(st.phase==='place'){side.appendChild(ce('div','qlabel','این قطعه را در خانه‌ای خالی بگذارید:'));var pv=ce('div','qpv');pv.appendChild(pieceEl(st.toPlace));side.appendChild(pv);}
+ else{side.appendChild(ce('div','qlabel','یکی از این قطعه‌ها را به حریف بدهید:'));var pool=ce('div','qpool');
+  for(var j=0;j<st.pool.length;j++){(function(p){var ch=pieceEl(p,'qchip');ch.addEventListener('click',function(){onHand(p);});pool.appendChild(ch);})(st.pool[j]);}
+  side.appendChild(pool);}
+ app.appendChild(side);hudUpd();}
+function onCell(r,c){if(busy||!st||st.phase!=='place'||st.turn!==0||st.board[4*r+c])return;st=L.place(st,r,c);after();}
+function onHand(p){if(busy||!st||st.phase!=='hand'||st.turn!==0)return;st=L.hand(st,p);after();}
+function after(){render();if(st.phase==='over'){end();return;}if(st.turn===1)aiTurn();}
+function aiTurn(){busy=true;var g=gen;hudUpd();setTimeout(function(){if(g!==gen||!st||st.phase==='over'){busy=false;return;}var m=L.aiMove(st);st=L.place(st,m.r,m.c);render();if(st.phase==='over'){busy=false;end();return;}setTimeout(function(){if(g!==gen||!st||st.phase==='over'){busy=false;return;}if(m.piece)st=L.hand(st,m.piece);busy=false;render();if(st.phase==='over')end();},620);},680);}
+function end(){render();if(st.draw)ovl('مساوی','هیچ‌کس چارتایی نساخت.','بازی جدید',function(){newGame();});
+ else if(st.winner===0){store.set(WKEY,String(wins()+1));ovl('بردی!','چهار قطعهٔ هم‌ویژگی در یک راستا نشست.','بازی جدید',function(){newGame();});}
+ else ovl('باختی!','حریف چهار قطعهٔ هم‌ویژگی ساخت.','بازی جدید',function(){newGame();});}
+function newGame(){gen++;busy=false;st=L.initial();render();}
+newGame();
+})();
+</script>
+</body>
+</html>

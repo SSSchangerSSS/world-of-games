@@ -439,3 +439,37 @@ Stage Summary:
 - Deliverable: /home/z/my-project/agent_out/h1_skill.py (copy of tested /tmp/h1/games/h1_skill.py, 27.6KB).
 - Tests: LOGIC pass=20 fail=0 (5+5+5+5); py_compile OK; node --check ×4 OK; no forbidden tokens; sizes < 45KB.
 - Next: platform integrator can merge GAMES from this batch into the main build/catalog.
+---
+Task ID: AG-I2
+Agent: I2 (word games sub-agent, retry)
+Task: 3 Persian word games (word-search + anagram + word-chain) in ONE batch games/i2_word.py; cat=word, engines=(common,word).
+Work Log: kit verbatim at /tmp/i2 (Write tool blocked on /tmp → heredoc, same as prior agents). word-search (واژه‌یاب شبکه‌ای): 10×10، ۸ واژهٔ ۵-۷ حرفی از فهرست ۴۸ واژه، PLACE_DIRS=[[0,-1],[1,0],[1,-1],[1,1]]، placeWord با مرز+تداخل فقط هم‌حرف (۲۵۰ تلاش تصادفی + اسکن قطعی پشتیبان)، fillGrid با حروف پرتکرار فارسی، checkSelection فقط خط مستقیم روی محورهای مجاز و تطابق دقیق سلول‌های واژهٔ قرارگرفته؛ UI لمس آغاز→پایان، هایلایت sel/fnd، چیپ واژه‌ها، رکورد زمان wog-word-search-best. anagram (واژه‌سازی): DICT ۱۵۰ واژهٔ ۲-۷ حرفی (منابع ۶-۷ حرفی = ۴۹)، genLetters (واژهٔ مبدأ + پرکننده تا ۶/۷ حرف)، canForm زیرمجموعهٔ چندمجموعه‌ای با نرمال‌سازی ي/ك، findable، scoreOf=len²، تایمر ۱۲۰ث، کاشی‌های لمسی + بُر بزن + ثبت/پاک، پایان: فاش‌سازی همهٔ واژه‌های ممکن (در #app و متن ovl)، رکورد wog-anagram-best. word-chain (زنجیرهٔ واژه‌ها): DICT ۲۰۵ واژه (ANA + ۵۵ افزوده با پوشش حروف آغازین ا..ی)، lastLetter/firstLetter نرمال‌کننده (ي→ی ك→ک، حذف فاصله/نیم‌فاصله)، canChain دقیق، aiReply از میان نامصرف‌ها؛ هر دور used ریست، ۱۵ث/نوبت، خطا/پاس = امتیاز حریف، ربات گیرکند = امتیاز انسان، اولین ۵ برنده، کیبورد فارسی (faKb) + keydown، رکورد برد wog-word-chain-wins. یک باگ فیکسچر در ران دوم: انتظار اشتباه «ر» برای حرف آخر «آب‌ریز» (درست: «ز») + افزودن بردار نیم‌فاصلهٔ انتهایی («آب‌»→«ب») — تست تضعیف نشد، منطق دست نخورد.
+- SELF-CHECK: build ۳ صفحه؛ node test_mini.mjs → LOGIC pass=15 fail=0 (۵+۵+۵)؛ py_compile OK؛ node -e new Function ×3 OK؛ اسموک ران‌تایم با DOM-stub (کلیک همهٔ کنترل‌ها + پیشروی ۲۲۰ تیک تایمر + فراخوانی faKb): هر ۳ صفحه بدون خطا، ovl پایان برای anagram (انقضای ۱۲۰ث) و word-chain (۵ باخت زمانی) ثبت شد؛ اسکن توکن‌های ممنوعه روی خروجی: فقط localStorage داخل wrapper استاندارد store کیت (سطر ۳۱ قالب) — در logic/ui صفر مورد؛ بدون ایموجی. حجم رندرشده: word-search 7,838B · anagram 9,246B · word-chain 10,383B — همه زیر ۴۵KB.
+- تست‌های کلیدی: بردار PLACE_DIRS؛ قراردهی معتبر/خارج مرز (کوهستان دو جهت)/تداخل حرف متفاوت (دوستی روی باران، موزیک روی آبادی)/هم‌پوشانی هم‌حرف مجاز (آبادی از میان «ا» باران)؛ ۵۰ gen مهرشده — هر ۸ واژه قرار می‌گیرد، جهت هر واژه ∈ PLACE_DIRS، حروف سلول‌ها = واژه، شبکه پر؛ پخش مجدد سلول‌های هر واژهٔ placed به‌عنوان انتخاب → پیدا شدن، انتخاب معکوس → null؛ رد همان‌خانه/غیرمستقیم/جهت‌های ممنوعه (0,1)(-1,0)(-1,-1)/خارج مرز/انتخاب ناقص؛ canForm با شمارش تکراری (باب/لال) و حروف اضافی و ك عربی؛ scoreOf مجذور و یکنوا؛ findable (باران بله، نان بدون «ن» دوم خیر) و تهی؛ ۳۰ مجموعهٔ مهرشده همیشه شامل واژهٔ مبدأ + حروف فارسی معتبر؛ سلامت واژه‌نامه‌ها (یکتا، نرمال، طول) و پوشش حروف آغازین زنجیره؛ نرمال‌سازی lastLetter (كتاب/باري/فاصله/نیم‌فاصله)؛ زنجیرهٔ دقیق + رد ناهم‌حرف؛ پاسخ ربات در ۲۰ بذر: ۵حلقهٔ زنجیرهٔ کامل، پرهیز از used، null در فرسودگی حرف «ب»؛ شبیه‌سازی کامل ۱۰ مسابقهٔ مهرشده تا ۵ امتیاز — پایان‌پذیر، rounds=sc[0]+sc[1]≤9، فقط یک برندهٔ ۵.
+Stage Summary:
+- Deliverable: /home/z/my-project/agent_out/i2_word.py (copy of tested /tmp/i2/games/i2_word.py, 30,972B).
+- Tests: LOGIC pass=15 fail=0 (5+5+5); py_compile OK; script syntax OK ×3; runtime smoke ×3 OK; forbidden tokens clean (only kit's own store wrapper); sizes < 45KB.
+- Next: platform integrator can merge GAMES from this batch into the main build/catalog.
+
+---
+Task ID: 4
+Agent: main (Z.ai)
+Task: توسعه مجموعه به ۱۰۰ بازی + دکمه بازگشت به خانه + تست کامل منطق (درخواست کاربر)
+
+Work Log:
+- زیرساخت بیلد در scripts/wog ساخته شد: lib.py (قالب مشترک با دکمه بازگشت + shim + موتورهای کارتی/آرکید/واژه)، build.py (کاتالوگ ۱۰۰تایی با assert دقیق اسلاگ‌ها)، test_logic.mjs (هارنس تست منطق با mulberry32)، check_syntax.py، smoke.py (Playwright).
+- کشف مهم: زیرایجنت‌ها FS مشترک دارند ولی snapshot ایزوله می‌بینند و merge-back می‌تواند فایل‌های همزمانِ من را پاک کند (j_luck/h1/i2 یک‌بار ناپدید و بازتولید شدند)؛ راهکار: کیت درون‌خطی در worklog + کپی فوری پس از هر ایجنت + backup/games.
+- ۲۵ اجرای زیرایجنت (تکی/موازی) دسته‌های A1..I3 را ساخت؛ رفع باگ‌های تست ایجنت‌ها (pentago pure-place، spider/freecell fixtures، fox-and-hounds سینتکس + انتظار ۷ حرکت، g1 ربات‌های فلکی → تست‌های قطعی، mulberry32 خراب کیت d3).
+- نرد ایرانی به‌صورت کامل توسط main پیاده شد: تاس دوبل×۴، میله، زدن بلوت، بیرون‌آوردن (قانون بالاترین خانه)، قانون «حداکثر توالی/تاس بزرگ‌تر»، AI حریص + ۸ تست (پیپ ۱۶۷، conservation ۳۰ مهره، بازی کامل AI-vs-AI).
+- فیکس موتور: faKb با longKeys غیرآرایه‌ای مقاوم شد (واژه‌یاب/حلق‌آویز).
+- لندینگ جدید: جست‌وجو + فیلتر ۶ دسته + ۱۰۰ کارت + JSON-LD ItemList + licenses.html (اتریبیوشن chess.js BSD-2) + sitemap ۱۰۲ URL + games.json.
+- پچ دکمه بازگشت ۱۳ بازی قدیمی در pages-site و Data/SeedGames (patch_back_button.py).
+- QA نهایی: ۴۷۹/۴۷۹ تست منطق · node --check ۱۰۰/۱۰۰ · smoke ۱۰۰/۱۰۰ (۰ خطا، دکمه بازگشت، data-smoke) · ۱۴/۱۴ تست تعاملی بازی‌های قدیمی (شطرنج e2e4+پاسخ AI، ۲۰۴۸ کلید، مین‌یاب، بلک‌جک شرط‌بندی→پخش→کارت، حافظه، سولیتر پشت‌کار و…).
+- git: main cb0b282 (README + GAMES.md + پچ SeedGames) push شد؛ gh-pages 6681b84 (مجموعه کامل ۱۰۰ بازی، ۲.۲MB) push شد؛ core.fileMode=false برای نویز mode-churn.
+- راستی‌آزمایی زنده: landing 200، games.json=۱۰۰، backgammon/wordle/chess/pasoor/licenses همگی 200، دکمه بازگشت در HTML بازی‌ها.
+
+Stage Summary:
+- مجموعهٔ نهایی: دقیقاً ۱۰۰ بازی قابل اجرا در https://ssschangersss.github.io/world-of-games/ (۶ دسته: تخته ۲۱، کارتی ۱۶، پازل ۲۰، اکشن ۲۲، واژه ۱۰، شانس ۱۱)
+- دکمه «⌂ خانه» در هر ۱۰۰ صفحه (href نسبی ../../index.html)
+- تست منطق: هر بازی جدید WOG_LOGIC خالص + تست واحد (۴۷۹ تست)؛ بازی‌های قدیمی: تست تعاملی مرورگر
+- ابزار بازتولید کامل: scripts/wog/build.py (بیلد + لندینگ + sitemap) و backup/games

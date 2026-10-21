@@ -1,17 +1,105 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://ssschangersss.github.io/world-of-games/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
-  <url><loc>https://ssschangersss.github.io/world-of-games/games/chess/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://ssschangersss.github.io/world-of-games/games/solitaire/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://ssschangersss.github.io/world-of-games/games/blackjack/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://ssschangersss.github.io/world-of-games/games/sudoku/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://ssschangersss.github.io/world-of-games/games/g2048/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://ssschangersss.github.io/world-of-games/games/reversi/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://ssschangersss.github.io/world-of-games/games/tic-tac-toe/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://ssschangersss.github.io/world-of-games/games/minesweeper/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://ssschangersss.github.io/world-of-games/games/akhaemenid-memory/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://ssschangersss.github.io/world-of-games/games/snake/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://ssschangersss.github.io/world-of-games/games/breakout/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://ssschangersss.github.io/world-of-games/games/alborz-jump/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://ssschangersss.github.io/world-of-games/games/pong/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>1.0</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/licenses.html</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/water-sort/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/reversi/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/game-of-ur/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/higher-lower/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/hanoi/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/stacker/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/blockudoku/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/blackjack/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/pig/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/rush-hour/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/stroop/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/invaders/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/breakout/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/aim/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/kite/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/war/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/akhaemenid-memory/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/emoji-quiz/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/guess-number/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/hokm/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/dodge/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/tic-tac-toe/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/dominoes/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/runner/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/digits/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/mastermind/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/fox-and-hounds/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/math-sprint/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/word-chain/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/clock/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/typing/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/rps/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/plinko/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/chuck-a-luck/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/tripeaks/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/cups/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/sudoku/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/solitaire/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/spider/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/sokoban/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/coin-flip/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/asteroids/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/simon/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/thirty-one/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/memory-grid/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/chess/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/meteor/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/coin-catch/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/proverb/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/flood/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/reaction/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/freecell/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/frogger/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/lotto/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/ludo/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/snakes-ladders/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/snake/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/antonym/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/hangman/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/mancala/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/morris9/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/whack/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/minesweeper/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/battleship/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/backgammon/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/dots-boxes/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/nonogram/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/nim/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/pyramid/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/maze/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/crazy-eights/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/8queens/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/hex/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/anagram/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/wordle/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/word-search/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/video-poker/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/p15/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/pasoor/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/capitals/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/alborz-jump/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/flappy/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/flags/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/pentago/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/gomoku/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/peg/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/pong/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/chomp/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/lights-out/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/slots/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/connect4/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/lcr/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/checkers/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/kakuro/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/quarto-mini/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/wheel/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/golf/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/yahtzee/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/g2048/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ssschangersss.github.io/world-of-games/games/calc24/</loc><lastmod>2026-10-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
 </urlset>

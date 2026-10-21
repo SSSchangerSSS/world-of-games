@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<title>دومینو | دنیای بازی‌ها</title>
+<meta name="description" content="دومینوی شش‌دوبله در برابر ربات: تخته‌هایت را به دو سرِ خط بزن، از بونیارد بکش و در بن‌بست دستِ سبک‌تر برنده است.">
+<style>*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+@font-face{font-family:Vazirmatn;src:url(../../fonts/Vazirmatn-Regular.woff2) format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:Vazirmatn;src:url(../../fonts/Vazirmatn-Bold.woff2) format('woff2');font-weight:700;font-display:swap}
+body{font-family:Vazirmatn,Tahoma,sans-serif;background:linear-gradient(160deg,#101a2e,#0b1220);color:#f3ead8;min-height:100dvh;user-select:none;display:flex;flex-direction:column;align-items:center;padding:12px;padding-top:56px;overflow-x:hidden}
+a.wog-home{position:fixed;top:10px;inset-inline-start:12px;z-index:99;background:rgba(217,164,65,.12);border:1px solid rgba(217,164,65,.45);color:#e8c073;text-decoration:none;padding:6px 12px;border-radius:10px;font-size:.85rem;font-weight:700}
+a.wog-home:hover{background:rgba(217,164,65,.3)}
+header{text-align:center;margin-bottom:8px}
+h1{font-size:1.2rem;color:#d9a441}
+.hud{color:#a8b3c9;font-size:.9rem;margin-top:2px;min-height:1.4em}
+.hud b{color:#e8c073}
+button,.wbtn{font-family:inherit;background:#d9a441;color:#221806;border:0;border-radius:10px;font-weight:700;padding:8px 16px;font-size:.95rem;cursor:pointer;touch-action:manipulation}
+button.sec,.wbtn.sec{background:#14203a;color:#f3ead8;border:1px solid rgba(217,164,65,.35)}
+button:disabled{opacity:.45;cursor:default}
+#hint{color:#a8b3c9;font-size:.85rem;margin-top:10px;text-align:center;max-width:680px;line-height:1.9}
+.wpanel{background:#14203a;border:1px solid rgba(217,164,65,.35);border-radius:14px;padding:14px}
+.wrow{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;align-items:center;margin:8px 0}
+.wovl{position:fixed;inset:0;background:rgba(5,9,18,.85);display:flex;align-items:center;justify-content:center;z-index:90}
+.wovl .box{background:#14203a;border:2px solid rgba(217,164,65,.5);border-radius:16px;padding:22px 28px;text-align:center;max-width:88vw}
+.wovl h2{color:#e8c073;margin-bottom:8px}
+.wovl p{color:#a8b3c9;margin-bottom:14px}
+.wog-toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#14203a;border:1px solid rgba(217,164,65,.5);color:#f3ead8;padding:8px 18px;border-radius:12px;opacity:0;transition:.25s;z-index:95;pointer-events:none;font-size:.9rem}
+.wog-toast.on{opacity:1}
+.wgrid{display:grid;border:2px solid rgba(217,164,65,.5);border-radius:10px;overflow:hidden;direction:ltr;touch-action:manipulation}
+.wgrid .cell{display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative}
+.cell.light{background:#e8dcc0}.cell.dark{background:#41527a}
+.wcard{display:inline-flex;flex-direction:column;justify-content:space-between;width:52px;height:74px;background:#f6efe0;color:#1c2438;border-radius:7px;padding:3px 5px;font-weight:700;font-size:.9rem;line-height:1;box-shadow:0 2px 5px rgba(0,0,0,.45);cursor:pointer;touch-action:manipulation;flex:none}
+.wcard.red{color:#c0392b}
+.wcard.back{background:linear-gradient(135deg,#2c3a5e,#41527a);border:2px solid rgba(217,164,65,.5)}
+.wcard.back:before{content:'❋';color:rgba(232,192,115,.55);align-self:center;font-size:1.3rem}
+.wcard.small{width:38px;height:54px;font-size:.75rem;border-radius:5px}
+.wcard.tiny{width:30px;height:44px;font-size:.65rem;border-radius:4px;padding:2px 3px}
+.wcard.sel{outline:3px solid #e8c073;transform:translateY(-6px)}
+.wcard .cn{font-size:.7rem;opacity:.85}.wcard .cv{align-self:flex-start}
+.wcard.back .cn,.wcard.back .cv{display:none}
+.wdpad{display:none;grid-template-columns:repeat(3,58px);grid-auto-rows:50px;gap:6px;margin-top:12px}
+.wdpad.on{display:grid}
+.wdpad button{font-size:1.15rem}
+@media(pointer:coarse){.wdpad{display:grid}}
+canvas{touch-action:none;border-radius:10px;border:2px solid rgba(217,164,65,.35);background:#0d1526}
+body{margin:0;background:#0b1526;color:#e8edf7;font-family:Vazirmatn,Tahoma,sans-serif}
+#app{max-width:820px;margin:0 auto;padding:8px 10px 30px}
+.dpanel{background:#14203a;border-radius:12px;padding:8px 12px;margin:8px 0}
+.dpanel b{color:#d9a441;font-size:13px}
+.cnt{color:#9fb3d9;font-size:12px;margin-right:8px}
+.backrow{display:flex;gap:3px;flex-wrap:wrap;margin-top:6px}
+.btile{width:16px;height:26px;background:#1d2c4d;border:1px solid #2a3a5c;border-radius:4px}
+.dlinebox{background:#14203a;border-radius:12px;padding:8px 12px;margin:8px 0}
+.ends{display:flex;justify-content:space-between;font-size:12px;color:#9fb3d9;margin-bottom:6px}
+.ends b{color:#d9a441}
+.dline{display:flex;gap:3px;overflow-x:auto;padding:4px 2px;align-items:center;min-height:40px}
+.ltile{display:flex;flex-direction:column;align-items:center;background:#0e1930;border:1px solid #2a3a5c;border-radius:5px;padding:2px 6px;flex:0 0 auto;font-size:12px;font-weight:700}
+.ltile i{display:block;width:100%;height:1px;background:#2a3a5c;margin:2px 0}
+.ltile.ed{border-color:#d9a441}
+.empty{color:#8093b5;font-size:12px}
+.hand{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.dtile{display:flex;flex-direction:column;align-items:center;background:#0e1930;color:#e8edf7;border:1px solid #2a3a5c;border-radius:6px;padding:3px 10px;font-size:13px;font-weight:700;min-height:44px;min-width:34px;touch-action:manipulation;font-family:inherit}
+.dtile i{display:block;width:80%;height:1px;background:#2a3a5c;margin:2px 0}
+.dtile.ok{border-color:#3fb8af;background:#0f2b33;cursor:pointer}
+.dtile:disabled{opacity:.45}
+.dctl{display:flex;gap:12px;align-items:center;justify-content:center;margin:12px 0;flex-wrap:wrap}
+.binfo{color:#9fb3d9;font-size:13px}
+.btn{background:#d9a441;border:0;color:#14203a;font-weight:700;padding:10px 20px;border-radius:10px;font-size:15px;min-height:42px;touch-action:manipulation;font-family:inherit}
+.btn.ghost{background:#1d2c4d;color:#e8edf7}
+.btn.small{padding:6px 14px;min-height:36px;font-size:13px}
+.pendbar{background:#1d2c4d;border:1px solid #d9a441;border-radius:10px;padding:8px 12px;margin:8px 0;text-align:center;font-size:13px}
+</style>
+</head>
+<body>
+<a class="wog-home" href="../../index.html">⌂ خانه</a>
+<header><h1>❋ دومینو ❋</h1><div class="hud" id="hud"></div></header>
+<div id="app"></div>
+<p id="hint"></p>
+<div class="wog-toast" id="wog-toast"></div>
+<script>
+(function () {
+'use strict';
+var store = {
+  get: function (k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+  set: function (k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+};
+/*WOG_LOGIC_START*/
+var WOG_LOGIC=(function(){
+'use strict';
+function initial(rng){var r=rng||Math.random,t=[],a,b,j,x;for(a=0;a<=6;a++){for(b=a;b<=6;b++){t.push([a,b]);}}for(a=t.length-1;a>0;a--){j=Math.floor(r()*(a+1));x=t[a];t[a]=t[j];t[j]=x;}return {hands:[t.slice(0,7),t.slice(7,14)],bone:t.slice(14),line:[],turn:0,passes:0,over:false};}
+function ends(st){if(!st.line.length){return null;}return [st.line[0].a,st.line[st.line.length-1].b];}
+function fits(st,tile){if(!st.line.length){return ['C'];}var e=ends(st),out=[];if(tile[0]===e[0]||tile[1]===e[0]){out.push('L');}if(tile[0]===e[1]||tile[1]===e[1]){out.push('R');}return out;}
+function hasTile(hand,tile){for(var i=0;i<hand.length;i++){var h=hand[i];if((h[0]===tile[0]&&h[1]===tile[1])||(h[0]===tile[1]&&h[1]===tile[0])){return i;}}return -1;}
+function legalTiles(st,hand){if(!st.line.length){return hand.slice();}var out=[],i;for(i=0;i<hand.length;i++){if(fits(st,hand[i]).length){out.push(hand[i]);}}return out;}
+function placeTile(st,pl,tile,end){var hand=st.hands[pl],i=hasTile(hand,tile);if(i<0){return false;}var L0=st.line;if(!L0.length){L0.push({a:tile[0],b:tile[1]});}else{var e=ends(st),tries=end?[end]:['R','L'],done=false,k;for(k=0;k<tries.length&&!done;k++){if(tries[k]==='R'&&(tile[0]===e[1]||tile[1]===e[1])){L0.push(tile[0]===e[1]?{a:tile[0],b:tile[1]}:{a:tile[1],b:tile[0]});done=true;}else if(tries[k]==='L'&&(tile[0]===e[0]||tile[1]===e[0])){L0.unshift(tile[0]===e[0]?{a:tile[1],b:tile[0]}:{a:tile[0],b:tile[1]});done=true;}}if(!done){return false;}}hand.splice(i,1);st.passes=0;st.over=(hand.length===0);st.turn=1-pl;return true;}
+function drawTile(st,pl){if(!st.bone.length){return null;}var t=st.bone.pop();st.hands[pl].push(t);return t;}
+function pass(st){st.passes++;if(st.passes>=2){st.over=true;}st.turn=1-st.turn;return st.over;}
+function aiPick(legal){var bi=0,bs=-999,i,s;for(i=0;i<legal.length;i++){s=legal[i][0]+legal[i][1]-(legal[i][0]===legal[i][1]?2:0);if(s>bs){bs=s;bi=i;}}return legal[bi];}
+function autoTurn(st,rng){var pl=st.turn,legal=legalTiles(st,st.hands[pl]),draws=0;while(!legal.length&&st.bone.length){drawTile(st,pl);draws++;legal=legalTiles(st,st.hands[pl]);}if(legal.length){var t=aiPick(legal);placeTile(st,pl,t);return {played:t,draws:draws};}pass(st);return {passed:true,draws:draws};}
+function blocked(st){return st.passes>=2;}
+function pipSum(hand){var s=0,i;for(i=0;i<hand.length;i++){s+=hand[i][0]+hand[i][1];}return s;}
+function winner(st){if(!st.hands[0].length&&!st.hands[1].length){return 'draw';}if(!st.hands[0].length){return 0;}if(!st.hands[1].length){return 1;}if(st.passes>=2){var a=pipSum(st.hands[0]),b=pipSum(st.hands[1]);if(a<b){return 0;}if(b<a){return 1;}return 'draw';}return null;}
+return {initial:initial,ends:ends,fits:fits,legalTiles:legalTiles,placeTile:placeTile,drawTile:drawTile,pass:pass,aiPick:aiPick,autoTurn:autoTurn,blocked:blocked,pipSum:pipSum,winner:winner};
+})();
+/*WOG_LOGIC_END*/
+var L = WOG_LOGIC;
+function $(s){return document.querySelector(s)}
+function $$(s){return Array.prototype.slice.call(document.querySelectorAll(s))}
+function ce(tag,cls,html){var e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;return e}
+var FA_D='۰۱۲۳۴۵۶۷۸۹';
+function fa(n){return String(n).replace(/\d/g,function(d){return FA_D[+d]})}
+function shuffle(a,rng){a=a.slice();rng=rng||Math.random;for(var i=a.length-1;i>0;i--){var j=Math.floor(rng()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a}
+function rint(a,b,rng){rng=rng||Math.random;return a+Math.floor(rng()*(b-a+1))}
+function pick(arr,rng){rng=rng||Math.random;return arr[Math.floor(rng()*arr.length)]}
+function clamp(v,a,b){return v<a?a:v>b?b:v}
+var _toastT=0;
+function toast(msg,ms){var t=$('#wog-toast');if(!t)return;t.textContent=msg;t.classList.add('on');clearTimeout(_toastT);_toastT=setTimeout(function(){t.classList.remove('on')},ms||1800)}
+function hud(html){var h=$('#hud');if(h)h.innerHTML=html}
+function ovl(title,sub,btn,cb){var o=ce('div','wovl');var b=ce('div','box');b.appendChild(ce('h2',null,title));if(sub)b.appendChild(ce('p',null,sub));var bt=ce('button',null,btn);bt.setAttribute('data-smoke','');bt.addEventListener('click',function(){o.remove();cb&&cb()});b.appendChild(bt);o.appendChild(b);document.body.appendChild(o);return o}
+function bestOf(key,val){var b=parseInt(store.get(key)||'0',10)||0;if(val>b)store.set(key,String(val));return Math.max(b,val)}
+function storeBest(key){return parseInt(store.get(key)||'0',10)||0}
+
+var app=document.getElementById('app');
+var st=null,pend=null,busy=false,seq=0,timer=null;
+function hudUpd(){hud('نوبت: <b>'+(st.turn===0?'شما':'ربات')+'</b> · بونیارد: '+fa(st.bone.length)+' · پایپ: شما '+fa(L.pipSum(st.hands[0]))+' / ربات '+fa(L.pipSum(st.hands[1])));}
+function newGame(){
+  if(timer){clearTimeout(timer);timer=null;}
+  seq++;busy=false;pend=null;
+  st=L.initial(Math.random);
+  $('#hint').textContent='تخته‌ای بگذار که با یکی از دو سرِ خط جور باشد؛ اگر نه، از بونیارد بکش تا بازی‌شدنی بیاید.';
+  render();hudUpd();toast('دومینو شروع شد — ۷ تخته داری');
+}
+function endGame(w){
+  busy=true;
+  if(w===0){ovl('بردی!',L.blocked(st)?'با پایپ کمتر بردی':'دستت خالی شد','بازی جدید',newGame);}
+  else if(w===1){ovl('باختی!',L.blocked(st)?'ربات با پایپ کمتر برد':'ربات دستش را خالی کرد','بازی جدید',newGame);}
+  else{ovl('مساوی!','پایپ دو دست برابر بود','بازی جدید',newGame);}
+}
+function afterPlay(){
+  render();hudUpd();
+  var w=L.winner(st);
+  if(w!==null){endGame(w);return;}
+  if(st.turn===1){aiGo();}
+  else{toast('نوبت شما');}
+}
+function playTile(t,end){
+  if(!st||busy||st.turn!==0){return;}
+  if(!L.placeTile(st,0,t,end)){pend=null;render();toast('این گذاشتن ممکن نیست');return;}
+  pend=null;
+  afterPlay();
+}
+function tileClick(){
+  if(!st||busy||st.turn!==0){return;}
+  var i=+this.getAttribute('data-i'),t=st.hands[0][i],f=L.fits(st,t);
+  if(!f.length){return;}
+  if(f.length===2){pend=t;render();return;}
+  playTile(t,f[0]);
+}
+function aiGo(){
+  var my=++seq;busy=true;render();hudUpd();
+  timer=setTimeout(function(){
+    if(my!==seq||!st||st.turn!==1){return;}
+    var r=L.autoTurn(st,Math.random);
+    render();hudUpd();
+    if(r.played){toast('ربات تخته گذاشت');}
+    else{toast('ربات پاس داد');}
+    var w=L.winner(st);
+    if(w!==null){endGame(w);return;}
+    busy=false;
+    toast('نوبت شما');
+  },800);
+}
+function drawClick(){
+  if(!st||busy||st.turn!==0){return;}
+  var my=++seq;busy=true;render();
+  (function step(){
+    if(my!==seq||!st){return;}
+    if(L.legalTiles(st,st.hands[0]).length){busy=false;render();hudUpd();toast('تختهٔ بازی‌شدنی گرفتی!');return;}
+    if(!st.bone.length){
+      var over=L.pass(st);
+      render();hudUpd();
+      if(over){endGame(L.winner(st));return;}
+      toast('بونیارد خالی — پاس');aiGo();return;
+    }
+    var t=L.drawTile(st,0);
+    toast('برداشتی: '+fa(t[0])+' و '+fa(t[1]));
+    render();hudUpd();
+    timer=setTimeout(step,320);
+  })();
+}
+function passClick(){
+  if(!st||busy||st.turn!==0){return;}
+  var over=L.pass(st);
+  render();hudUpd();
+  if(over){endGame(L.winner(st));return;}
+  toast('پاس دادی');aiGo();
+}
+function render(){
+  var i,t,h='<div class="dpanel ai"><b>ربات</b><span class="cnt">'+fa(st.hands[1].length)+' تخته</span><div class="backrow">';
+  for(i=0;i<st.hands[1].length;i++){h+='<div class="btile"></div>';}
+  h+='</div></div>';
+  h+='<div class="dlinebox"><div class="ends"><span>سر چپ: <b>'+(st.line.length?fa(st.line[0].a):'—')+'</b></span><span>سر راست: <b>'+(st.line.length?fa(st.line[st.line.length-1].b):'—')+'</b></span></div><div class="dline" dir="ltr">';
+  for(i=0;i<st.line.length;i++){var o=st.line[i];h+='<div class="ltile'+((i===0||i===st.line.length-1)?' ed':'')+'"><span>'+fa(o.a)+'</span><i></i><span>'+fa(o.b)+'</span></div>';}
+  if(!st.line.length){h+='<span class="empty">خط خالی است — هر تخته‌ای بگذار</span>';}
+  h+='</div></div>';
+  var leg=L.legalTiles(st,st.hands[0]);
+  h+='<div class="dpanel you"><b>تخته‌های شما</b><div class="hand">';
+  for(i=0;i<st.hands[0].length;i++){t=st.hands[0][i];var okp=(st.turn===0&&!busy)&&(leg.indexOf(t)>=0);
+    h+='<button class="dtile'+(okp?' ok':'')+'" data-i="'+i+'"'+(okp?'':' disabled')+'><span>'+fa(t[0])+'</span><i></i><span>'+fa(t[1])+'</span></button>';}
+  h+='</div></div>';
+  h+='<div class="dctl"><span class="binfo">بونیارد: '+fa(st.bone.length)+'</span>';
+  if(st.turn===0&&leg.length===0&&st.bone.length>0){h+='<button id="drawBtn" data-smoke class="btn">از بونیارد بکش</button>';}
+  if(st.turn===0&&leg.length===0&&st.bone.length===0){h+='<button id="passBtn" class="btn">پاس</button>';}
+  h+='<button id="ngBtn" data-smoke class="btn ghost">بازی جدید</button></div>';
+  if(pend){h+='<div class="pendbar">«'+fa(pend[0])+'|'+fa(pend[1])+'» به هر دو سر می‌خورد — کجا بگذارم؟ <button id="plBtn" class="btn small">چپ</button> <button id="prBtn" class="btn small">راست</button></div>';}
+  app.innerHTML=h;
+  var els=app.querySelectorAll('.dtile.ok'),j;
+  for(j=0;j<els.length;j++){els[j].onclick=tileClick;}
+  var rb=$('#drawBtn');if(rb){rb.onclick=drawClick;}
+  var pb=$('#passBtn');if(pb){pb.onclick=passClick;}
+  $('#ngBtn').onclick=newGame;
+  var lb=$('#plBtn');if(lb){lb.onclick=function(){playTile(pend.slice(),'L');};}
+  var rr=$('#prBtn');if(rr){rr.onclick=function(){playTile(pend.slice(),'R');};}
+}
+newGame();
+})();
+</script>
+</body>
+</html>

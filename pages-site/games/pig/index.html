@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<title>تاس پیگ | دنیای بازی‌ها</title>
+<meta name="description" content="تاس بیندازید و شمارش نوبت را جمع کنید؛ با آمدن ۱ همهٔ شمارش می‌سوزد. ربات محتاط را در رسیدن به ۱۰۰ امتیاز شکست دهید.">
+<style>*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+@font-face{font-family:Vazirmatn;src:url(../../fonts/Vazirmatn-Regular.woff2) format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:Vazirmatn;src:url(../../fonts/Vazirmatn-Bold.woff2) format('woff2');font-weight:700;font-display:swap}
+body{font-family:Vazirmatn,Tahoma,sans-serif;background:linear-gradient(160deg,#101a2e,#0b1220);color:#f3ead8;min-height:100dvh;user-select:none;display:flex;flex-direction:column;align-items:center;padding:12px;padding-top:56px;overflow-x:hidden}
+a.wog-home{position:fixed;top:10px;inset-inline-start:12px;z-index:99;background:rgba(217,164,65,.12);border:1px solid rgba(217,164,65,.45);color:#e8c073;text-decoration:none;padding:6px 12px;border-radius:10px;font-size:.85rem;font-weight:700}
+a.wog-home:hover{background:rgba(217,164,65,.3)}
+header{text-align:center;margin-bottom:8px}
+h1{font-size:1.2rem;color:#d9a441}
+.hud{color:#a8b3c9;font-size:.9rem;margin-top:2px;min-height:1.4em}
+.hud b{color:#e8c073}
+button,.wbtn{font-family:inherit;background:#d9a441;color:#221806;border:0;border-radius:10px;font-weight:700;padding:8px 16px;font-size:.95rem;cursor:pointer;touch-action:manipulation}
+button.sec,.wbtn.sec{background:#14203a;color:#f3ead8;border:1px solid rgba(217,164,65,.35)}
+button:disabled{opacity:.45;cursor:default}
+#hint{color:#a8b3c9;font-size:.85rem;margin-top:10px;text-align:center;max-width:680px;line-height:1.9}
+.wpanel{background:#14203a;border:1px solid rgba(217,164,65,.35);border-radius:14px;padding:14px}
+.wrow{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;align-items:center;margin:8px 0}
+.wovl{position:fixed;inset:0;background:rgba(5,9,18,.85);display:flex;align-items:center;justify-content:center;z-index:90}
+.wovl .box{background:#14203a;border:2px solid rgba(217,164,65,.5);border-radius:16px;padding:22px 28px;text-align:center;max-width:88vw}
+.wovl h2{color:#e8c073;margin-bottom:8px}
+.wovl p{color:#a8b3c9;margin-bottom:14px}
+.wog-toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#14203a;border:1px solid rgba(217,164,65,.5);color:#f3ead8;padding:8px 18px;border-radius:12px;opacity:0;transition:.25s;z-index:95;pointer-events:none;font-size:.9rem}
+.wog-toast.on{opacity:1}
+.wgrid{display:grid;border:2px solid rgba(217,164,65,.5);border-radius:10px;overflow:hidden;direction:ltr;touch-action:manipulation}
+.wgrid .cell{display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative}
+.cell.light{background:#e8dcc0}.cell.dark{background:#41527a}
+.wcard{display:inline-flex;flex-direction:column;justify-content:space-between;width:52px;height:74px;background:#f6efe0;color:#1c2438;border-radius:7px;padding:3px 5px;font-weight:700;font-size:.9rem;line-height:1;box-shadow:0 2px 5px rgba(0,0,0,.45);cursor:pointer;touch-action:manipulation;flex:none}
+.wcard.red{color:#c0392b}
+.wcard.back{background:linear-gradient(135deg,#2c3a5e,#41527a);border:2px solid rgba(217,164,65,.5)}
+.wcard.back:before{content:'❋';color:rgba(232,192,115,.55);align-self:center;font-size:1.3rem}
+.wcard.small{width:38px;height:54px;font-size:.75rem;border-radius:5px}
+.wcard.tiny{width:30px;height:44px;font-size:.65rem;border-radius:4px;padding:2px 3px}
+.wcard.sel{outline:3px solid #e8c073;transform:translateY(-6px)}
+.wcard .cn{font-size:.7rem;opacity:.85}.wcard .cv{align-self:flex-start}
+.wcard.back .cn,.wcard.back .cv{display:none}
+.wdpad{display:none;grid-template-columns:repeat(3,58px);grid-auto-rows:50px;gap:6px;margin-top:12px}
+.wdpad.on{display:grid}
+.wdpad button{font-size:1.15rem}
+@media(pointer:coarse){.wdpad{display:grid}}
+canvas{touch-action:none;border-radius:10px;border:2px solid rgba(217,164,65,.35);background:#0d1526}
+#app{max-width:540px;margin:0 auto;padding:6px 10px}
+.scores{display:flex;gap:10px;justify-content:center;margin:10px 0}
+.pcard{background:#14203a;border:2px solid #233052;border-radius:12px;padding:10px 14px;text-align:center;flex:1;max-width:220px;color:#8fa3c8}
+.pcard.on{border-color:#d9a441}
+.pcard .big{font-size:30px;font-weight:800;color:#d9a441;line-height:1.3}
+.pcard .sub{min-height:20px;color:#3fb8af;font-size:14px}
+.diebig{font-size:76px;text-align:center;line-height:1.15;color:#f3ead8}
+.tot{text-align:center;color:#3fb8af;font-size:17px;min-height:24px;margin:6px 0}
+.btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.btn{min-height:44px;border:0;border-radius:10px;background:#d9a441;color:#14203a;font-weight:700;padding:10px 20px;cursor:pointer;touch-action:manipulation;font-family:inherit;font-size:15px}
+.btn.alt{background:#3fb8af;color:#0c1526}
+</style>
+</head>
+<body>
+<a class="wog-home" href="../../index.html">⌂ خانه</a>
+<header><h1>❋ تاس پیگ ❋</h1><div class="hud" id="hud"></div></header>
+<div id="app"></div>
+<p id="hint"></p>
+<div class="wog-toast" id="wog-toast"></div>
+<script>
+(function () {
+'use strict';
+var store = {
+  get: function (k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+  set: function (k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+};
+/*WOG_LOGIC_START*/
+function pNew(){return{scores:[0,0],current:0,turnTotal:0,over:false,winner:-1};}
+function pStart(state,idx){state.current=idx;state.turnTotal=0;return state;}
+function pRoll(state,rng){if(state.over)throw new Error('game-over');
+ var r=rng||Math.random,die=1+Math.floor(r()*6);
+ if(die===1){state.turnTotal=0;return{die:1,busted:true};}
+ state.turnTotal+=die;return{die:die,busted:false};}
+function pHold(state){var b=state.scores[state.current]+state.turnTotal;
+ state.scores[state.current]=b;state.turnTotal=0;
+ if(b>=100){state.over=true;state.winner=state.current;}
+ return b;}
+function pAI(state){var tot=state.scores[state.current]+state.turnTotal;
+ if(tot>=100)return'hold';
+ if(state.turnTotal>=20)return'hold';
+ return'roll';}
+function pTurn(state,idx,decide,rng){pStart(state,idx);var guard=0;
+ while(!state.over&&guard++<500){
+  if(decide(state)==='hold'){pHold(state);break;}
+  if(pRoll(state,rng).busted)break;}
+ return state;}
+var WOG_LOGIC={newGame:pNew,startTurn:pStart,roll:pRoll,hold:pHold,aiDecision:pAI,takeTurn:pTurn};
+/*WOG_LOGIC_END*/
+var L = WOG_LOGIC;
+function $(s){return document.querySelector(s)}
+function $$(s){return Array.prototype.slice.call(document.querySelectorAll(s))}
+function ce(tag,cls,html){var e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;return e}
+var FA_D='۰۱۲۳۴۵۶۷۸۹';
+function fa(n){return String(n).replace(/\d/g,function(d){return FA_D[+d]})}
+function shuffle(a,rng){a=a.slice();rng=rng||Math.random;for(var i=a.length-1;i>0;i--){var j=Math.floor(rng()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a}
+function rint(a,b,rng){rng=rng||Math.random;return a+Math.floor(rng()*(b-a+1))}
+function pick(arr,rng){rng=rng||Math.random;return arr[Math.floor(rng()*arr.length)]}
+function clamp(v,a,b){return v<a?a:v>b?b:v}
+var _toastT=0;
+function toast(msg,ms){var t=$('#wog-toast');if(!t)return;t.textContent=msg;t.classList.add('on');clearTimeout(_toastT);_toastT=setTimeout(function(){t.classList.remove('on')},ms||1800)}
+function hud(html){var h=$('#hud');if(h)h.innerHTML=html}
+function ovl(title,sub,btn,cb){var o=ce('div','wovl');var b=ce('div','box');b.appendChild(ce('h2',null,title));if(sub)b.appendChild(ce('p',null,sub));var bt=ce('button',null,btn);bt.setAttribute('data-smoke','');bt.addEventListener('click',function(){o.remove();cb&&cb()});b.appendChild(bt);o.appendChild(b);document.body.appendChild(o);return o}
+function bestOf(key,val){var b=parseInt(store.get(key)||'0',10)||0;if(val>b)store.set(key,String(val));return Math.max(b,val)}
+function storeBest(key){return parseInt(store.get(key)||'0',10)||0}
+
+var st=L.newGame(),busy=false,last=0,wins=+(store.get('wog-pig-wins')||0);
+$('#hint').textContent='تاس ببرانید و شمارش نوبت را جمع کنید؛ اگر ۱ بیاید همهٔ شمارش نوبت می‌سوزد. با «نگه‌دار» امتیاز را ثبت کنید؛ اولین نفری که به ۱۰۰ برسد برنده است.';
+$('#app').innerHTML='<div class="scores"><div class="pcard" id="p0"><div>شما</div><div class="big" id="s0">۰</div><div class="sub" id="t0"></div></div><div class="pcard" id="p1"><div>ربات</div><div class="big" id="s1">۰</div><div class="sub" id="t1"></div></div></div><div class="diebig" id="die">⚄</div><div class="tot" id="tt"></div><div class="btns"><button class="btn" id="btnRoll" data-smoke>پرتاب</button><button class="btn alt" id="btnHold" data-smoke>نگه‌دار</button><button class="btn alt" id="btnNew" data-smoke>بازی جدید</button></div>';
+function render(){
+ $('#s0').textContent=fa(st.scores[0]);$('#s1').textContent=fa(st.scores[1]);
+ $('#t0').textContent=(st.current===0&&!st.over)?('در نوبت: '+fa(st.turnTotal)):'';
+ $('#t1').textContent=(st.current===1&&!st.over)?('در نوبت: '+fa(st.turnTotal)):'';
+ $('#p0').className='pcard'+((st.current===0&&!st.over)?' on':'');
+ $('#p1').className='pcard'+((st.current===1&&!st.over)?' on':'');
+ if(last)$('#die').textContent='⚀⚁⚂⚃⚄⚅'.charAt(last-1);
+ $('#tt').textContent=st.over?'':('شمارش این نوبت: '+fa(st.turnTotal));
+ hud('شما '+fa(st.scores[0])+' — ربات '+fa(st.scores[1])+' | بردها: '+fa(wins));}
+function newG(){st=L.newGame();busy=false;last=0;L.startTurn(st,0);render();}
+function end(){var win=st.winner===0;
+ if(win){wins++;store.set('wog-pig-wins',String(wins));}
+ busy=true;render();
+ ovl(win?'بردی!':'باختی!','نتیجهٔ نهایی — شما '+fa(st.scores[0])+' : ربات '+fa(st.scores[1]),'بازی جدید',newG);}
+function aiTurn(){if(st.over)return;busy=true;L.startTurn(st,1);render();
+ (function step(){
+  if(st.over){end();return;}
+  if(L.aiDecision(st)==='hold'){L.hold(st);render();
+   if(st.over){end();return;}
+   busy=false;setTimeout(function(){L.startTurn(st,0);render();},700);return;}
+  var res=L.roll(st);last=res.die;render();
+  if(res.busted){busy=false;toast('ربات سوخت!');setTimeout(function(){L.startTurn(st,0);render();},700);return;}
+  setTimeout(step,650);})();}
+$('#btnRoll').addEventListener('click',function(){if(busy||st.over||st.current!==0)return;
+ var res=L.roll(st);last=res.die;
+ if(res.busted){toast('تاس ۱ آمد! شمارش این نوبت سوخت');render();setTimeout(aiTurn,700);return;}
+ render();});
+$('#btnHold').addEventListener('click',function(){if(busy||st.over||st.current!==0)return;
+ if(st.turnTotal===0){toast('هنوز در این نوبت تاسی نیاورده‌اید');return;}
+ L.hold(st);last=0;render();
+ if(st.over){end();return;}
+ setTimeout(aiTurn,700);});
+$('#btnNew').addEventListener('click',newG);
+L.startTurn(st,0);render();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<title>چرخ میوه | دنیای بازی‌ها</title>
+<meta name="description" content="چرخ میوهٔ سه‌قرقره با نمادهای وزن‌دار؛ هر چرخش ۵ اعتبار دارد و سه نماد یکسان روی خط برد جایزه می‌دهد.">
+<style>*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+@font-face{font-family:Vazirmatn;src:url(../../fonts/Vazirmatn-Regular.woff2) format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:Vazirmatn;src:url(../../fonts/Vazirmatn-Bold.woff2) format('woff2');font-weight:700;font-display:swap}
+body{font-family:Vazirmatn,Tahoma,sans-serif;background:linear-gradient(160deg,#101a2e,#0b1220);color:#f3ead8;min-height:100dvh;user-select:none;display:flex;flex-direction:column;align-items:center;padding:12px;padding-top:56px;overflow-x:hidden}
+a.wog-home{position:fixed;top:10px;inset-inline-start:12px;z-index:99;background:rgba(217,164,65,.12);border:1px solid rgba(217,164,65,.45);color:#e8c073;text-decoration:none;padding:6px 12px;border-radius:10px;font-size:.85rem;font-weight:700}
+a.wog-home:hover{background:rgba(217,164,65,.3)}
+header{text-align:center;margin-bottom:8px}
+h1{font-size:1.2rem;color:#d9a441}
+.hud{color:#a8b3c9;font-size:.9rem;margin-top:2px;min-height:1.4em}
+.hud b{color:#e8c073}
+button,.wbtn{font-family:inherit;background:#d9a441;color:#221806;border:0;border-radius:10px;font-weight:700;padding:8px 16px;font-size:.95rem;cursor:pointer;touch-action:manipulation}
+button.sec,.wbtn.sec{background:#14203a;color:#f3ead8;border:1px solid rgba(217,164,65,.35)}
+button:disabled{opacity:.45;cursor:default}
+#hint{color:#a8b3c9;font-size:.85rem;margin-top:10px;text-align:center;max-width:680px;line-height:1.9}
+.wpanel{background:#14203a;border:1px solid rgba(217,164,65,.35);border-radius:14px;padding:14px}
+.wrow{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;align-items:center;margin:8px 0}
+.wovl{position:fixed;inset:0;background:rgba(5,9,18,.85);display:flex;align-items:center;justify-content:center;z-index:90}
+.wovl .box{background:#14203a;border:2px solid rgba(217,164,65,.5);border-radius:16px;padding:22px 28px;text-align:center;max-width:88vw}
+.wovl h2{color:#e8c073;margin-bottom:8px}
+.wovl p{color:#a8b3c9;margin-bottom:14px}
+.wog-toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#14203a;border:1px solid rgba(217,164,65,.5);color:#f3ead8;padding:8px 18px;border-radius:12px;opacity:0;transition:.25s;z-index:95;pointer-events:none;font-size:.9rem}
+.wog-toast.on{opacity:1}
+.wgrid{display:grid;border:2px solid rgba(217,164,65,.5);border-radius:10px;overflow:hidden;direction:ltr;touch-action:manipulation}
+.wgrid .cell{display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative}
+.cell.light{background:#e8dcc0}.cell.dark{background:#41527a}
+.wcard{display:inline-flex;flex-direction:column;justify-content:space-between;width:52px;height:74px;background:#f6efe0;color:#1c2438;border-radius:7px;padding:3px 5px;font-weight:700;font-size:.9rem;line-height:1;box-shadow:0 2px 5px rgba(0,0,0,.45);cursor:pointer;touch-action:manipulation;flex:none}
+.wcard.red{color:#c0392b}
+.wcard.back{background:linear-gradient(135deg,#2c3a5e,#41527a);border:2px solid rgba(217,164,65,.5)}
+.wcard.back:before{content:'❋';color:rgba(232,192,115,.55);align-self:center;font-size:1.3rem}
+.wcard.small{width:38px;height:54px;font-size:.75rem;border-radius:5px}
+.wcard.tiny{width:30px;height:44px;font-size:.65rem;border-radius:4px;padding:2px 3px}
+.wcard.sel{outline:3px solid #e8c073;transform:translateY(-6px)}
+.wcard .cn{font-size:.7rem;opacity:.85}.wcard .cv{align-self:flex-start}
+.wcard.back .cn,.wcard.back .cv{display:none}
+.wdpad{display:none;grid-template-columns:repeat(3,58px);grid-auto-rows:50px;gap:6px;margin-top:12px}
+.wdpad.on{display:grid}
+.wdpad button{font-size:1.15rem}
+@media(pointer:coarse){.wdpad{display:grid}}
+canvas{touch-action:none;border-radius:10px;border:2px solid rgba(217,164,65,.35);background:#0d1526}
+.machine{max-width:360px;margin:12px auto;background:#14203a;border:2px solid #d9a441;border-radius:16px;padding:16px}
+.reels{display:flex;gap:10px;justify-content:center}
+.reel{width:84px;height:84px;background:#0d1730;border:2px solid #2c3f6b;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:42px;color:#fff}
+.pline{height:3px;background:#d9a441;border-radius:2px;margin:8px 10px 0}
+.machine.go .reel span{display:inline-block;animation:jig .12s linear 5}
+@keyframes jig{0%{transform:translateY(-8px)}50%{transform:translateY(8px)}100%{transform:translateY(0)}}
+.paytable{max-width:440px;margin:10px auto;text-align:center;color:#9fb0d8;font-size:13px;line-height:2}
+.pi{display:inline-block;background:#14203a;border:1px solid #2c3f6b;border-radius:8px;padding:2px 8px;margin:2px;color:#e8edf7}
+.btns{display:flex;gap:10px;justify-content:center;margin:14px 0;flex-wrap:wrap}
+.btn{min-height:48px;min-width:120px;padding:10px 20px;font-size:16px;border-radius:10px;background:#1b2b4d;color:#e8edf7;border:1px solid #2c3f6b;cursor:pointer;touch-action:manipulation}
+.btn.primary{background:#d9a441;color:#14203a;font-weight:700}
+.btn:disabled{opacity:.45;cursor:default}
+.msg{text-align:center;color:#67b98a;min-height:22px}
+</style>
+</head>
+<body>
+<a class="wog-home" href="../../index.html">⌂ خانه</a>
+<header><h1>❋ چرخ میوه ❋</h1><div class="hud" id="hud"></div></header>
+<div id="app"></div>
+<p id="hint"></p>
+<div class="wog-toast" id="wog-toast"></div>
+<script>
+(function () {
+'use strict';
+var store = {
+  get: function (k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+  set: function (k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+};
+/*WOG_LOGIC_START*/
+var WOG_LOGIC = (function () {
+  var SYMS = ['⬤', '▲', '★', '◆', '❋', '♣'];
+  var WEIGHTS = [6, 5, 4, 3, 2, 2];
+  var TRIPLE_VALS = [8, 6, 50, 25, 15, 10];
+  var REELS = [[], [], []], TRIPLE = {}, i, j;
+  for (i = 0; i < SYMS.length; i++) {
+    TRIPLE[SYMS[i]] = TRIPLE_VALS[i];
+    for (j = 0; j < WEIGHTS[i]; j++) { REELS[0].push(SYMS[i]); REELS[1].push(SYMS[i]); REELS[2].push(SYMS[i]); }
+  }
+  function pick1(rng) { var r = rng || Math.random; return REELS[0][Math.floor(r() * REELS[0].length)]; }
+  function spin(rng) { return [pick1(rng), pick1(rng), pick1(rng)]; }
+  function payout(reels) {
+    var a = reels[0], b = reels[1], c = reels[2], pair = null;
+    if (a === b && b === c) return TRIPLE[a] || 0;
+    if (a === b || a === c) pair = a; else if (b === c) pair = b;
+    if (pair === null) return 0;
+    return pair === '★' ? 3 : 2;
+  }
+  function ev(n) { var s = 0, k; for (k = 0; k < n; k++) s += payout(spin()); return s / n; }
+  return { SYMS: SYMS, WEIGHTS: WEIGHTS, REELS: REELS, TRIPLE: TRIPLE, COST: 5, pick1: pick1, spin: spin, payout: payout, ev: ev };
+})();
+/*WOG_LOGIC_END*/
+var L = WOG_LOGIC;
+function $(s){return document.querySelector(s)}
+function $$(s){return Array.prototype.slice.call(document.querySelectorAll(s))}
+function ce(tag,cls,html){var e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;return e}
+var FA_D='۰۱۲۳۴۵۶۷۸۹';
+function fa(n){return String(n).replace(/\d/g,function(d){return FA_D[+d]})}
+function shuffle(a,rng){a=a.slice();rng=rng||Math.random;for(var i=a.length-1;i>0;i--){var j=Math.floor(rng()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a}
+function rint(a,b,rng){rng=rng||Math.random;return a+Math.floor(rng()*(b-a+1))}
+function pick(arr,rng){rng=rng||Math.random;return arr[Math.floor(rng()*arr.length)]}
+function clamp(v,a,b){return v<a?a:v>b?b:v}
+var _toastT=0;
+function toast(msg,ms){var t=$('#wog-toast');if(!t)return;t.textContent=msg;t.classList.add('on');clearTimeout(_toastT);_toastT=setTimeout(function(){t.classList.remove('on')},ms||1800)}
+function hud(html){var h=$('#hud');if(h)h.innerHTML=html}
+function ovl(title,sub,btn,cb){var o=ce('div','wovl');var b=ce('div','box');b.appendChild(ce('h2',null,title));if(sub)b.appendChild(ce('p',null,sub));var bt=ce('button',null,btn);bt.setAttribute('data-smoke','');bt.addEventListener('click',function(){o.remove();cb&&cb()});b.appendChild(bt);o.appendChild(b);document.body.appendChild(o);return o}
+function bestOf(key,val){var b=parseInt(store.get(key)||'0',10)||0;if(val>b)store.set(key,String(val));return Math.max(b,val)}
+function storeBest(key){return parseInt(store.get(key)||'0',10)||0}
+
+var credits = 100, busy = false, reels = null;
+function render(msg) {
+  var r = reels ? reels : ['؟', '؟', '؟'];
+  var h = '<div class="machine' + (busy ? ' go' : '') + '"><div class="reels">';
+  var i, pt;
+  for (i = 0; i < 3; i++) h += '<div class="reel"><span>' + r[i] + '</span></div>';
+  h += '</div><div class="pline"></div></div>';
+  h += '<div class="btns"><button id="spin" class="btn primary" data-smoke' + (busy || credits < L.COST ? ' disabled' : '') + '>چرخش (' + fa(L.COST) + ' اعتبار)</button><button id="new" class="btn" data-smoke>شروع مجدد با ' + fa(100) + '</button></div>';
+  pt = '';
+  for (i = 0; i < L.SYMS.length; i++) pt += '<span class="pi">' + L.SYMS[i] + L.SYMS[i] + L.SYMS[i] + '=' + fa(L.TRIPLE[L.SYMS[i]]) + '</span>';
+  h += '<div class="paytable"><b>جوایز:</b> ' + pt + '<span class="pi">دو ' + L.SYMS[2] + '=۳</span><span class="pi">جفت دیگر=۲</span></div>';
+  if (msg) h += '<div class="msg">' + msg + '</div>';
+  $('#app').innerHTML = h;
+  $('#spin').onclick = doSpin;
+  $('#new').onclick = newGame;
+  hud('اعتبار: ' + fa(credits) + ' · رکورد: ' + fa(store.get('wog-slots-best') || '0'));
+}
+function doSpin() {
+  if (busy || credits < L.COST) return;
+  busy = true;
+  credits -= L.COST;
+  render('در حال چرخش…');
+  setTimeout(function () {
+    var p;
+    reels = L.spin();
+    p = L.payout(reels);
+    credits += p;
+    busy = false;
+    if (credits > parseInt(store.get('wog-slots-best') || '0', 10)) store.set('wog-slots-best', String(credits));
+    render(p > 0 ? 'برد: ' + fa(p) + ' اعتبار!' : 'جایزه‌ای نبود؛ دوباره بچرخان');
+    if (credits < L.COST) setTimeout(function () { ovl('اعتبار تمام شد', 'اعتبار نهایی تو: ' + fa(credits), 'شروع مجدد با ۱۰۰', newGame); }, 350);
+  }, 700);
+}
+function newGame() { credits = 100; reels = null; busy = false; render('اعتبار دوباره ' + fa(100) + ' شد'); }
+$('#hint').textContent = 'هر چرخش ۵ اعتبار دارد؛ سه نماد یکسان روی خط برد جایزه می‌دهد. ستاره گران‌بهاترین نماد است و دو ستاره هم ۳ اعتبار می‌دهد.';
+render('');
+hud('اعتبار: ' + fa(credits));
+})();
+</script>
+</body>
+</html>

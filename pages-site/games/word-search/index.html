@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<title>واژه‌یاب شبکه‌ای | دنیای بازی‌ها</title>
+<meta name="description" content="هشت واژهٔ پنج تا هفت‌حرفی در شبکهٔ ۱۰×۱۰ پنهان شده‌اند. خانهٔ آغاز و پایان هر واژه را لمس کن تا خط آن روشن شود.">
+<style>*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+@font-face{font-family:Vazirmatn;src:url(../../fonts/Vazirmatn-Regular.woff2) format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:Vazirmatn;src:url(../../fonts/Vazirmatn-Bold.woff2) format('woff2');font-weight:700;font-display:swap}
+body{font-family:Vazirmatn,Tahoma,sans-serif;background:linear-gradient(160deg,#101a2e,#0b1220);color:#f3ead8;min-height:100dvh;user-select:none;display:flex;flex-direction:column;align-items:center;padding:12px;padding-top:56px;overflow-x:hidden}
+a.wog-home{position:fixed;top:10px;inset-inline-start:12px;z-index:99;background:rgba(217,164,65,.12);border:1px solid rgba(217,164,65,.45);color:#e8c073;text-decoration:none;padding:6px 12px;border-radius:10px;font-size:.85rem;font-weight:700}
+a.wog-home:hover{background:rgba(217,164,65,.3)}
+header{text-align:center;margin-bottom:8px}
+h1{font-size:1.2rem;color:#d9a441}
+.hud{color:#a8b3c9;font-size:.9rem;margin-top:2px;min-height:1.4em}
+.hud b{color:#e8c073}
+button,.wbtn{font-family:inherit;background:#d9a441;color:#221806;border:0;border-radius:10px;font-weight:700;padding:8px 16px;font-size:.95rem;cursor:pointer;touch-action:manipulation}
+button.sec,.wbtn.sec{background:#14203a;color:#f3ead8;border:1px solid rgba(217,164,65,.35)}
+button:disabled{opacity:.45;cursor:default}
+#hint{color:#a8b3c9;font-size:.85rem;margin-top:10px;text-align:center;max-width:680px;line-height:1.9}
+.wpanel{background:#14203a;border:1px solid rgba(217,164,65,.35);border-radius:14px;padding:14px}
+.wrow{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;align-items:center;margin:8px 0}
+.wovl{position:fixed;inset:0;background:rgba(5,9,18,.85);display:flex;align-items:center;justify-content:center;z-index:90}
+.wovl .box{background:#14203a;border:2px solid rgba(217,164,65,.5);border-radius:16px;padding:22px 28px;text-align:center;max-width:88vw}
+.wovl h2{color:#e8c073;margin-bottom:8px}
+.wovl p{color:#a8b3c9;margin-bottom:14px}
+.wog-toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#14203a;border:1px solid rgba(217,164,65,.5);color:#f3ead8;padding:8px 18px;border-radius:12px;opacity:0;transition:.25s;z-index:95;pointer-events:none;font-size:.9rem}
+.wog-toast.on{opacity:1}
+.wgrid{display:grid;border:2px solid rgba(217,164,65,.5);border-radius:10px;overflow:hidden;direction:ltr;touch-action:manipulation}
+.wgrid .cell{display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative}
+.cell.light{background:#e8dcc0}.cell.dark{background:#41527a}
+.wcard{display:inline-flex;flex-direction:column;justify-content:space-between;width:52px;height:74px;background:#f6efe0;color:#1c2438;border-radius:7px;padding:3px 5px;font-weight:700;font-size:.9rem;line-height:1;box-shadow:0 2px 5px rgba(0,0,0,.45);cursor:pointer;touch-action:manipulation;flex:none}
+.wcard.red{color:#c0392b}
+.wcard.back{background:linear-gradient(135deg,#2c3a5e,#41527a);border:2px solid rgba(217,164,65,.5)}
+.wcard.back:before{content:'❋';color:rgba(232,192,115,.55);align-self:center;font-size:1.3rem}
+.wcard.small{width:38px;height:54px;font-size:.75rem;border-radius:5px}
+.wcard.tiny{width:30px;height:44px;font-size:.65rem;border-radius:4px;padding:2px 3px}
+.wcard.sel{outline:3px solid #e8c073;transform:translateY(-6px)}
+.wcard .cn{font-size:.7rem;opacity:.85}.wcard .cv{align-self:flex-start}
+.wcard.back .cn,.wcard.back .cv{display:none}
+.wdpad{display:none;grid-template-columns:repeat(3,58px);grid-auto-rows:50px;gap:6px;margin-top:12px}
+.wdpad.on{display:grid}
+.wdpad button{font-size:1.15rem}
+@media(pointer:coarse){.wdpad{display:grid}}
+canvas{touch-action:none;border-radius:10px;border:2px solid rgba(217,164,65,.35);background:#0d1526}
+*{box-sizing:border-box}
+body{font-family:Tahoma,'Segoe UI',sans-serif;margin:0;background:#0b1428;color:#eef2f7}
+header{padding:10px 14px 0}
+h1{font-size:18px;margin:0 0 6px;color:#d9a441}
+#hud{font-size:13px;color:#9fb3d1;min-height:18px}
+#app{padding:10px;max-width:540px;margin:0 auto}
+#hint{padding:8px 14px;color:#7f93b3;font-size:12px;margin:0}
+.panel{background:#14203a;border:1px solid #1f3160;border-radius:10px;padding:10px;margin:8px 0}
+button{font-family:inherit;font-size:15px;min-height:42px;min-width:44px;border-radius:8px;border:1px solid #2a4a7a;background:#1b2c4f;color:#eef2f7;padding:8px 14px;cursor:pointer;touch-action:manipulation}
+button.gold{background:#d9a441;color:#14203a;border-color:#d9a441;font-weight:700}
+button.danger{background:#e26d5c;color:#14203a;border-color:#e26d5c;font-weight:700}
+button:disabled{opacity:.45}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:center}
+.chip{background:#14203a;border:1px solid #1f3160;border-radius:14px;padding:4px 10px;font-size:13px;color:#9fb3d1}
+.chip.on{background:#67b98a;color:#0b1428;border-color:#67b98a;text-decoration:line-through}
+.small{font-size:12px;color:#7f93b3;text-align:center;margin:4px 0}
+.wgrid{display:grid;grid-template-columns:repeat(10,1fr);gap:3px}
+.wcell{aspect-ratio:1;display:flex;align-items:center;justify-content:center;background:#14203a;border:1px solid #1f3160;border-radius:5px;font-size:15px;cursor:pointer;user-select:none;-webkit-user-select:none}
+.wcell.sel{background:#d9a441;color:#14203a;font-weight:700}
+.wcell.fnd{background:#3fb8af;color:#0b1428;font-weight:700}
+</style>
+</head>
+<body>
+<a class="wog-home" href="../../index.html">⌂ خانه</a>
+<header><h1>❋ واژه‌یاب شبکه‌ای ❋</h1><div class="hud" id="hud"></div></header>
+<div id="app"></div>
+<p id="hint"></p>
+<div class="wog-toast" id="wog-toast"></div>
+<script>
+(function () {
+'use strict';
+var store = {
+  get: function (k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+  set: function (k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+};
+/*WOG_LOGIC_START*/
+var WOG_LOGIC=(function(){
+var N=10;
+var PLACE_DIRS=[[0,-1],[1,0],[1,-1],[1,1]];
+var FILL="الیمنورتهدسکبشچپگفقحز";
+var WORDS=["سلامتی", "موفقیت", "دانشجو", "دوستی", "زندگی", "کتابچه", "پنجره", "خورشید", "درختان", "آسمان", "دریاچه", "کوهستان", "مهربانی", "آزادی", "گنجشک", "پرندگان", "باغبان", "باران", "نانوا", "مدرسه", "دوچرخه", "نارنجی", "پروانه", "قناری", "سنجاب", "خلبان", "کشاورز", "راهنما", "دانشمند", "خلاقیت", "توانایی", "یادگیری", "پایداری", "شیرینی", "گردشگر", "تابستان", "زمستان", "مرغابی", "زرافه", "ستاره", "بلدرچین", "سفرنامه", "سبزیجات", "ماهیگیر", "چمدان", "مسافر", "یخچال", "صابون"];
+function emptyGrid(){var g=[],r,c;for(r=0;r<N;r++){g.push([]);for(c=0;c<N;c++)g[r].push("");}return g;}
+function placeWord(grid,word,r,c,dir){var cells=[],i,rr,cc;
+for(i=0;i<word.length;i++){rr=r+dir[0]*i;cc=c+dir[1]*i;
+if(rr<0||rr>=N||cc<0||cc>=N)return null;
+if(grid[rr][cc]!==""&&grid[rr][cc]!==word[i])return null;
+cells.push([rr,cc]);}
+for(i=0;i<word.length;i++)grid[cells[i][0]][cells[i][1]]=word[i];
+return cells;}
+function tryPlace(grid,word,rng){var t,d,r,c,cs,dir;
+for(t=0;t<250;t++){dir=PLACE_DIRS[Math.floor(rng()*PLACE_DIRS.length)];
+r=Math.floor(rng()*N);c=Math.floor(rng()*N);
+cs=placeWord(grid,word,r,c,dir);if(cs)return cs;}
+for(d=0;d<PLACE_DIRS.length;d++)for(r=0;r<N;r++)for(c=0;c<N;c++){cs=placeWord(grid,word,r,c,PLACE_DIRS[d]);if(cs)return cs;}
+return null;}
+function fillGrid(grid,rng){for(var r=0;r<N;r++)for(var c=0;c<N;c++)if(grid[r][c]==="")grid[r][c]=FILL[Math.floor(rng()*FILL.length)];}
+function gen(words,rng){var grid=emptyGrid(),placed=[];
+for(var i=0;i<words.length;i++){var cells=tryPlace(grid,words[i],rng);
+if(!cells)throw new Error("cannot place: "+words[i]);
+placed.push({word:words[i],cells:cells});}
+fillGrid(grid,rng);
+return {grid:grid,placed:placed};}
+function checkSelection(placed,r1,c1,r2,c2){
+var dr=r2-r1,dc=c2-c1;
+if(dr===0&&dc===0)return null;
+if(Math.abs(dr)!==Math.abs(dc)&&dr!==0&&dc!==0)return null;
+var sr=dr===0?0:(dr>0?1:-1),sc=dc===0?0:(dc>0?1:-1);
+var ok=false;
+for(var i=0;i<PLACE_DIRS.length;i++)if(PLACE_DIRS[i][0]===sr&&PLACE_DIRS[i][1]===sc){ok=true;break;}
+if(!ok)return null;
+var len=Math.max(Math.abs(dr),Math.abs(dc)),cells=[];
+for(var j=0;j<=len;j++){var rr=r1+sr*j,cc=c1+sc*j;
+if(rr<0||rr>=N||cc<0||cc>=N)return null;
+cells.push([rr,cc]);}
+for(var k=0;k<placed.length;k++){var pc=placed[k].cells;
+if(pc.length!==cells.length)continue;
+var same=true;
+for(var m=0;m<cells.length;m++)if(pc[m][0]!==cells[m][0]||pc[m][1]!==cells[m][1]){same=false;break;}
+if(same)return placed[k].word;}
+return null;}
+return {N:N,PLACE_DIRS:PLACE_DIRS,WORDS:WORDS,FILL:FILL,placeWord:placeWord,fillGrid:fillGrid,gen:gen,checkSelection:checkSelection};
+})();
+/*WOG_LOGIC_END*/
+var L = WOG_LOGIC;
+function $(s){return document.querySelector(s)}
+function $$(s){return Array.prototype.slice.call(document.querySelectorAll(s))}
+function ce(tag,cls,html){var e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;return e}
+var FA_D='۰۱۲۳۴۵۶۷۸۹';
+function fa(n){return String(n).replace(/\d/g,function(d){return FA_D[+d]})}
+function shuffle(a,rng){a=a.slice();rng=rng||Math.random;for(var i=a.length-1;i>0;i--){var j=Math.floor(rng()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a}
+function rint(a,b,rng){rng=rng||Math.random;return a+Math.floor(rng()*(b-a+1))}
+function pick(arr,rng){rng=rng||Math.random;return arr[Math.floor(rng()*arr.length)]}
+function clamp(v,a,b){return v<a?a:v>b?b:v}
+var _toastT=0;
+function toast(msg,ms){var t=$('#wog-toast');if(!t)return;t.textContent=msg;t.classList.add('on');clearTimeout(_toastT);_toastT=setTimeout(function(){t.classList.remove('on')},ms||1800)}
+function hud(html){var h=$('#hud');if(h)h.innerHTML=html}
+function ovl(title,sub,btn,cb){var o=ce('div','wovl');var b=ce('div','box');b.appendChild(ce('h2',null,title));if(sub)b.appendChild(ce('p',null,sub));var bt=ce('button',null,btn);bt.setAttribute('data-smoke','');bt.addEventListener('click',function(){o.remove();cb&&cb()});b.appendChild(bt);o.appendChild(b);document.body.appendChild(o);return o}
+function bestOf(key,val){var b=parseInt(store.get(key)||'0',10)||0;if(val>b)store.set(key,String(val));return Math.max(b,val)}
+function storeBest(key){return parseInt(store.get(key)||'0',10)||0}
+var FA_LETTERS=['آ','ا','ب','پ','ت','ث','ج','چ','ح','خ','د','ذ','ر','ز','ژ','س','ش','ص','ض','ط','ظ','ع','غ','ف','ق','ک','گ','ل','م','ن','و','ه','ی'];
+function normFa(s){return (s||'').replace(/ي/g,'ی').replace(/ك/g,'ک').replace(/\u200c/g,' ').replace(/\s+/g,' ').trim()}
+function faKb(onKey,longKeys){var kb=ce('div');kb.style.cssText='display:flex;flex-wrap:wrap;gap:5px;justify-content:center;max-width:560px;margin-top:12px;direction:rtl';FA_LETTERS.forEach(function(ch){var b=ce('button','sec',ch);b.style.cssText='min-width:40px;padding:8px 4px';b.addEventListener('click',function(){onKey(ch)});kb.appendChild(b)});var lk=(longKeys&&longKeys.length&&typeof longKeys.forEach==='function')?longKeys:[];lk.forEach(function(x){var b=ce('button',null,x.label);b.addEventListener('click',function(){onKey(x.k)});kb.appendChild(b)});document.getElementById('app').appendChild(kb);return kb}
+
+var app=$('#app');
+var st=null,sel=null,fc={},t0=0,timer=null;
+function shuffleCopy(a){var b=a.slice(),i,j,t;for(i=b.length-1;i>0;i--){j=Math.floor(Math.random()*(i+1));t=b[i];b[i]=b[j];b[j]=t;}return b;}
+function key(r,c){return r+'_'+c;}
+function isFound(w){for(var k in fc)if(fc[k]===w)return true;return false;}
+function newGame(){
+var pool=shuffleCopy(L.WORDS).slice(0,8);
+st=L.gen(pool,Math.random);
+sel=null;fc={};t0=Date.now();
+if(timer)clearInterval(timer);
+timer=setInterval(paintHud,1000);
+render();paintHud();
+}
+function paintHud(){
+var f=0,k;for(k in fc)f++;
+var el=Math.floor((Date.now()-t0)/1000);
+hud('یافته: '+fa(f)+' از '+fa(st?st.placed.length:8)+' · زمان: '+fa(el)+' ثانیه');
+}
+function render(){
+app.innerHTML='';
+var g=st.grid;
+var grid=ce('div','wgrid');
+for(var r=0;r<10;r++)for(var c=0;c<10;c++)(function(r,c){
+var d=ce('div','wcell');
+d.textContent=g[r][c];
+if(sel&&sel[0]===r&&sel[1]===c)d.className+=' sel';
+if(fc[key(r,c)])d.className+=' fnd';
+d.onclick=function(){tap(r,c);};
+grid.appendChild(d);
+})(r,c);
+app.appendChild(grid);
+var chips=ce('div','row');
+for(var i=0;i<st.placed.length;i++){
+var ch=ce('div','chip'+(isFound(st.placed[i].word)?' on':''));
+ch.textContent=st.placed[i].word;
+chips.appendChild(ch);
+}
+app.appendChild(chips);
+var row=ce('div','row');
+var nb=ce('button','gold');
+nb.textContent='بازی جدید';
+nb.setAttribute('data-smoke','1');
+nb.onclick=newGame;
+row.appendChild(nb);
+app.appendChild(row);
+}
+function tap(r,c){
+if(!st)return;
+if(!sel){sel=[r,c];render();return;}
+if(sel[0]===r&&sel[1]===c){sel=null;render();return;}
+var w=L.checkSelection(st.placed,sel[0],sel[1],r,c);
+if(w&&!isFound(w)){
+var p=null,i;
+for(i=0;i<st.placed.length;i++)if(st.placed[i].word===w)p=st.placed[i];
+for(i=0;i<p.cells.length;i++)fc[key(p.cells[i][0],p.cells[i][1])]=w;
+toast('پیدا شد: '+w);
+sel=null;
+var f=0,k;for(k in fc)f++;
+if(f===st.placed.length){win();return;}
+render();paintHud();
+}else{
+if(w)toast('این واژه قبلاً پیدا شده بود');
+else toast('این خط واژه‌ای ندارد');
+sel=[r,c];render();
+}
+}
+function win(){
+if(timer){clearInterval(timer);timer=null;}
+var el=Math.floor((Date.now()-t0)/1000);
+var best=parseInt(store.get('wog-word-search-best')||'0',10);
+var rec;
+if(!best||el<best){store.set('wog-word-search-best',String(el));rec=' — رکورد جدید!';}
+else rec=' — رکورد: '+fa(best)+' ثانیه';
+render();
+ovl('همهٔ واژه‌ها پیدا شد!','زمان: '+fa(el)+' ثانیه'+rec,'بازی جدید',newGame);
+}
+newGame();
+})();
+</script>
+</body>
+</html>

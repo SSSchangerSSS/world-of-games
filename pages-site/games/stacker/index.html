@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<title>برج‌ساز | دنیای بازی‌ها</title>
+<meta name="description" content="بلوک را در لحظهٔ درست رها کن تا برج بلندتر شود؛ چیدمان کامل عرض از دست رفته را برمی‌گرداند.">
+<style>*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+@font-face{font-family:Vazirmatn;src:url(../../fonts/Vazirmatn-Regular.woff2) format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:Vazirmatn;src:url(../../fonts/Vazirmatn-Bold.woff2) format('woff2');font-weight:700;font-display:swap}
+body{font-family:Vazirmatn,Tahoma,sans-serif;background:linear-gradient(160deg,#101a2e,#0b1220);color:#f3ead8;min-height:100dvh;user-select:none;display:flex;flex-direction:column;align-items:center;padding:12px;padding-top:56px;overflow-x:hidden}
+a.wog-home{position:fixed;top:10px;inset-inline-start:12px;z-index:99;background:rgba(217,164,65,.12);border:1px solid rgba(217,164,65,.45);color:#e8c073;text-decoration:none;padding:6px 12px;border-radius:10px;font-size:.85rem;font-weight:700}
+a.wog-home:hover{background:rgba(217,164,65,.3)}
+header{text-align:center;margin-bottom:8px}
+h1{font-size:1.2rem;color:#d9a441}
+.hud{color:#a8b3c9;font-size:.9rem;margin-top:2px;min-height:1.4em}
+.hud b{color:#e8c073}
+button,.wbtn{font-family:inherit;background:#d9a441;color:#221806;border:0;border-radius:10px;font-weight:700;padding:8px 16px;font-size:.95rem;cursor:pointer;touch-action:manipulation}
+button.sec,.wbtn.sec{background:#14203a;color:#f3ead8;border:1px solid rgba(217,164,65,.35)}
+button:disabled{opacity:.45;cursor:default}
+#hint{color:#a8b3c9;font-size:.85rem;margin-top:10px;text-align:center;max-width:680px;line-height:1.9}
+.wpanel{background:#14203a;border:1px solid rgba(217,164,65,.35);border-radius:14px;padding:14px}
+.wrow{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;align-items:center;margin:8px 0}
+.wovl{position:fixed;inset:0;background:rgba(5,9,18,.85);display:flex;align-items:center;justify-content:center;z-index:90}
+.wovl .box{background:#14203a;border:2px solid rgba(217,164,65,.5);border-radius:16px;padding:22px 28px;text-align:center;max-width:88vw}
+.wovl h2{color:#e8c073;margin-bottom:8px}
+.wovl p{color:#a8b3c9;margin-bottom:14px}
+.wog-toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#14203a;border:1px solid rgba(217,164,65,.5);color:#f3ead8;padding:8px 18px;border-radius:12px;opacity:0;transition:.25s;z-index:95;pointer-events:none;font-size:.9rem}
+.wog-toast.on{opacity:1}
+.wgrid{display:grid;border:2px solid rgba(217,164,65,.5);border-radius:10px;overflow:hidden;direction:ltr;touch-action:manipulation}
+.wgrid .cell{display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative}
+.cell.light{background:#e8dcc0}.cell.dark{background:#41527a}
+.wcard{display:inline-flex;flex-direction:column;justify-content:space-between;width:52px;height:74px;background:#f6efe0;color:#1c2438;border-radius:7px;padding:3px 5px;font-weight:700;font-size:.9rem;line-height:1;box-shadow:0 2px 5px rgba(0,0,0,.45);cursor:pointer;touch-action:manipulation;flex:none}
+.wcard.red{color:#c0392b}
+.wcard.back{background:linear-gradient(135deg,#2c3a5e,#41527a);border:2px solid rgba(217,164,65,.5)}
+.wcard.back:before{content:'❋';color:rgba(232,192,115,.55);align-self:center;font-size:1.3rem}
+.wcard.small{width:38px;height:54px;font-size:.75rem;border-radius:5px}
+.wcard.tiny{width:30px;height:44px;font-size:.65rem;border-radius:4px;padding:2px 3px}
+.wcard.sel{outline:3px solid #e8c073;transform:translateY(-6px)}
+.wcard .cn{font-size:.7rem;opacity:.85}.wcard .cv{align-self:flex-start}
+.wcard.back .cn,.wcard.back .cv{display:none}
+.wdpad{display:none;grid-template-columns:repeat(3,58px);grid-auto-rows:50px;gap:6px;margin-top:12px}
+.wdpad.on{display:grid}
+.wdpad button{font-size:1.15rem}
+@media(pointer:coarse){.wdpad{display:grid}}
+canvas{touch-action:none;border-radius:10px;border:2px solid rgba(217,164,65,.35);background:#0d1526}
+
+</style>
+</head>
+<body>
+<a class="wog-home" href="../../index.html">⌂ خانه</a>
+<header><h1>❋ برج‌ساز ❋</h1><div class="hud" id="hud"></div></header>
+<div id="app"></div>
+<p id="hint"></p>
+<div class="wog-toast" id="wog-toast"></div>
+<script>
+(function () {
+'use strict';
+var store = {
+  get: function (k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+  set: function (k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+};
+/*WOG_LOGIC_START*/
+var WOG_LOGIC=(function(){
+var W=320,MAXW=110,BONUS=4;
+function newState(rng){rng=rng||Math.random;var w=MAXW;return{tower:[{x:(W-w)/2,w:w}],cur:{x:rng()*(W-w),w:w,dir:rng()<0.5?-1:1},phase:'move',combo:0,over:false,side:1}}
+function step(s,dt,speed){if(s.phase!=='move')return s;var c=s.cur;c.x+=c.dir*speed*dt;
+ if(c.x<=0){c.x=0;c.dir=1}
+ if(c.x>=W-c.w){c.x=W-c.w;c.dir=-1}
+ return s}
+function drop(s){if(s.phase!=='move')return{overlapW:0,perfect:false,over:true};
+ var t=s.tower[s.tower.length-1],c=s.cur;
+ var oL=Math.max(c.x,t.x),oR=Math.min(c.x+c.w,t.x+t.w),ow=oR-oL;if(ow<0)ow=0;
+ if(ow<=0){s.phase='over';s.over=true;return{overlapW:0,perfect:false,over:true}}
+ var perfect=ow>=c.w-1e-9,nw,nx;
+ if(perfect){nw=Math.min(t.w+BONUS,MAXW);nx=t.x+t.w/2-nw/2;if(nx<0)nx=0;if(nx+nw>W)nx=W-nw;s.combo++}
+ else{nw=ow;nx=oL;s.combo=0}
+ s.tower.push({x:nx,w:nw});
+ s.side=-s.side;
+ s.cur={x:s.side>0?0:W-nw,w:nw,dir:s.side>0?1:-1};
+ return{overlapW:ow,perfect:perfect,over:false}}
+function scoreOf(s){return s.tower.length-1}
+return{newState:newState,step:step,drop:drop,scoreOf:scoreOf,W:W,MAXW:MAXW,BONUS:BONUS}})();
+/*WOG_LOGIC_END*/
+var L = WOG_LOGIC;
+function $(s){return document.querySelector(s)}
+function $$(s){return Array.prototype.slice.call(document.querySelectorAll(s))}
+function ce(tag,cls,html){var e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;return e}
+var FA_D='۰۱۲۳۴۵۶۷۸۹';
+function fa(n){return String(n).replace(/\d/g,function(d){return FA_D[+d]})}
+function shuffle(a,rng){a=a.slice();rng=rng||Math.random;for(var i=a.length-1;i>0;i--){var j=Math.floor(rng()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a}
+function rint(a,b,rng){rng=rng||Math.random;return a+Math.floor(rng()*(b-a+1))}
+function pick(arr,rng){rng=rng||Math.random;return arr[Math.floor(rng()*arr.length)]}
+function clamp(v,a,b){return v<a?a:v>b?b:v}
+var _toastT=0;
+function toast(msg,ms){var t=$('#wog-toast');if(!t)return;t.textContent=msg;t.classList.add('on');clearTimeout(_toastT);_toastT=setTimeout(function(){t.classList.remove('on')},ms||1800)}
+function hud(html){var h=$('#hud');if(h)h.innerHTML=html}
+function ovl(title,sub,btn,cb){var o=ce('div','wovl');var b=ce('div','box');b.appendChild(ce('h2',null,title));if(sub)b.appendChild(ce('p',null,sub));var bt=ce('button',null,btn);bt.setAttribute('data-smoke','');bt.addEventListener('click',function(){o.remove();cb&&cb()});b.appendChild(bt);o.appendChild(b);document.body.appendChild(o);return o}
+function bestOf(key,val){var b=parseInt(store.get(key)||'0',10)||0;if(val>b)store.set(key,String(val));return Math.max(b,val)}
+function storeBest(key){return parseInt(store.get(key)||'0',10)||0}
+function makeCanvas(w,h){var cv=document.createElement('canvas');cv.width=w;cv.height=h;cv.style.width='min(96vw,'+w+'px)';cv.style.height='auto';document.getElementById('app').appendChild(cv);return{cv:cv,ctx:cv.getContext('2d'),w:w,h:h}}
+function keyState(){var k={};addEventListener('keydown',function(e){k[e.code]=1;if(/^(Arrow|Space)/.test(e.code))e.preventDefault()});addEventListener('keyup',function(e){k[e.code]=0});return k}
+function bindPad(defs){var d=ce('div','wdpad');var grid={};defs.forEach(function(x){grid[x.k]=x});var cell=function(k){var b;if(k&&grid[k]){b=ce('button',null,grid[k].label);b.setAttribute('data-k',k)}else{b=ce('span');b.style.visibility='hidden'}d.appendChild(b)};cell(defs.length>2?defs[1].k:null);defs.forEach(function(x){cell(x.k)});cell(null);document.getElementById('app').appendChild(d);$$('[data-k]').forEach(function(b){var k=b.getAttribute('data-k');function on(e){e.preventDefault();ks[k]=1}function off(e){e.preventDefault();ks[k]=0}b.addEventListener('touchstart',on,{passive:false});b.addEventListener('touchend',off);b.addEventListener('mousedown',on);b.addEventListener('mouseup',off);b.addEventListener('mouseleave',off)})}
+function rafStep(fn){var last=performance.now();function f(t){var dt=Math.min(.05,(t-last)/1000);last=t;fn(dt);requestAnimationFrame(f)}requestAnimationFrame(f)}
+
+var cv=makeCanvas(320,440),ctx=cv.ctx,g=cv.cv;
+g.style.touchAction='none';
+var s=L.newState(),endedShown=false,BH=26;
+function best(v){var k='wog-stacker-best',o=parseInt(store.get(k)||'0',10)||0;if(v>o){o=v;store.set(k,''+v)}return o}
+function reset(){s=L.newState();endedShown=false}
+function drop(){if(s.phase!=='move')return;var r=L.drop(s);
+ if(r.perfect)toast('چیدمان کامل! عرض +۴');
+ if(r.over&&!endedShown){endedShown=true;var sc=L.scoreOf(s);best(sc);
+  ovl('برج افتاد!','ارتفاع: '+fa(sc)+' | رکورد: '+fa(best(0)),'بازی جدید',reset)}}
+g.addEventListener('pointerdown',function(){drop()});
+var b1=ce('button','wbtn','انداختن');b1.setAttribute('data-smoke','1');b1.onclick=drop;
+var b2=ce('button','wbtn','بازی جدید');b2.onclick=reset;
+$('#app').appendChild(b1);$('#app').appendChild(b2);
+var keys=keyState(),ps=false;
+$('#hint').textContent='بلوک خودکار می‌لغزد؛ با لمس بوم، دکمه یا Space رهایش کن. هم‌پوشانی با بالای برج عرض بعدی را می‌سازد و چیدمان کامل ۴+ عرض و زنجیره می‌دهد. خطای کامل = پایان.';
+function render(){var i,b;
+ ctx.fillStyle='#0b1226';ctx.fillRect(0,0,L.W,440);
+ var n=s.tower.length,baseY=416,off=Math.max(0,n-14)*BH;
+ for(i=0;i<n;i++){b=s.tower[i];var y=baseY-i*BH+off;if(y<-BH)continue;
+  ctx.fillStyle=i===n-1?'#d9a441':(i%2?'#2a3c63':'#3fb8af');
+  ctx.fillRect(b.x,y,b.w,BH-2)}
+ if(s.phase==='move'){var c=s.cur,y2=baseY-n*BH+off;
+  ctx.fillStyle='#d9a441';ctx.fillRect(c.x,y2,c.w,BH-2);
+  ctx.fillStyle='#14203a';ctx.fillRect(c.x+c.w/2-2,y2+6,4,BH-14)}
+ ctx.fillStyle='#22304f';ctx.fillRect(0,baseY+BH-2,L.W,440-baseY-BH+2)}
+rafStep(function(dt){
+ if(s.phase==='move')L.step(s,Math.min(dt,0.05),110+s.tower.length*7);
+ var sp=keys.Space;if(sp&&!ps)drop();ps=sp;
+ render();hud('ارتفاع: '+fa(L.scoreOf(s))+' | رکورد: '+fa(best(0))+' | زنجیره: '+fa(s.combo))});
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<title>روباه و سگ‌ها | دنیای بازی‌ها</title>
+<meta name="description" content="روباه و سگ‌ها روی خانه‌های تیرهٔ صفحهٔ شطرنجی: شما روباه هستید و چهار سگ فقط رو به جلو حرکت می‌کنند. خود را به ردیف نخست برسانید و از محاصره بگریزید.">
+<style>*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+@font-face{font-family:Vazirmatn;src:url(../../fonts/Vazirmatn-Regular.woff2) format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:Vazirmatn;src:url(../../fonts/Vazirmatn-Bold.woff2) format('woff2');font-weight:700;font-display:swap}
+body{font-family:Vazirmatn,Tahoma,sans-serif;background:linear-gradient(160deg,#101a2e,#0b1220);color:#f3ead8;min-height:100dvh;user-select:none;display:flex;flex-direction:column;align-items:center;padding:12px;padding-top:56px;overflow-x:hidden}
+a.wog-home{position:fixed;top:10px;inset-inline-start:12px;z-index:99;background:rgba(217,164,65,.12);border:1px solid rgba(217,164,65,.45);color:#e8c073;text-decoration:none;padding:6px 12px;border-radius:10px;font-size:.85rem;font-weight:700}
+a.wog-home:hover{background:rgba(217,164,65,.3)}
+header{text-align:center;margin-bottom:8px}
+h1{font-size:1.2rem;color:#d9a441}
+.hud{color:#a8b3c9;font-size:.9rem;margin-top:2px;min-height:1.4em}
+.hud b{color:#e8c073}
+button,.wbtn{font-family:inherit;background:#d9a441;color:#221806;border:0;border-radius:10px;font-weight:700;padding:8px 16px;font-size:.95rem;cursor:pointer;touch-action:manipulation}
+button.sec,.wbtn.sec{background:#14203a;color:#f3ead8;border:1px solid rgba(217,164,65,.35)}
+button:disabled{opacity:.45;cursor:default}
+#hint{color:#a8b3c9;font-size:.85rem;margin-top:10px;text-align:center;max-width:680px;line-height:1.9}
+.wpanel{background:#14203a;border:1px solid rgba(217,164,65,.35);border-radius:14px;padding:14px}
+.wrow{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;align-items:center;margin:8px 0}
+.wovl{position:fixed;inset:0;background:rgba(5,9,18,.85);display:flex;align-items:center;justify-content:center;z-index:90}
+.wovl .box{background:#14203a;border:2px solid rgba(217,164,65,.5);border-radius:16px;padding:22px 28px;text-align:center;max-width:88vw}
+.wovl h2{color:#e8c073;margin-bottom:8px}
+.wovl p{color:#a8b3c9;margin-bottom:14px}
+.wog-toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#14203a;border:1px solid rgba(217,164,65,.5);color:#f3ead8;padding:8px 18px;border-radius:12px;opacity:0;transition:.25s;z-index:95;pointer-events:none;font-size:.9rem}
+.wog-toast.on{opacity:1}
+.wgrid{display:grid;border:2px solid rgba(217,164,65,.5);border-radius:10px;overflow:hidden;direction:ltr;touch-action:manipulation}
+.wgrid .cell{display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative}
+.cell.light{background:#e8dcc0}.cell.dark{background:#41527a}
+.wcard{display:inline-flex;flex-direction:column;justify-content:space-between;width:52px;height:74px;background:#f6efe0;color:#1c2438;border-radius:7px;padding:3px 5px;font-weight:700;font-size:.9rem;line-height:1;box-shadow:0 2px 5px rgba(0,0,0,.45);cursor:pointer;touch-action:manipulation;flex:none}
+.wcard.red{color:#c0392b}
+.wcard.back{background:linear-gradient(135deg,#2c3a5e,#41527a);border:2px solid rgba(217,164,65,.5)}
+.wcard.back:before{content:'❋';color:rgba(232,192,115,.55);align-self:center;font-size:1.3rem}
+.wcard.small{width:38px;height:54px;font-size:.75rem;border-radius:5px}
+.wcard.tiny{width:30px;height:44px;font-size:.65rem;border-radius:4px;padding:2px 3px}
+.wcard.sel{outline:3px solid #e8c073;transform:translateY(-6px)}
+.wcard .cn{font-size:.7rem;opacity:.85}.wcard .cv{align-self:flex-start}
+.wcard.back .cn,.wcard.back .cv{display:none}
+.wdpad{display:none;grid-template-columns:repeat(3,58px);grid-auto-rows:50px;gap:6px;margin-top:12px}
+.wdpad.on{display:grid}
+.wdpad button{font-size:1.15rem}
+@media(pointer:coarse){.wdpad{display:grid}}
+canvas{touch-action:none;border-radius:10px;border:2px solid rgba(217,164,65,.35);background:#0d1526}
+*{box-sizing:border-box}
+body{margin:0;background:#0b1424;color:#e8edf5;font-family:Vazirmatn,Tahoma,'Segoe UI',sans-serif;text-align:center}
+header h1{color:#d9a441;font-size:22px;margin:8px 0 4px}
+#hud{color:#9fb0c8;font-size:13px;min-height:18px;padding:0 8px}
+#app{display:flex;flex-direction:column;align-items:center;gap:10px;padding:8px}
+.btn{background:#d9a441;color:#101a2e;border:0;border-radius:10px;padding:10px 20px;font-size:15px;font-weight:700;cursor:pointer;min-height:42px;font-family:inherit;touch-action:manipulation}
+.btn:hover{filter:brightness(1.08)}
+.fctrl{display:flex;gap:10px}
+.fboard{direction:ltr;display:grid;grid-template-columns:repeat(8,min(44px,11.5vw));grid-auto-rows:min(44px,11.5vw);border:2px solid #24365c;border-radius:12px;overflow:hidden;background:#14203a}
+.fcell{display:flex;align-items:center;justify-content:center}
+.flt{background:#0d1830}
+.fdk{background:#1c2d52}
+.fgoal{box-shadow:0 -3px 0 #d9a441 inset}
+.fmv{cursor:pointer;box-shadow:0 0 0 3px #3fb8af inset}
+.fmv:hover{box-shadow:0 0 0 3px #67b98a inset}
+.fp{border-radius:50%}
+.ffox{width:72%;height:72%;background:radial-gradient(circle at 35% 30%,#f2a25c,#c4571f 74%);box-shadow:0 2px 5px rgba(0,0,0,.55)}
+.fhound{width:56%;height:56%;background:radial-gradient(circle at 35% 30%,#9fb3cf,#46597c 74%);box-shadow:0 2px 5px rgba(0,0,0,.55)}
+.fmsg{color:#9fb0c8;font-size:14px;min-height:20px}
+#hint{color:#8fa1b8;font-size:13px;max-width:440px;margin:8px auto;padding:0 10px;line-height:1.7}
+</style>
+</head>
+<body>
+<a class="wog-home" href="../../index.html">⌂ خانه</a>
+<header><h1>❋ روباه و سگ‌ها ❋</h1><div class="hud" id="hud"></div></header>
+<div id="app"></div>
+<p id="hint"></p>
+<div class="wog-toast" id="wog-toast"></div>
+<script>
+(function () {
+'use strict';
+var store = {
+  get: function (k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+  set: function (k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+};
+/*WOG_LOGIC_START*/
+var WOG_LOGIC=(function(){
+'use strict';
+function isDark(r,c){return (r+c)%2===1;}
+function initial(){return {fox:{r:7,c:4},hounds:[{r:0,c:1},{r:0,c:3},{r:0,c:5},{r:0,c:7}],turn:'fox'};}
+function inB(r,c){return r>=0&&r<8&&c>=0&&c<8;}
+function occAt(st,r,c){if(st.fox.r===r&&st.fox.c===c)return true;var i;for(i=0;i<4;i++)if(st.hounds[i].r===r&&st.hounds[i].c===c)return true;return false;}
+function legalMoves(st,pl){var out=[],i,d;
+ if(pl==='fox'){var DD=[[-1,-1],[-1,1],[1,-1],[1,1]];for(d=0;d<4;d++){var nr=st.fox.r+DD[d][0],nc=st.fox.c+DD[d][1];if(inB(nr,nc)&&isDark(nr,nc)&&!occAt(st,nr,nc))out.push({from:{r:st.fox.r,c:st.fox.c},to:{r:nr,c:nc}});}}
+ else{var HD=[[1,-1],[1,1]];for(i=0;i<4;i++){var h=st.hounds[i];for(d=0;d<2;d++){var nr2=h.r+HD[d][0],nc2=h.c+HD[d][1];if(inB(nr2,nc2)&&isDark(nr2,nc2)&&!occAt(st,nr2,nc2))out.push({from:{r:h.r,c:h.c},to:{r:nr2,c:nc2}});}}}
+ return out;}
+function applyMove(st,pl,from,to){if(pl!==st.turn)throw new Error('turn');var ms=legalMoves(st,pl),i,found=null;
+ for(i=0;i<ms.length;i++){var m=ms[i];if(m.from.r===from.r&&m.from.c===from.c&&m.to.r===to.r&&m.to.c===to.c){found=m;break;}}
+ if(!found)throw new Error('illegal');
+ var ns={fox:{r:st.fox.r,c:st.fox.c},hounds:[],turn:pl==='fox'?'hounds':'fox'},j;
+ for(j=0;j<4;j++)ns.hounds.push({r:st.hounds[j].r,c:st.hounds[j].c});
+ if(pl==='fox')ns.fox={r:to.r,c:to.c};
+ else for(j=0;j<4;j++)if(ns.hounds[j].r===from.r&&ns.hounds[j].c===from.c){ns.hounds[j]={r:to.r,c:to.c};break;}
+ return ns;}
+function winner(st){if(st.fox.r===0)return 1;
+ if(st.turn==='fox'&&legalMoves(st,'fox').length===0)return -1;
+ if(st.turn==='hounds'&&legalMoves(st,'hounds').length===0)return 1;
+ return 0;}
+function aiMove(st,rng){if(!rng)rng=Math.random;var ms=legalMoves(st,'hounds');if(!ms.length)return null;
+ var i,j,bs=Infinity,cands=[];
+ for(i=0;i<ms.length;i++){var m=ms[i],hs=[],s=0;
+  for(j=0;j<4;j++)hs.push({r:st.hounds[j].r,c:st.hounds[j].c});
+  for(j=0;j<4;j++)if(hs[j].r===m.from.r&&hs[j].c===m.from.c){hs[j].r=m.to.r;hs[j].c=m.to.c;break;}
+  for(j=0;j<4;j++)s+=Math.abs(hs[j].c-st.fox.c);
+  if(s<bs){bs=s;cands=[m];}else if(s===bs)cands.push(m);}
+ return cands[Math.floor(rng()*cands.length)];}
+return {isDark:isDark,initial:initial,legalMoves:legalMoves,applyMove:applyMove,winner:winner,aiMove:aiMove};
+})();
+/*WOG_LOGIC_END*/
+var L = WOG_LOGIC;
+function $(s){return document.querySelector(s)}
+function $$(s){return Array.prototype.slice.call(document.querySelectorAll(s))}
+function ce(tag,cls,html){var e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;return e}
+var FA_D='۰۱۲۳۴۵۶۷۸۹';
+function fa(n){return String(n).replace(/\d/g,function(d){return FA_D[+d]})}
+function shuffle(a,rng){a=a.slice();rng=rng||Math.random;for(var i=a.length-1;i>0;i--){var j=Math.floor(rng()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a}
+function rint(a,b,rng){rng=rng||Math.random;return a+Math.floor(rng()*(b-a+1))}
+function pick(arr,rng){rng=rng||Math.random;return arr[Math.floor(rng()*arr.length)]}
+function clamp(v,a,b){return v<a?a:v>b?b:v}
+var _toastT=0;
+function toast(msg,ms){var t=$('#wog-toast');if(!t)return;t.textContent=msg;t.classList.add('on');clearTimeout(_toastT);_toastT=setTimeout(function(){t.classList.remove('on')},ms||1800)}
+function hud(html){var h=$('#hud');if(h)h.innerHTML=html}
+function ovl(title,sub,btn,cb){var o=ce('div','wovl');var b=ce('div','box');b.appendChild(ce('h2',null,title));if(sub)b.appendChild(ce('p',null,sub));var bt=ce('button',null,btn);bt.setAttribute('data-smoke','');bt.addEventListener('click',function(){o.remove();cb&&cb()});b.appendChild(bt);o.appendChild(b);document.body.appendChild(o);return o}
+function bestOf(key,val){var b=parseInt(store.get(key)||'0',10)||0;if(val>b)store.set(key,String(val));return Math.max(b,val)}
+function storeBest(key){return parseInt(store.get(key)||'0',10)||0}
+
+var st=null,busy=false,gen=0,WKEY='wog-fox-and-hounds-wins';
+function wins(){var v=store.get(WKEY);return v===null||v===undefined?0:(+v||0);}
+function hudUpd(){if(!st)return;var w=L.winner(st),s;
+ if(w!==0)s=w===1?'پایان: روباه نجات یافت — برد شما':'پایان: روباه محاصره شد';
+ else if(busy)s='سگ‌ها در حال تعقیب…';
+ else s='نوبت شما: روباه را حرکت دهید';
+ s+=' | بردها: '+fa(wins());
+ hud(s);
+ $('#hint').textContent='روباه مورب در هر چهار جهت و سگ‌ها فقط رو به جلو حرکت می‌کنند؛ روباه را به ردیف نخست برسانید — اگر حرکتی نمانید بازنده‌اید.';}
+function statusMsg(){var w=L.winner(st);
+ if(w!==0)return w===1?(st.fox.r===0?'روباه به ردیف نخست رسید — بردی!':'سگ‌ها بی‌حرکت شدند — بردی!'):'سگ‌ها همهٔ راه‌ها را بستند — باختی!';
+ if(busy)return 'سگ‌ها در حال تعقیب…';
+ return 'مقصدهای نشان‌شده را انتخاب کنید';}
+function render(){var app=$('#app');app.innerHTML='';
+ var ctrl=ce('div','fctrl');var nb=ce('button','btn','بازی جدید');nb.setAttribute('data-smoke','1');nb.addEventListener('click',function(){newGame();});ctrl.appendChild(nb);app.appendChild(ctrl);
+ var bd=ce('div','fboard');var mv={};
+ if(L.winner(st)===0&&st.turn==='fox'&&!busy){var ms=L.legalMoves(st,'fox');for(var i=0;i<ms.length;i++)mv[ms[i].to.r+'-'+ms[i].to.c]=1;}
+ for(var r=0;r<8;r++)for(var c=0;c<8;c++){(function(r,c){var cell=ce('div','fcell '+((((r+c)%2)===1)?'fdk':'flt'));
+  if(r===0&&((r+c)%2)===1)cell.className+=' fgoal';
+  if(st.fox.r===r&&st.fox.c===c)cell.appendChild(ce('div','fp ffox'));
+  else{for(var k=0;k<4;k++)if(st.hounds[k].r===r&&st.hounds[k].c===c){cell.appendChild(ce('div','fp fhound'));break;}}
+  if(mv[r+'-'+c]){cell.className+=' fmv';cell.addEventListener('click',function(){onMove(r,c);});}
+  bd.appendChild(cell);})(r,c);}
+ app.appendChild(bd);app.appendChild(ce('div','fmsg',statusMsg()));hudUpd();}
+function onMove(r,c){if(busy||!st||L.winner(st)!==0||st.turn!=='fox')return;
+ var ms=L.legalMoves(st,'fox'),ok=false,i;for(i=0;i<ms.length;i++)if(ms[i].to.r===r&&ms[i].to.c===c){ok=true;break;}
+ if(!ok)return;
+ st=L.applyMove(st,'fox',{r:st.fox.r,c:st.fox.c},{r:r,c:c});after();}
+function after(){render();var w=L.winner(st);if(w!==0){end(w);return;}
+ busy=true;var g=gen;hudUpd();
+ setTimeout(function(){if(g!==gen||!st)return;var h=L.aiMove(st);if(h)st=L.applyMove(st,'hounds',h.from,h.to);busy=false;render();var w2=L.winner(st);if(w2!==0)end(w2);},640);}
+function end(w){render();
+ if(w===1){store.set(WKEY,String(wins()+1));
+  if(st.fox.r===0)ovl('بردی! روباه فرار کرد','به ردیف نخست رسیدی و از سگ‌ها گذشتی.','بازی جدید',function(){newGame();});
+  else ovl('بردی! سگ‌ها میخکوب شدند','هیچ سگی نتوانست حرکت کند.','بازی جدید',function(){newGame();});}
+ else ovl('روباه گرفتار شد','سگ‌ها همهٔ راه‌های مورب را بستند.','بازی جدید',function(){newGame();});}
+function newGame(){gen++;busy=false;st=L.initial();render();}
+newGame();
+})();
+</script>
+</body>
+</html>

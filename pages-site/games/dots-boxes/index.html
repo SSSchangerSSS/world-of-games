@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<title>نقطه و خط | دنیای بازی‌ها</title>
+<meta name="description" content="نقطه و خط روی شبکهٔ ۴×۴؛ خط بکش و کادر بساز — هر کادرِ کامل یک امتیاز و یک نوبت اضافه دارد. در پایان بیشترین کادر برنده است.">
+<style>*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+@font-face{font-family:Vazirmatn;src:url(../../fonts/Vazirmatn-Regular.woff2) format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:Vazirmatn;src:url(../../fonts/Vazirmatn-Bold.woff2) format('woff2');font-weight:700;font-display:swap}
+body{font-family:Vazirmatn,Tahoma,sans-serif;background:linear-gradient(160deg,#101a2e,#0b1220);color:#f3ead8;min-height:100dvh;user-select:none;display:flex;flex-direction:column;align-items:center;padding:12px;padding-top:56px;overflow-x:hidden}
+a.wog-home{position:fixed;top:10px;inset-inline-start:12px;z-index:99;background:rgba(217,164,65,.12);border:1px solid rgba(217,164,65,.45);color:#e8c073;text-decoration:none;padding:6px 12px;border-radius:10px;font-size:.85rem;font-weight:700}
+a.wog-home:hover{background:rgba(217,164,65,.3)}
+header{text-align:center;margin-bottom:8px}
+h1{font-size:1.2rem;color:#d9a441}
+.hud{color:#a8b3c9;font-size:.9rem;margin-top:2px;min-height:1.4em}
+.hud b{color:#e8c073}
+button,.wbtn{font-family:inherit;background:#d9a441;color:#221806;border:0;border-radius:10px;font-weight:700;padding:8px 16px;font-size:.95rem;cursor:pointer;touch-action:manipulation}
+button.sec,.wbtn.sec{background:#14203a;color:#f3ead8;border:1px solid rgba(217,164,65,.35)}
+button:disabled{opacity:.45;cursor:default}
+#hint{color:#a8b3c9;font-size:.85rem;margin-top:10px;text-align:center;max-width:680px;line-height:1.9}
+.wpanel{background:#14203a;border:1px solid rgba(217,164,65,.35);border-radius:14px;padding:14px}
+.wrow{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;align-items:center;margin:8px 0}
+.wovl{position:fixed;inset:0;background:rgba(5,9,18,.85);display:flex;align-items:center;justify-content:center;z-index:90}
+.wovl .box{background:#14203a;border:2px solid rgba(217,164,65,.5);border-radius:16px;padding:22px 28px;text-align:center;max-width:88vw}
+.wovl h2{color:#e8c073;margin-bottom:8px}
+.wovl p{color:#a8b3c9;margin-bottom:14px}
+.wog-toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#14203a;border:1px solid rgba(217,164,65,.5);color:#f3ead8;padding:8px 18px;border-radius:12px;opacity:0;transition:.25s;z-index:95;pointer-events:none;font-size:.9rem}
+.wog-toast.on{opacity:1}
+.wgrid{display:grid;border:2px solid rgba(217,164,65,.5);border-radius:10px;overflow:hidden;direction:ltr;touch-action:manipulation}
+.wgrid .cell{display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative}
+.cell.light{background:#e8dcc0}.cell.dark{background:#41527a}
+.wcard{display:inline-flex;flex-direction:column;justify-content:space-between;width:52px;height:74px;background:#f6efe0;color:#1c2438;border-radius:7px;padding:3px 5px;font-weight:700;font-size:.9rem;line-height:1;box-shadow:0 2px 5px rgba(0,0,0,.45);cursor:pointer;touch-action:manipulation;flex:none}
+.wcard.red{color:#c0392b}
+.wcard.back{background:linear-gradient(135deg,#2c3a5e,#41527a);border:2px solid rgba(217,164,65,.5)}
+.wcard.back:before{content:'❋';color:rgba(232,192,115,.55);align-self:center;font-size:1.3rem}
+.wcard.small{width:38px;height:54px;font-size:.75rem;border-radius:5px}
+.wcard.tiny{width:30px;height:44px;font-size:.65rem;border-radius:4px;padding:2px 3px}
+.wcard.sel{outline:3px solid #e8c073;transform:translateY(-6px)}
+.wcard .cn{font-size:.7rem;opacity:.85}.wcard .cv{align-self:flex-start}
+.wcard.back .cn,.wcard.back .cv{display:none}
+.wdpad{display:none;grid-template-columns:repeat(3,58px);grid-auto-rows:50px;gap:6px;margin-top:12px}
+.wdpad.on{display:grid}
+.wdpad button{font-size:1.15rem}
+@media(pointer:coarse){.wdpad{display:grid}}
+canvas{touch-action:none;border-radius:10px;border:2px solid rgba(217,164,65,.35);background:#0d1526}
+.dwrap{direction:ltr;display:flex;justify-content:center;overflow-x:auto;padding:8px 0}
+.dgrid{display:grid;gap:2px}
+.dcell{display:flex;align-items:center;justify-content:center}
+.ddot{width:8px;height:8px;border-radius:50%;background:#8fa3c8}
+.dline{border:none;border-radius:4px;background:#2a3a5c;cursor:pointer;touch-action:manipulation;padding:0}
+.dline.h{width:40px;height:16px}
+.dline.v{width:16px;height:40px}
+.dline.p1{background:#3fb8af;cursor:default}
+.dline.p2{background:#e26d5c;cursor:default}
+.dline:not(.p1):not(.p2):hover{background:#d9a441}
+.dbox{width:40px;height:40px;border-radius:6px;background:rgba(20,32,58,.5)}
+.dbox.own1{background:rgba(63,184,175,.22);border:1px solid #3fb8af}
+.dbox.own2{background:rgba(226,109,92,.2);border:1px solid #e26d5c}
+.bmark{font-size:10px;color:#cfe3ff}
+button{font-family:inherit}
+.newbtn{display:block;margin:16px auto 0;min-height:44px;padding:0 22px;border-radius:12px;border:1px solid #d9a441;background:transparent;color:#d9a441;font-size:15px;cursor:pointer;touch-action:manipulation}
+</style>
+</head>
+<body>
+<a class="wog-home" href="../../index.html">⌂ خانه</a>
+<header><h1>❋ نقطه و خط ❋</h1><div class="hud" id="hud"></div></header>
+<div id="app"></div>
+<p id="hint"></p>
+<div class="wog-toast" id="wog-toast"></div>
+<script>
+(function () {
+'use strict';
+var store = {
+  get: function (k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+  set: function (k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+};
+/*WOG_LOGIC_START*/
+function dbBoxLines(b){var r=Math.floor(b/4),c=b%4;return[r*4+c,(r+1)*4+c,20+r*5+c,21+r*5+c];}
+function dbAdj(i){var out=[];
+  if(i<20){var r=Math.floor(i/4),c=i%4;
+    if(r<4)out.push(r*4+c);
+    if(r>0)out.push((r-1)*4+c);
+  }else{var v=i-20;r=Math.floor(v/5);c=v%5;
+    if(c<4)out.push(r*4+c);
+    if(c>0)out.push(r*4+c-1);}
+  out.sort(function(a,b){return a-b;});return out;}
+function dbSides(st,b){var l=dbBoxLines(b),s=0,i;for(i=0;i<4;i++)if(st.lines[l[i]])s++;return s;}
+var WOG_LOGIC={
+initial:function(){var l=[],b=[],i;for(i=0;i<40;i++)l.push(0);for(i=0;i<16;i++)b.push(0);
+  return{lines:l,boxes:b,turn:1,over:false};},
+adjBoxes:dbAdj,
+boxLines:dbBoxLines,
+boxSides:dbSides,
+boxOwner:function(st,b){return st.boxes[b];},
+score:function(st){var h=0,a=0,i;for(i=0;i<16;i++){if(st.boxes[i]===1)h++;else if(st.boxes[i]===2)a++;}return[h,a];},
+claimLine:function(st,id,pl){
+  if(st.over||id<0||id>39||st.lines[id]||pl!==st.turn)return null;
+  st.lines[id]=pl;
+  var adj=dbAdj(id),done=[],i;
+  for(i=0;i<adj.length;i++){var b=adj[i];
+    if(!st.boxes[b]&&dbSides(st,b)===4){st.boxes[b]=pl;done.push(b);}}
+  var left=0;for(i=0;i<40;i++)if(!st.lines[i])left++;
+  if(left===0)st.over=true;
+  else if(!done.length)st.turn=(pl===1?2:1);
+  return{boxes:done,extra:done.length>0};
+},
+isOver:function(st){return !!st.over;},
+aiMove:function(st,rng){
+  var un=[],i;
+  for(i=0;i<40;i++)if(!st.lines[i])un.push(i);
+  if(!un.length)return null;
+  var comp=[],safe=[],risky=[],j;
+  for(i=0;i<un.length;i++){
+    var id=un[i],adj=dbAdj(id),c=false,sf=true,d=0;
+    for(j=0;j<adj.length;j++){var b=adj[j];
+      if(st.boxes[b])continue;
+      var s=dbSides(st,b);
+      if(s===3)c=true;
+      if(s>=2){sf=false;d++;}}
+    if(c)comp.push(id);else if(sf)safe.push(id);else risky.push({id:id,d:d});
+  }
+  var pool;
+  if(comp.length)pool=comp;
+  else if(safe.length)pool=safe;
+  else{var m=1e9;
+    for(i=0;i<risky.length;i++)if(risky[i].d<m)m=risky[i].d;
+    pool=[];for(i=0;i<risky.length;i++)if(risky[i].d===m)pool.push(risky[i].id);}
+  var pick=pool[0];
+  if(rng&&pool.length>1)pick=pool[Math.floor(rng()*pool.length)];
+  return{line:pick,kind:comp.length?'comp':(safe.length?'safe':'risk')};
+}};
+/*WOG_LOGIC_END*/
+var L = WOG_LOGIC;
+function $(s){return document.querySelector(s)}
+function $$(s){return Array.prototype.slice.call(document.querySelectorAll(s))}
+function ce(tag,cls,html){var e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;return e}
+var FA_D='۰۱۲۳۴۵۶۷۸۹';
+function fa(n){return String(n).replace(/\d/g,function(d){return FA_D[+d]})}
+function shuffle(a,rng){a=a.slice();rng=rng||Math.random;for(var i=a.length-1;i>0;i--){var j=Math.floor(rng()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a}
+function rint(a,b,rng){rng=rng||Math.random;return a+Math.floor(rng()*(b-a+1))}
+function pick(arr,rng){rng=rng||Math.random;return arr[Math.floor(rng()*arr.length)]}
+function clamp(v,a,b){return v<a?a:v>b?b:v}
+var _toastT=0;
+function toast(msg,ms){var t=$('#wog-toast');if(!t)return;t.textContent=msg;t.classList.add('on');clearTimeout(_toastT);_toastT=setTimeout(function(){t.classList.remove('on')},ms||1800)}
+function hud(html){var h=$('#hud');if(h)h.innerHTML=html}
+function ovl(title,sub,btn,cb){var o=ce('div','wovl');var b=ce('div','box');b.appendChild(ce('h2',null,title));if(sub)b.appendChild(ce('p',null,sub));var bt=ce('button',null,btn);bt.setAttribute('data-smoke','');bt.addEventListener('click',function(){o.remove();cb&&cb()});b.appendChild(bt);o.appendChild(b);document.body.appendChild(o);return o}
+function bestOf(key,val){var b=parseInt(store.get(key)||'0',10)||0;if(val>b)store.set(key,String(val));return Math.max(b,val)}
+function storeBest(key){return parseInt(store.get(key)||'0',10)||0}
+
+var st=L.initial();
+function lineBtn(id,dir){var b=ce('button','dline '+dir+(st.lines[id]?' p'+st.lines[id]:''));
+  if(!st.lines[id]&&st.turn===1&&!st.over)b.onclick=function(){mv(id);};
+  return b;}
+function draw(){
+  var app=$('#app');app.innerHTML='';
+  var wrap=ce('div','dwrap'),g=ce('div','dgrid'),r,c;
+  for(r=0;r<9;r++)for(c=0;c<9;c++){
+    var cell;
+    if(r%2===0&&c%2===0){cell=ce('div','dcell');cell.appendChild(ce('span','ddot'));}
+    else if(r%2===0){cell=ce('div','dcell');cell.appendChild(lineBtn((r/2)*4+(c-1)/2,'h'));}
+    else if(c%2===0){cell=ce('div','dcell');cell.appendChild(lineBtn(20+((r-1)/2)*5+c/2,'v'));}
+    else{var bx=((r-1)/2)*4+((c-1)/2),ow=st.boxes[bx];
+      cell=ce('div','dcell dbox'+(ow?' own'+ow:''));
+      cell.appendChild(ce('span','bmark',ow===1?'تو':(ow===2?'رایانه':'')));}
+    g.appendChild(cell);}
+  wrap.appendChild(g);app.appendChild(wrap);
+  var ng=ce('button','newbtn','بازی جدید');ng.setAttribute('data-smoke','1');ng.onclick=function(){newGame();};
+  app.appendChild(ng);
+  var sc=L.score(st);
+  hud('شما '+fa(sc[0])+' — رایانه '+fa(sc[1])+(st.over?' | پایان':' | نوبت: '+(st.turn===1?'شما':'رایانه')));
+  $('#hint').textContent='خط خالی را لمس کن؛ ضلع آخرِ هر کادر را بگذاری کادر مال توست و یک نوبت اضافه می‌گیری.';
+}
+function mv(id){if(st.over||st.turn!==1)return;var r=L.claimLine(st,id,1);if(!r)return;draw();
+  if(st.over){setTimeout(end,300);return;}
+  if(r.extra){if(r.boxes.length)toast('کادر گرفتی! نوبت اضافه');return;}
+  setTimeout(aiTurn,600);}
+function aiTurn(){if(st.over)return;var m=L.aiMove(st,null);if(!m)return;var r=L.claimLine(st,m.line,2);draw();
+  if(r&&r.boxes.length)toast('رایانه کادر گرفت');
+  if(st.over){setTimeout(end,300);return;}
+  if(r&&r.extra)setTimeout(aiTurn,600);}
+function newGame(){st=L.initial();draw();}
+function end(){var sc=L.score(st),d=sc[0]-sc[1];
+  ovl(d>0?'بردی!':(d<0?'باختی!':'مساوی'),'شما '+fa(sc[0])+' کادر — رایانه '+fa(sc[1])+' کادر','بازی جدید',function(){newGame();});}
+draw();
+})();
+</script>
+</body>
+</html>

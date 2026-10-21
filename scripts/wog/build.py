@@ -82,7 +82,7 @@ def write_tests_manifest(manifest, out):
 def main():
     args = sys.argv[1:]
     only = None
-    out = os.path.join(os.path.dirname(HERE), "pages-site")  # /home/z/my-project/pages-site
+    out = os.path.join(os.path.dirname(os.path.dirname(HERE)), "pages-site")  # /home/z/my-project/pages-site
     if "--only" in args:
         only = args[args.index("--only") + 1]
     if "--out" in args:
@@ -102,10 +102,11 @@ def main():
 
     full = out.endswith("pages-site") and not only
     if full:
-        missing = EXPECTED - seen
+        new_expected = EXPECTED - set(s for s, *_ in EXISTING13)
+        missing = new_expected - seen
         if missing:
             raise SystemExit("MISSING slugs (%d): %s" % (len(missing), ", ".join(sorted(missing))))
-        extra = seen - EXPECTED
+        extra = seen - new_expected
         if extra:
             raise SystemExit("EXTRA slugs: %s" % ", ".join(sorted(extra)))
         print("catalog OK: %d new games (total %d with existing)" % (len(games), len(games) + 13))
@@ -150,7 +151,7 @@ def build_site_extra(new_games, out):
     spec = importlib.util.spec_from_file_location("landing_template", tpl_path)
     lt = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(lt)
-    lt.render(os.path.dirname(out), tiles)  # writes index.html + licenses.html into `out`
+    lt.render(out, tiles)  # writes index.html + licenses.html into `out`
     print("landing + sitemap + licenses written")
 
 

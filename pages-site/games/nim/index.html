@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<title>نیم | دنیای بازی‌ها</title>
+<meta name="description" content="نیمِ مِسره با سه تودهٔ ۳، ۵ و ۷ مهره‌ای؛ هر بار از یک توده چند مهره (یا همه) بردار — ولی مواظب باش: هر کس آخرین مهره را بردارد می‌بازد! رایانه بی‌نقص بازی می‌کند.">
+<style>*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+@font-face{font-family:Vazirmatn;src:url(../../fonts/Vazirmatn-Regular.woff2) format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:Vazirmatn;src:url(../../fonts/Vazirmatn-Bold.woff2) format('woff2');font-weight:700;font-display:swap}
+body{font-family:Vazirmatn,Tahoma,sans-serif;background:linear-gradient(160deg,#101a2e,#0b1220);color:#f3ead8;min-height:100dvh;user-select:none;display:flex;flex-direction:column;align-items:center;padding:12px;padding-top:56px;overflow-x:hidden}
+a.wog-home{position:fixed;top:10px;inset-inline-start:12px;z-index:99;background:rgba(217,164,65,.12);border:1px solid rgba(217,164,65,.45);color:#e8c073;text-decoration:none;padding:6px 12px;border-radius:10px;font-size:.85rem;font-weight:700}
+a.wog-home:hover{background:rgba(217,164,65,.3)}
+header{text-align:center;margin-bottom:8px}
+h1{font-size:1.2rem;color:#d9a441}
+.hud{color:#a8b3c9;font-size:.9rem;margin-top:2px;min-height:1.4em}
+.hud b{color:#e8c073}
+button,.wbtn{font-family:inherit;background:#d9a441;color:#221806;border:0;border-radius:10px;font-weight:700;padding:8px 16px;font-size:.95rem;cursor:pointer;touch-action:manipulation}
+button.sec,.wbtn.sec{background:#14203a;color:#f3ead8;border:1px solid rgba(217,164,65,.35)}
+button:disabled{opacity:.45;cursor:default}
+#hint{color:#a8b3c9;font-size:.85rem;margin-top:10px;text-align:center;max-width:680px;line-height:1.9}
+.wpanel{background:#14203a;border:1px solid rgba(217,164,65,.35);border-radius:14px;padding:14px}
+.wrow{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;align-items:center;margin:8px 0}
+.wovl{position:fixed;inset:0;background:rgba(5,9,18,.85);display:flex;align-items:center;justify-content:center;z-index:90}
+.wovl .box{background:#14203a;border:2px solid rgba(217,164,65,.5);border-radius:16px;padding:22px 28px;text-align:center;max-width:88vw}
+.wovl h2{color:#e8c073;margin-bottom:8px}
+.wovl p{color:#a8b3c9;margin-bottom:14px}
+.wog-toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#14203a;border:1px solid rgba(217,164,65,.5);color:#f3ead8;padding:8px 18px;border-radius:12px;opacity:0;transition:.25s;z-index:95;pointer-events:none;font-size:.9rem}
+.wog-toast.on{opacity:1}
+.wgrid{display:grid;border:2px solid rgba(217,164,65,.5);border-radius:10px;overflow:hidden;direction:ltr;touch-action:manipulation}
+.wgrid .cell{display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative}
+.cell.light{background:#e8dcc0}.cell.dark{background:#41527a}
+.wcard{display:inline-flex;flex-direction:column;justify-content:space-between;width:52px;height:74px;background:#f6efe0;color:#1c2438;border-radius:7px;padding:3px 5px;font-weight:700;font-size:.9rem;line-height:1;box-shadow:0 2px 5px rgba(0,0,0,.45);cursor:pointer;touch-action:manipulation;flex:none}
+.wcard.red{color:#c0392b}
+.wcard.back{background:linear-gradient(135deg,#2c3a5e,#41527a);border:2px solid rgba(217,164,65,.5)}
+.wcard.back:before{content:'❋';color:rgba(232,192,115,.55);align-self:center;font-size:1.3rem}
+.wcard.small{width:38px;height:54px;font-size:.75rem;border-radius:5px}
+.wcard.tiny{width:30px;height:44px;font-size:.65rem;border-radius:4px;padding:2px 3px}
+.wcard.sel{outline:3px solid #e8c073;transform:translateY(-6px)}
+.wcard .cn{font-size:.7rem;opacity:.85}.wcard .cv{align-self:flex-start}
+.wcard.back .cn,.wcard.back .cv{display:none}
+.wdpad{display:none;grid-template-columns:repeat(3,58px);grid-auto-rows:50px;gap:6px;margin-top:12px}
+.wdpad.on{display:grid}
+.wdpad button{font-size:1.15rem}
+@media(pointer:coarse){.wdpad{display:grid}}
+canvas{touch-action:none;border-radius:10px;border:2px solid rgba(217,164,65,.35);background:#0d1526}
+.board{display:flex;flex-direction:column;gap:12px;max-width:560px;margin:0 auto}
+.heap{background:#14203a;border:1px solid #2a3a5c;border-radius:14px;padding:12px 14px;cursor:pointer;transition:border-color .15s}
+.heap.sel{border-color:#d9a441}
+.hname{font-size:13px;color:#8fa3c8;margin-bottom:6px}
+.pips{display:flex;flex-wrap:wrap;gap:6px;min-height:16px;align-items:center}
+.pip{width:14px;height:14px;border-radius:50%;background:#d9a441;display:inline-block}
+.none{color:#5a6b8f;font-size:13px}
+.hcount{margin-top:6px;color:#3fb8af;font-size:13px}
+.bar{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:14px;min-height:46px;align-items:center}
+.msg{color:#8fa3c8;padding:8px}
+button{font-family:inherit}
+.hbtn{min-width:44px;min-height:44px;border-radius:10px;border:1px solid #2a3a5c;background:#1b2b4d;color:#e8eefc;font-size:16px;cursor:pointer;touch-action:manipulation}
+.hbtn.gold{background:#d9a441;color:#14203a;font-weight:700}
+.newbtn{display:block;margin:18px auto 0;min-height:44px;padding:0 22px;border-radius:12px;border:1px solid #d9a441;background:transparent;color:#d9a441;font-size:15px;cursor:pointer;touch-action:manipulation}
+</style>
+</head>
+<body>
+<a class="wog-home" href="../../index.html">⌂ خانه</a>
+<header><h1>❋ نیم ❋</h1><div class="hud" id="hud"></div></header>
+<div id="app"></div>
+<p id="hint"></p>
+<div class="wog-toast" id="wog-toast"></div>
+<script>
+(function () {
+'use strict';
+var store = {
+  get: function (k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+  set: function (k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+};
+/*WOG_LOGIC_START*/
+var WOG_LOGIC={
+initial:function(){return{heaps:[3,5,7],turn:0,over:false,loser:-1};},
+take:function(st,idx,n){
+  if(!st||st.over||idx<0||idx>=st.heaps.length||n<1||n>st.heaps[idx])return false;
+  st.heaps[idx]-=n;
+  var t=st.heaps[0]+st.heaps[1]+st.heaps[2];
+  if(t===0){st.over=true;st.loser=st.turn;}
+  else st.turn=1-st.turn;
+  return true;
+},
+isOver:function(st){return !!st.over;},
+loser:function(st){return st.loser;},
+aiMove:function(st,rng){
+  var h=st.heaps,big=[],ones=0,i,x=0;
+  for(i=0;i<h.length;i++){if(h[i]>1)big.push(i);else if(h[i]===1)ones++;x^=h[i];}
+  if(big.length>=2){
+    if(x!==0){for(i=0;i<h.length;i++){var v=h[i]^x;if(v<h[i])return{heap:i,n:h[i]-v};}}
+    var bi=big[0];for(i=1;i<big.length;i++)if(h[i]>h[bi])bi=i;
+    return{heap:bi,n:1};
+  }
+  if(big.length===1){var b=big[0];return ones%2===0?{heap:b,n:h[b]-1}:{heap:b,n:h[b]};}
+  for(i=0;i<h.length;i++)if(h[i]===1)return{heap:i,n:1};
+  return null;
+}};
+/*WOG_LOGIC_END*/
+var L = WOG_LOGIC;
+function $(s){return document.querySelector(s)}
+function $$(s){return Array.prototype.slice.call(document.querySelectorAll(s))}
+function ce(tag,cls,html){var e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;return e}
+var FA_D='۰۱۲۳۴۵۶۷۸۹';
+function fa(n){return String(n).replace(/\d/g,function(d){return FA_D[+d]})}
+function shuffle(a,rng){a=a.slice();rng=rng||Math.random;for(var i=a.length-1;i>0;i--){var j=Math.floor(rng()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a}
+function rint(a,b,rng){rng=rng||Math.random;return a+Math.floor(rng()*(b-a+1))}
+function pick(arr,rng){rng=rng||Math.random;return arr[Math.floor(rng()*arr.length)]}
+function clamp(v,a,b){return v<a?a:v>b?b:v}
+var _toastT=0;
+function toast(msg,ms){var t=$('#wog-toast');if(!t)return;t.textContent=msg;t.classList.add('on');clearTimeout(_toastT);_toastT=setTimeout(function(){t.classList.remove('on')},ms||1800)}
+function hud(html){var h=$('#hud');if(h)h.innerHTML=html}
+function ovl(title,sub,btn,cb){var o=ce('div','wovl');var b=ce('div','box');b.appendChild(ce('h2',null,title));if(sub)b.appendChild(ce('p',null,sub));var bt=ce('button',null,btn);bt.setAttribute('data-smoke','');bt.addEventListener('click',function(){o.remove();cb&&cb()});b.appendChild(bt);o.appendChild(b);document.body.appendChild(o);return o}
+function bestOf(key,val){var b=parseInt(store.get(key)||'0',10)||0;if(val>b)store.set(key,String(val));return Math.max(b,val)}
+function storeBest(key){return parseInt(store.get(key)||'0',10)||0}
+
+var st=L.initial(),sel=-1;
+function pips(n){var s='',i;for(i=0;i<n;i++)s+='<span class="pip"></span>';return s;}
+function draw(){
+  var app=$('#app');app.innerHTML='';
+  var wrap=ce('div','board');
+  st.heaps.forEach(function(h,i){
+    var row=ce('div','heap'+(sel===i?' sel':''));
+    row.appendChild(ce('div','hname','توده '+fa(i+1)));
+    var dp=ce('div','pips');
+    if(h>0)dp.innerHTML=pips(h);else dp.appendChild(ce('span','none','خالی'));
+    row.appendChild(dp);
+    row.appendChild(ce('div','hcount',fa(h)+' مهره'));
+    row.onclick=function(){if(!st.over&&st.turn===0&&st.heaps[i]>0){sel=i;draw();}};
+    wrap.appendChild(row);
+  });
+  app.appendChild(wrap);
+  var bar=ce('div','bar');
+  if(st.over){bar.appendChild(ce('div','msg',st.loser===0?'پایان — باختی!':'پایان — بردی!'));}
+  else if(st.turn===1){bar.appendChild(ce('div','msg','نوبت رایانه...'));}
+  else if(sel<0||st.heaps[sel]<1){bar.appendChild(ce('div','msg','یک توده را انتخاب کن'));}
+  else{
+    var h=st.heaps[sel],n;
+    var mk=function(k){return function(){mv(sel,k);};};
+    for(n=1;n<=h;n++){var b=ce('button','hbtn',fa(n));b.onclick=mk(n);bar.appendChild(b);}
+    var ba=ce('button','hbtn gold','همه');ba.onclick=mk(h);bar.appendChild(ba);
+  }
+  app.appendChild(bar);
+  var ng=ce('button','newbtn','بازی جدید');ng.setAttribute('data-smoke','1');ng.onclick=function(){newGame();};
+  app.appendChild(ng);
+  hud('نوبت: '+(st.over?'پایان':(st.turn===0?'شما':'رایانه')));
+  $('#hint').textContent='توده‌ای را انتخاب کن و ۱ تا همهٔ مهره‌هایش را بردار؛ هر کس آخرین مهره را بردارد می‌بازد.';
+}
+function mv(i,n){if(st.over||st.turn!==0)return;if(!L.take(st,i,n))return;sel=-1;draw();if(st.over){setTimeout(end,300);return;}setTimeout(aiTurn,700);}
+function aiTurn(){if(st.over)return;var m=L.aiMove(st,null);if(m)L.take(st,m.heap,m.n);draw();if(st.over)setTimeout(end,300);}
+function newGame(){st=L.initial();sel=-1;draw();}
+function end(){var win=st.loser===1;ovl(win?'بردی!':'باختی!',win?'رایانه آخرین مهره را برداشت؛ آفرین!':'تو آخرین مهره را برداشتی و باختی.','بازی جدید',function(){newGame();});}
+draw();
+})();
+</script>
+</body>
+</html>

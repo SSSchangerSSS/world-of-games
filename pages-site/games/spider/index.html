@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<title>سولیتر عنکبوتی | دنیای بازی‌ها</title>
+<meta name="description" content="سولیتر عنکبوتی تک‌خال با ۱۰ ستون و ۵ بار پخش از دسته">
+<style>*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+@font-face{font-family:Vazirmatn;src:url(../../fonts/Vazirmatn-Regular.woff2) format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:Vazirmatn;src:url(../../fonts/Vazirmatn-Bold.woff2) format('woff2');font-weight:700;font-display:swap}
+body{font-family:Vazirmatn,Tahoma,sans-serif;background:linear-gradient(160deg,#101a2e,#0b1220);color:#f3ead8;min-height:100dvh;user-select:none;display:flex;flex-direction:column;align-items:center;padding:12px;padding-top:56px;overflow-x:hidden}
+a.wog-home{position:fixed;top:10px;inset-inline-start:12px;z-index:99;background:rgba(217,164,65,.12);border:1px solid rgba(217,164,65,.45);color:#e8c073;text-decoration:none;padding:6px 12px;border-radius:10px;font-size:.85rem;font-weight:700}
+a.wog-home:hover{background:rgba(217,164,65,.3)}
+header{text-align:center;margin-bottom:8px}
+h1{font-size:1.2rem;color:#d9a441}
+.hud{color:#a8b3c9;font-size:.9rem;margin-top:2px;min-height:1.4em}
+.hud b{color:#e8c073}
+button,.wbtn{font-family:inherit;background:#d9a441;color:#221806;border:0;border-radius:10px;font-weight:700;padding:8px 16px;font-size:.95rem;cursor:pointer;touch-action:manipulation}
+button.sec,.wbtn.sec{background:#14203a;color:#f3ead8;border:1px solid rgba(217,164,65,.35)}
+button:disabled{opacity:.45;cursor:default}
+#hint{color:#a8b3c9;font-size:.85rem;margin-top:10px;text-align:center;max-width:680px;line-height:1.9}
+.wpanel{background:#14203a;border:1px solid rgba(217,164,65,.35);border-radius:14px;padding:14px}
+.wrow{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;align-items:center;margin:8px 0}
+.wovl{position:fixed;inset:0;background:rgba(5,9,18,.85);display:flex;align-items:center;justify-content:center;z-index:90}
+.wovl .box{background:#14203a;border:2px solid rgba(217,164,65,.5);border-radius:16px;padding:22px 28px;text-align:center;max-width:88vw}
+.wovl h2{color:#e8c073;margin-bottom:8px}
+.wovl p{color:#a8b3c9;margin-bottom:14px}
+.wog-toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#14203a;border:1px solid rgba(217,164,65,.5);color:#f3ead8;padding:8px 18px;border-radius:12px;opacity:0;transition:.25s;z-index:95;pointer-events:none;font-size:.9rem}
+.wog-toast.on{opacity:1}
+.wgrid{display:grid;border:2px solid rgba(217,164,65,.5);border-radius:10px;overflow:hidden;direction:ltr;touch-action:manipulation}
+.wgrid .cell{display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative}
+.cell.light{background:#e8dcc0}.cell.dark{background:#41527a}
+.wcard{display:inline-flex;flex-direction:column;justify-content:space-between;width:52px;height:74px;background:#f6efe0;color:#1c2438;border-radius:7px;padding:3px 5px;font-weight:700;font-size:.9rem;line-height:1;box-shadow:0 2px 5px rgba(0,0,0,.45);cursor:pointer;touch-action:manipulation;flex:none}
+.wcard.red{color:#c0392b}
+.wcard.back{background:linear-gradient(135deg,#2c3a5e,#41527a);border:2px solid rgba(217,164,65,.5)}
+.wcard.back:before{content:'❋';color:rgba(232,192,115,.55);align-self:center;font-size:1.3rem}
+.wcard.small{width:38px;height:54px;font-size:.75rem;border-radius:5px}
+.wcard.tiny{width:30px;height:44px;font-size:.65rem;border-radius:4px;padding:2px 3px}
+.wcard.sel{outline:3px solid #e8c073;transform:translateY(-6px)}
+.wcard .cn{font-size:.7rem;opacity:.85}.wcard .cv{align-self:flex-start}
+.wcard.back .cn,.wcard.back .cv{display:none}
+.wdpad{display:none;grid-template-columns:repeat(3,58px);grid-auto-rows:50px;gap:6px;margin-top:12px}
+.wdpad.on{display:grid}
+.wdpad button{font-size:1.15rem}
+@media(pointer:coarse){.wdpad{display:grid}}
+canvas{touch-action:none;border-radius:10px;border:2px solid rgba(217,164,65,.35);background:#0d1526}
+body{margin:0;background:#123d16;color:#fff;font-family:Tahoma,Arial,sans-serif}
+header{text-align:center;padding:4px}
+h1{margin:2px 0;font-size:17px}
+#hud{font-size:13px;color:#dcedc8}
+.wog-home{display:inline-block;color:#fff;text-decoration:none;font-size:12px;opacity:.7;margin:3px}
+.bar{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;padding:5px}
+.bt{background:#ffffff22;border:1px solid #ffffff55;color:#fff;border-radius:8px;padding:6px 12px;font-family:inherit;font-size:13px;cursor:pointer}
+#app{padding:2px 4px}
+.tabs{display:flex;gap:3px;justify-content:center;align-items:flex-start}
+.col{flex:1 1 0;min-width:30px;max-width:50px;min-height:70px}
+.cd{position:relative;width:100%;height:60px;background:#fcfcf4;border:1px solid #444;border-radius:6px;color:#111;font-size:14px;cursor:pointer;box-sizing:border-box}
+.col .cd+.cd{margin-top:-45px}
+.cd b{position:absolute;top:2px;right:4px}
+.cd i{position:absolute;bottom:1px;left:4px;font-style:normal}
+.cd.sel{outline:3px solid #ffca28;background:#fff59d}
+#hint{text-align:center;font-size:12px;color:#ffe0b2;margin:8px 4px}
+#wog-toast{position:fixed;bottom:10px;left:0;right:0;text-align:center;font-size:13px;color:#fff;pointer-events:none;text-shadow:0 1px 2px #000}
+</style>
+</head>
+<body>
+<a class="wog-home" href="../../index.html">⌂ خانه</a>
+<header><h1>❋ سولیتر عنکبوتی ❋</h1><div class="hud" id="hud"></div></header>
+<div id="app"></div>
+<p id="hint"></p>
+<div class="wog-toast" id="wog-toast"></div>
+<script>
+(function () {
+'use strict';
+var store = {
+  get: function (k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+  set: function (k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+};
+/*WOG_LOGIC_START*/
+function sh(a,rng){var r=rng||Math.random,i,j,t;for(i=a.length-1;i>0;i--){j=Math.floor(r()*(i+1));t=a[i];a[i]=a[j];a[j]=t;}return a;}
+function snap(st){st.hist.push(JSON.stringify({p:st.piles,k:st.stock,r:st.removed,m:st.moves}));if(st.hist.length>300)st.hist.shift();}
+function undo(st){var h=st.hist.pop();if(!h)return false;var o=JSON.parse(h);st.piles=o.p;st.stock=o.k;st.removed=o.r;st.moves=o.m;return true;}
+function newGame(rng){var cards=[],id=0,c,r,i,p,n;for(c=0;c<8;c++)for(r=1;r<=13;r++)cards.push({s:0,r:r,id:id++});sh(cards,rng);var piles=[],k=0;for(p=0;p<10;p++){piles.push([]);n=p<4?6:5;for(i=0;i<n;i++)piles[p].push(cards[k++]);}return{piles:piles,stock:cards.slice(k),removed:0,moves:0,hist:[]};}
+function movableRun(pile,fromIdx){var i;if(!pile||fromIdx<0||fromIdx>=pile.length)return null;for(i=fromIdx;i<pile.length-1;i++){if(pile[i].r!==pile[i+1].r+1)return null;}return pile.slice(fromIdx);}
+function canDrop(run,top){if(!run||!run.length)return false;if(!top)return true;return top.r===run[0].r+1;}
+function checkCompleted(st){var n=0,p,pl,ok,i;for(p=0;p<10;p++){pl=st.piles[p];if(pl.length<13)continue;ok=true;for(i=0;i<13;i++){if(pl[pl.length-1-i].r!==i+1){ok=false;break;}}if(ok){pl.length-=13;st.removed++;n++;}}return n;}
+function applyMove(st,from,fromIdx,to){if(from===to)return false;var pl=st.piles[from],run=movableRun(pl,fromIdx),dst,i;if(!run)return false;dst=st.piles[to];if(!canDrop(run,dst[dst.length-1]))return false;snap(st);pl.length=fromIdx;for(i=0;i<run.length;i++)dst.push(run[i]);st.moves++;checkCompleted(st);return true;}
+function dealRow(st){var p;if(st.stock.length<10)return false;for(p=0;p<10;p++){if(!st.piles[p].length)return false;}snap(st);for(p=0;p<10;p++)st.piles[p].push(st.stock.pop());st.moves++;checkCompleted(st);return true;}
+function hasAnyMove(st){var a,i,b,pl,d;for(a=0;a<10;a++){pl=st.piles[a];if(!pl.length)continue;for(i=pl.length-1;i>=0;i--){for(b=0;b<10;b++){if(b===a)continue;d=st.piles[b];if(!d.length||d[d.length-1].r===pl[i].r+1)return true;}if(i>0&&pl[i-1].r!==pl[i].r+1)break;}}return false;}
+function isWin(st){return st.removed>=8;}
+function isStuck(st){return !hasAnyMove(st)&&st.stock.length===0;}
+var WOG_LOGIC={newGame:newGame,movableRun:movableRun,canDrop:canDrop,applyMove:applyMove,dealRow:dealRow,checkCompleted:checkCompleted,isWin:isWin,hasAnyMove:hasAnyMove,isStuck:isStuck,undo:undo,snap:snap};
+/*WOG_LOGIC_END*/
+var L = WOG_LOGIC;
+function $(s){return document.querySelector(s)}
+function $$(s){return Array.prototype.slice.call(document.querySelectorAll(s))}
+function ce(tag,cls,html){var e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;return e}
+var FA_D='۰۱۲۳۴۵۶۷۸۹';
+function fa(n){return String(n).replace(/\d/g,function(d){return FA_D[+d]})}
+function shuffle(a,rng){a=a.slice();rng=rng||Math.random;for(var i=a.length-1;i>0;i--){var j=Math.floor(rng()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a}
+function rint(a,b,rng){rng=rng||Math.random;return a+Math.floor(rng()*(b-a+1))}
+function pick(arr,rng){rng=rng||Math.random;return arr[Math.floor(rng()*arr.length)]}
+function clamp(v,a,b){return v<a?a:v>b?b:v}
+var _toastT=0;
+function toast(msg,ms){var t=$('#wog-toast');if(!t)return;t.textContent=msg;t.classList.add('on');clearTimeout(_toastT);_toastT=setTimeout(function(){t.classList.remove('on')},ms||1800)}
+function hud(html){var h=$('#hud');if(h)h.innerHTML=html}
+function ovl(title,sub,btn,cb){var o=ce('div','wovl');var b=ce('div','box');b.appendChild(ce('h2',null,title));if(sub)b.appendChild(ce('p',null,sub));var bt=ce('button',null,btn);bt.setAttribute('data-smoke','');bt.addEventListener('click',function(){o.remove();cb&&cb()});b.appendChild(bt);o.appendChild(b);document.body.appendChild(o);return o}
+function bestOf(key,val){var b=parseInt(store.get(key)||'0',10)||0;if(val>b)store.set(key,String(val));return Math.max(b,val)}
+function storeBest(key){return parseInt(store.get(key)||'0',10)||0}
+var SUITS='♠♥♦♣';
+function makeDeck(){var d=[];for(var s=0;s<4;s++)for(var r=1;r<=13;r++)d.push({s:s,r:r});return d}
+function isRed(c){return c.s===1||c.s===2}
+function suitOf(c){return SUITS[c.s]}
+function rankShort(r){return r===1?'A':r===11?'J':r===12?'Q':r===13?'K':String(r)}
+function rankFa(r){return r===1?'آس':r===11?'سرباز':r===12?'بی‌بی':r===13?'شاه':fa(r)}
+function cardEl(c,faceUp,size){var e=ce('div','wcard'+(faceUp?(isRed(c)?' red':''):' back')+(size?' '+size:''));if(faceUp)e.innerHTML='<span class="cn">'+rankShort(c.r)+suitOf(c)+'</span><span class="cv">'+suitOf(c)+'</span>';return e}
+function cardStack(el,cs,faceUp,size){cs.forEach(function(c){el.appendChild(cardEl(c,faceUp,size))});return el}
+
+var st=null,sel=null;
+function rk(r){return r===1?'A':(r===11?'J':(r===12?'Q':(r===13?'K':fa(r))));}
+function start(){st=L.newGame();sel=null;$('#hint').textContent='اول روی کارت مبدأ بزن و بعد روی مقصد؛ ردیف نزولی بساز و ۸ ردیف کامل K تا A را جمع کن.';render();}
+function isSel(p,i){return !!sel&&sel.p===p&&i>=sel.i;}
+function render(){
+ var app=$('#app');app.innerHTML='';
+ var bar=ce('div','bar','');
+ var bd=ce('button','bt','پخش ('+fa(st.stock.length/10)+')');
+ bd.setAttribute('data-smoke','deal');bd.onclick=function(){doDeal();};
+ var bu=ce('button','bt','برگرد');
+ bu.setAttribute('data-smoke','undo');bu.onclick=function(){if(L.undo(st)){sel=null;render();}else{toast('چیزی برای برگشت نیست');}};
+ var bn=ce('button','bt','بازی جدید');
+ bn.setAttribute('data-smoke','new');bn.onclick=function(){start();};
+ var bh=ce('button','bt','راهنما');
+ bh.onclick=function(){ovl('راهنما','کارت هر ستون باید روی کارتی با یک رتبه بیشتر بنشیند و هر ردیف نزولی پیوسته یکجا جابه‌جا می‌شود. ستونی که از K تا A پیوسته باشد پس از هر حرکت خودکار حذف می‌شود. دکمه پخش به هر ۱۰ ستون یک کارت اضافه می‌کند، اما اگر ستون خالی داشته باشی اجازه پخش نیست. با حذف ۸ ردیف برنده می‌شوی.','فهمیدم',function(){});};
+ bar.appendChild(bd);bar.appendChild(bu);bar.appendChild(bn);bar.appendChild(bh);
+ app.appendChild(bar);
+ var row=ce('div','tabs','');
+ for(var p=0;p<10;p++){
+  var col=ce('div','col','');
+  col.setAttribute('data-pile',p);
+  col.onclick=(function(q){return function(){tap(q,-1);};})(p);
+  var pl=st.piles[p];
+  for(var i=0;i<pl.length;i++){
+   var d=ce('div','cd'+(isSel(p,i)?' sel':''),'<b>'+rk(pl[i].r)+'</b><i>♠</i>');
+   d.setAttribute('data-card',p+'-'+i);
+   d.onclick=(function(q,j){return function(ev){ev.stopPropagation();tap(q,j);};})(p,i);
+   col.appendChild(d);
+  }
+  row.appendChild(col);
+ }
+ app.appendChild(row);
+ hud('حرکت: '+fa(st.moves)+' — دسته: '+fa(st.stock.length/10)+' — ردیف کامل: '+fa(st.removed)+' از ۸');
+}
+function tap(p,i){
+ if(sel&&sel.p!==p){
+  var ok=L.applyMove(st,sel.p,sel.i,p);
+  if(ok){sel=null;after();return;}
+  sel=null;
+  if(i>=0&&L.movableRun(st.piles[p],i))sel={p:p,i:i};
+  render();return;
+ }
+ if(sel&&sel.p===p&&i===sel.i){sel=null;render();return;}
+ if(i>=0&&L.movableRun(st.piles[p],i)){sel={p:p,i:i};render();return;}
+ if(sel){sel=null;render();}
+}
+function doDeal(){
+ sel=null;
+ if(!L.dealRow(st)){toast(st.stock.length?'هر ستون باید حداقل یک کارت داشته باشد':'دسته خالی است');render();return;}
+ after();
+}
+function after(){
+ render();
+ if(L.isWin(st)){ovl('آفرین! بردی','هر ۸ ردیف کامل شد','بازی جدید',function(){start();});return;}
+ if(L.isStuck(st)){ovl('بازی تمام شد','حرکت و پخش ممکن نیست','بازی جدید',function(){start();});}
+}
+start();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<title>یاتزی | دنیای بازی‌ها</title>
+<meta name="description" content="یاتزی تک‌نفره با ۵ تاس و ۳ پرتاب در هر نوبت؛ ۱۳ خانهٔ امتیاز را هوشمندانه پر کنید و جایزهٔ ۳۵ امتیازیِ بالایی را از دست ندهید.">
+<style>*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+@font-face{font-family:Vazirmatn;src:url(../../fonts/Vazirmatn-Regular.woff2) format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:Vazirmatn;src:url(../../fonts/Vazirmatn-Bold.woff2) format('woff2');font-weight:700;font-display:swap}
+body{font-family:Vazirmatn,Tahoma,sans-serif;background:linear-gradient(160deg,#101a2e,#0b1220);color:#f3ead8;min-height:100dvh;user-select:none;display:flex;flex-direction:column;align-items:center;padding:12px;padding-top:56px;overflow-x:hidden}
+a.wog-home{position:fixed;top:10px;inset-inline-start:12px;z-index:99;background:rgba(217,164,65,.12);border:1px solid rgba(217,164,65,.45);color:#e8c073;text-decoration:none;padding:6px 12px;border-radius:10px;font-size:.85rem;font-weight:700}
+a.wog-home:hover{background:rgba(217,164,65,.3)}
+header{text-align:center;margin-bottom:8px}
+h1{font-size:1.2rem;color:#d9a441}
+.hud{color:#a8b3c9;font-size:.9rem;margin-top:2px;min-height:1.4em}
+.hud b{color:#e8c073}
+button,.wbtn{font-family:inherit;background:#d9a441;color:#221806;border:0;border-radius:10px;font-weight:700;padding:8px 16px;font-size:.95rem;cursor:pointer;touch-action:manipulation}
+button.sec,.wbtn.sec{background:#14203a;color:#f3ead8;border:1px solid rgba(217,164,65,.35)}
+button:disabled{opacity:.45;cursor:default}
+#hint{color:#a8b3c9;font-size:.85rem;margin-top:10px;text-align:center;max-width:680px;line-height:1.9}
+.wpanel{background:#14203a;border:1px solid rgba(217,164,65,.35);border-radius:14px;padding:14px}
+.wrow{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;align-items:center;margin:8px 0}
+.wovl{position:fixed;inset:0;background:rgba(5,9,18,.85);display:flex;align-items:center;justify-content:center;z-index:90}
+.wovl .box{background:#14203a;border:2px solid rgba(217,164,65,.5);border-radius:16px;padding:22px 28px;text-align:center;max-width:88vw}
+.wovl h2{color:#e8c073;margin-bottom:8px}
+.wovl p{color:#a8b3c9;margin-bottom:14px}
+.wog-toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#14203a;border:1px solid rgba(217,164,65,.5);color:#f3ead8;padding:8px 18px;border-radius:12px;opacity:0;transition:.25s;z-index:95;pointer-events:none;font-size:.9rem}
+.wog-toast.on{opacity:1}
+.wgrid{display:grid;border:2px solid rgba(217,164,65,.5);border-radius:10px;overflow:hidden;direction:ltr;touch-action:manipulation}
+.wgrid .cell{display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative}
+.cell.light{background:#e8dcc0}.cell.dark{background:#41527a}
+.wcard{display:inline-flex;flex-direction:column;justify-content:space-between;width:52px;height:74px;background:#f6efe0;color:#1c2438;border-radius:7px;padding:3px 5px;font-weight:700;font-size:.9rem;line-height:1;box-shadow:0 2px 5px rgba(0,0,0,.45);cursor:pointer;touch-action:manipulation;flex:none}
+.wcard.red{color:#c0392b}
+.wcard.back{background:linear-gradient(135deg,#2c3a5e,#41527a);border:2px solid rgba(217,164,65,.5)}
+.wcard.back:before{content:'❋';color:rgba(232,192,115,.55);align-self:center;font-size:1.3rem}
+.wcard.small{width:38px;height:54px;font-size:.75rem;border-radius:5px}
+.wcard.tiny{width:30px;height:44px;font-size:.65rem;border-radius:4px;padding:2px 3px}
+.wcard.sel{outline:3px solid #e8c073;transform:translateY(-6px)}
+.wcard .cn{font-size:.7rem;opacity:.85}.wcard .cv{align-self:flex-start}
+.wcard.back .cn,.wcard.back .cv{display:none}
+.wdpad{display:none;grid-template-columns:repeat(3,58px);grid-auto-rows:50px;gap:6px;margin-top:12px}
+.wdpad.on{display:grid}
+.wdpad button{font-size:1.15rem}
+@media(pointer:coarse){.wdpad{display:grid}}
+canvas{touch-action:none;border-radius:10px;border:2px solid rgba(217,164,65,.35);background:#0d1526}
+#app{max-width:540px;margin:0 auto;padding:6px 10px}
+.dice{display:flex;gap:8px;justify-content:center;margin:12px 0;flex-wrap:wrap}
+.die{width:58px;height:58px;font-size:36px;line-height:1;border-radius:12px;border:2px solid #3fb8af;background:#14203a;color:#f3ead8;cursor:pointer;touch-action:manipulation;padding:0;font-family:inherit}
+.die.hold{border-color:#d9a441;background:#332a12;color:#d9a441;transform:translateY(-5px)}
+.die[disabled]{opacity:.5;transform:none}
+.btns{display:flex;gap:10px;justify-content:center;margin:10px 0;flex-wrap:wrap}
+.btn{min-height:44px;border:0;border-radius:10px;background:#d9a441;color:#14203a;font-weight:700;padding:10px 18px;cursor:pointer;touch-action:manipulation;font-family:inherit;font-size:15px}
+.btn.alt{background:#3fb8af;color:#0c1526}
+.sheet{display:flex;flex-direction:column;gap:4px}
+.row{display:flex;justify-content:space-between;align-items:center;min-height:40px;background:#14203a;border:1px solid #233052;border-radius:9px;padding:6px 12px;color:#f3ead8;width:100%;box-sizing:border-box;cursor:pointer;touch-action:manipulation;font-family:inherit;font-size:15px}
+.row.best{border-color:#d9a441}
+.row.used,.row.used b{color:#67b98a;cursor:default}
+.row b{color:#d9a441;font-size:16px}
+.sep{text-align:center;color:#8fa3c8;font-size:13px;margin:4px 0}
+.sep.tot{color:#d9a441;font-size:15px;font-weight:700}
+</style>
+</head>
+<body>
+<a class="wog-home" href="../../index.html">⌂ خانه</a>
+<header><h1>❋ یاتزی ❋</h1><div class="hud" id="hud"></div></header>
+<div id="app"></div>
+<p id="hint"></p>
+<div class="wog-toast" id="wog-toast"></div>
+<script>
+(function () {
+'use strict';
+var store = {
+  get: function (k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+  set: function (k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+};
+/*WOG_LOGIC_START*/
+var Y_UPPER=['ones','twos','threes','fours','fives','sixes'];
+var Y_CATS=Y_UPPER.concat(['threeKind','fourKind','fullHouse','smallStraight','largeStraight','chance','yahtzee']);
+function yCounts(d){var c=[0,0,0,0,0,0,0],i;for(i=0;i<5;i++)c[d[i]]++;return c;}
+function ySum(d){var s=0,i;for(i=0;i<5;i++)s+=d[i];return s;}
+function yMaxC(c){var m=0,i;for(i=1;i<=6;i++)if(c[i]>m)m=c[i];return m;}
+function yAllEq(d){return yMaxC(yCounts(d))===5;}
+function yRun(c,len){var run=0,i;for(i=1;i<=6;i++){run=c[i]>0?run+1:0;if(run>=len)return true;}return false;}
+function yCalc(cat,d){var c=yCounts(d),s=ySum(d),m=yMaxC(c),i,two,three;
+ if(cat==='ones')return c[1];if(cat==='twos')return c[2]*2;if(cat==='threes')return c[3]*3;
+ if(cat==='fours')return c[4]*4;if(cat==='fives')return c[5]*5;if(cat==='sixes')return c[6]*6;
+ if(cat==='threeKind')return m>=3?s:0;
+ if(cat==='fourKind')return m>=4?s:0;
+ if(cat==='fullHouse'){two=false;three=false;for(i=1;i<=6;i++){if(c[i]===2)two=true;if(c[i]===3)three=true;}return(two&&three)?25:0;}
+ if(cat==='smallStraight')return yRun(c,4)?30:0;
+ if(cat==='largeStraight')return yRun(c,5)?40:0;
+ if(cat==='chance')return s;
+ if(cat==='yahtzee')return m===5?50:0;
+ return 0;}
+function yNew(){return{dice:[0,0,0,0,0],rollsLeft:3,sheet:{}};}
+function yScore(state,cat,d){d=d||state.dice;var p=yCalc(cat,d);
+ if(!p&&(cat==='fullHouse'||cat==='smallStraight'||cat==='largeStraight')&&yAllEq(d)&&state&&state.sheet){
+  var up=Y_UPPER[d[0]-1];
+  if(state.sheet[up]!==undefined&&state.sheet[up]!==null){if(cat==='fullHouse')p=25;else if(cat==='smallStraight')p=30;else p=40;}}
+ return p;}
+function yRoll(state,holds,rng){if(state.rollsLeft<=0)throw new Error('no-rolls');
+ var r=rng||Math.random;holds=holds||[];
+ for(var i=0;i<5;i++)if(holds.indexOf(i)<0)state.dice[i]=1+Math.floor(r()*6);
+ state.rollsLeft--;return state.dice;}
+function yAssign(state,cat,d){if(state.sheet[cat]!==undefined)return state;
+ state.sheet[cat]=yScore(state,cat,d||state.dice);
+ state.rollsLeft=3;state.dice=[0,0,0,0,0];return state;}
+function yUpper(sheet){var s=0,i;for(i=0;i<6;i++)if(sheet[Y_UPPER[i]]!==undefined)s+=sheet[Y_UPPER[i]];return s;}
+function yBonus(sheet){return yUpper(sheet)>=63?35:0;}
+function yUsed(sheet,cat){return sheet[cat]!==undefined;}
+function yFull(sheet){for(var i=0;i<Y_CATS.length;i++)if(sheet[Y_CATS[i]]===undefined)return false;return true;}
+function yTotals(sheet){var u=yUpper(sheet),b=yBonus(sheet),l=0,i;
+ for(i=6;i<Y_CATS.length;i++)if(sheet[Y_CATS[i]]!==undefined)l+=sheet[Y_CATS[i]];
+ return{upper:u,bonus:b,lower:l,grand:u+b+l};}
+var WOG_LOGIC={UPPER:Y_UPPER,CATS:Y_CATS,newGame:yNew,rollDice:yRoll,calc:yCalc,score:yScore,assign:yAssign,
+ upperSubtotal:yUpper,bonus:yBonus,isUsed:yUsed,isSheetFull:yFull,totals:yTotals};
+/*WOG_LOGIC_END*/
+var L = WOG_LOGIC;
+function $(s){return document.querySelector(s)}
+function $$(s){return Array.prototype.slice.call(document.querySelectorAll(s))}
+function ce(tag,cls,html){var e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;return e}
+var FA_D='۰۱۲۳۴۵۶۷۸۹';
+function fa(n){return String(n).replace(/\d/g,function(d){return FA_D[+d]})}
+function shuffle(a,rng){a=a.slice();rng=rng||Math.random;for(var i=a.length-1;i>0;i--){var j=Math.floor(rng()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a}
+function rint(a,b,rng){rng=rng||Math.random;return a+Math.floor(rng()*(b-a+1))}
+function pick(arr,rng){rng=rng||Math.random;return arr[Math.floor(rng()*arr.length)]}
+function clamp(v,a,b){return v<a?a:v>b?b:v}
+var _toastT=0;
+function toast(msg,ms){var t=$('#wog-toast');if(!t)return;t.textContent=msg;t.classList.add('on');clearTimeout(_toastT);_toastT=setTimeout(function(){t.classList.remove('on')},ms||1800)}
+function hud(html){var h=$('#hud');if(h)h.innerHTML=html}
+function ovl(title,sub,btn,cb){var o=ce('div','wovl');var b=ce('div','box');b.appendChild(ce('h2',null,title));if(sub)b.appendChild(ce('p',null,sub));var bt=ce('button',null,btn);bt.setAttribute('data-smoke','');bt.addEventListener('click',function(){o.remove();cb&&cb()});b.appendChild(bt);o.appendChild(b);document.body.appendChild(o);return o}
+function bestOf(key,val){var b=parseInt(store.get(key)||'0',10)||0;if(val>b)store.set(key,String(val));return Math.max(b,val)}
+function storeBest(key){return parseInt(store.get(key)||'0',10)||0}
+
+var CAT_FA={ones:'یک‌ها',twos:'دوها',threes:'سه‌ها',fours:'چهارها',fives:'پنج‌ها',sixes:'شش‌ها',threeKind:'سه‌تایی',fourKind:'چهارتایی',fullHouse:'خانه کامل',smallStraight:'خیابان کوچک',largeStraight:'خیابان بزرگ',chance:'شانس',yahtzee:'یاتزی'};
+var DIE='⚀⚁⚂⚃⚄⚅';
+var st=L.newGame(),holds=[0,0,0,0,0],bestCat=null;
+$('#hint').textContent='تاس را لمس کنید تا ثابت بماند؛ در هر نوبت ۳ پرتاب دارید و باید امتیاز را در یکی از ۱۳ خانهٔ باز ثبت کنید.';
+$('#app').innerHTML='<div class="dice" id="diceRow"></div><div class="btns"><button class="btn" id="btnRoll" data-smoke>پرتاب تاس‌ها</button><button class="btn alt" id="btnNew" data-smoke>بازی جدید</button></div><div class="sheet" id="sheet"></div>';
+function dieCh(v){return v>0?DIE.charAt(v-1):'؟';}
+function rolled(){return st.rollsLeft<3&&st.dice[0]>0;}
+function catRow(cat){var v=st.sheet[cat];
+ if(v!==undefined)return '<div class="row used"><span>'+CAT_FA[cat]+'</span><b>'+fa(v)+'</b></div>';
+ var p=rolled()?L.score(st,cat):null;
+ return '<button class="row catbtn'+(cat===bestCat?' best':'')+'" data-cat="'+cat+'"><span>'+CAT_FA[cat]+'</span><b>'+(p===null?'—':fa(p))+'</b></button>';}
+function render(){var html='',i;
+ for(i=0;i<5;i++)html+='<button class="die'+(holds[i]?' hold':'')+'" data-i="'+i+'"'+((st.dice[i]>0&&st.rollsLeft<3)?'':' disabled')+'>'+dieCh(st.dice[i])+'</button>';
+ $('#diceRow').innerHTML=html;
+ bestCat=null;
+ if(rolled()){var bp=-1;for(i=0;i<L.CATS.length;i++){if(st.sheet[L.CATS[i]]!==undefined)continue;var pv=L.score(st,L.CATS[i]);if(pv>bp){bp=pv;bestCat=L.CATS[i];}}}
+ var s='';for(i=0;i<6;i++)s+=catRow(L.CATS[i]);
+ var u=L.upperSubtotal(st.sheet);
+ s+='<div class="sep">جایزهٔ بالایی: '+fa(u)+' از ۶۳'+(u>=63?' — ۳۵ امتیاز جایزه فعال شد':'')+'</div>';
+ for(i=6;i<L.CATS.length;i++)s+=catRow(L.CATS[i]);
+ var t=L.totals(st.sheet);
+ s+='<div class="sep tot">امتیاز کل فعلی: '+fa(t.grand)+'</div>';
+ $('#sheet').innerHTML=s;
+ hud('پرتاب باقی‌مانده: '+fa(st.rollsLeft)+' — بالایی: '+fa(u)+' — جایزه: '+fa(t.bonus)+' — کل: '+fa(t.grand));}
+function play(cat){if(!cat||st.sheet[cat]!==undefined)return;
+ if(!rolled()){toast('اول تاس‌ها را برانید');return;}
+ var pts=L.score(st,cat);L.assign(st,cat);holds=[0,0,0,0,0];
+ toast(CAT_FA[cat]+': '+fa(pts)+' امتیاز ثبت شد');
+ if(L.isSheetFull(st.sheet)){var t=L.totals(st.sheet),b=+(store.get('wog-yahtzee-best')||0);
+  if(t.grand>b){store.set('wog-yahtzee-best',String(t.grand));toast('رکورد جدید!');}
+  ovl('پایان یاتزی','امتیاز کل: '+fa(t.grand)+' — بالایی '+fa(t.upper)+' + جایزه '+fa(t.bonus)+' + پایینی '+fa(t.lower),'بازی جدید',newG);}
+ render();}
+function newG(){st=L.newGame();holds=[0,0,0,0,0];render();}
+$('#app').addEventListener('click',function(e){var el=e.target.closest?e.target.closest('.die'):null;
+ if(el&&!el.disabled){var i=+el.getAttribute('data-i');holds[i]=holds[i]?0:1;render();return;}
+ el=e.target.closest?e.target.closest('.catbtn'):null;
+ if(el&&el.getAttribute)play(el.getAttribute('data-cat'));});
+$('#btnRoll').addEventListener('click',function(){if(st.rollsLeft<=0){toast('پرتابی نمانده؛ خانه‌ای را برای ثبت انتخاب کنید');return;}
+ var hs=[],i;for(i=0;i<5;i++)if(holds[i])hs.push(i);
+ L.rollDice(st,hs);render();});
+$('#btnNew').addEventListener('click',newG);
+render();
+})();
+</script>
+</body>
+</html>

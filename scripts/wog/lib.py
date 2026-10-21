@@ -93,7 +93,7 @@ function rafStep(fn){var last=performance.now();function f(t){var dt=Math.min(.0
 
 WORD_JS = """var FA_LETTERS=['آ','ا','ب','پ','ت','ث','ج','چ','ح','خ','د','ذ','ر','ز','ژ','س','ش','ص','ض','ط','ظ','ع','غ','ف','ق','ک','گ','ل','م','ن','و','ه','ی'];
 function normFa(s){return (s||'').replace(/ي/g,'ی').replace(/ك/g,'ک').replace(/\\u200c/g,' ').replace(/\\s+/g,' ').trim()}
-function faKb(onKey,longKeys){var kb=ce('div');kb.style.cssText='display:flex;flex-wrap:wrap;gap:5px;justify-content:center;max-width:560px;margin-top:12px;direction:rtl';FA_LETTERS.forEach(function(ch){var b=ce('button','sec',ch);b.style.cssText='min-width:40px;padding:8px 4px';b.addEventListener('click',function(){onKey(ch)});kb.appendChild(b)});(longKeys||[]).forEach(function(x){var b=ce('button',null,x.label);b.addEventListener('click',function(){onKey(x.k)});kb.appendChild(b)});document.getElementById('app').appendChild(kb);return kb}
+function faKb(onKey,longKeys){var kb=ce('div');kb.style.cssText='display:flex;flex-wrap:wrap;gap:5px;justify-content:center;max-width:560px;margin-top:12px;direction:rtl';FA_LETTERS.forEach(function(ch){var b=ce('button','sec',ch);b.style.cssText='min-width:40px;padding:8px 4px';b.addEventListener('click',function(){onKey(ch)});kb.appendChild(b)});var lk=(longKeys&&longKeys.length&&typeof longKeys.forEach==='function')?longKeys:[];lk.forEach(function(x){var b=ce('button',null,x.label);b.addEventListener('click',function(){onKey(x.k)});kb.appendChild(b)});document.getElementById('app').appendChild(kb);return kb}
 """
 
 TEMPLATE = """<!DOCTYPE html>

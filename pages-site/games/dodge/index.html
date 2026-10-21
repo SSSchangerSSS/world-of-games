@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<title>دوری از توپ‌ها | دنیای بازی‌ها</title>
+<meta name="description" content="توپ‌ها در میدان جهش می‌کنند و شمارشان پیوسته بیشتر می‌شود؛ تا می‌توانی زنده بمان و امتیاز بگیر.">
+<style>*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+@font-face{font-family:Vazirmatn;src:url(../../fonts/Vazirmatn-Regular.woff2) format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:Vazirmatn;src:url(../../fonts/Vazirmatn-Bold.woff2) format('woff2');font-weight:700;font-display:swap}
+body{font-family:Vazirmatn,Tahoma,sans-serif;background:linear-gradient(160deg,#101a2e,#0b1220);color:#f3ead8;min-height:100dvh;user-select:none;display:flex;flex-direction:column;align-items:center;padding:12px;padding-top:56px;overflow-x:hidden}
+a.wog-home{position:fixed;top:10px;inset-inline-start:12px;z-index:99;background:rgba(217,164,65,.12);border:1px solid rgba(217,164,65,.45);color:#e8c073;text-decoration:none;padding:6px 12px;border-radius:10px;font-size:.85rem;font-weight:700}
+a.wog-home:hover{background:rgba(217,164,65,.3)}
+header{text-align:center;margin-bottom:8px}
+h1{font-size:1.2rem;color:#d9a441}
+.hud{color:#a8b3c9;font-size:.9rem;margin-top:2px;min-height:1.4em}
+.hud b{color:#e8c073}
+button,.wbtn{font-family:inherit;background:#d9a441;color:#221806;border:0;border-radius:10px;font-weight:700;padding:8px 16px;font-size:.95rem;cursor:pointer;touch-action:manipulation}
+button.sec,.wbtn.sec{background:#14203a;color:#f3ead8;border:1px solid rgba(217,164,65,.35)}
+button:disabled{opacity:.45;cursor:default}
+#hint{color:#a8b3c9;font-size:.85rem;margin-top:10px;text-align:center;max-width:680px;line-height:1.9}
+.wpanel{background:#14203a;border:1px solid rgba(217,164,65,.35);border-radius:14px;padding:14px}
+.wrow{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;align-items:center;margin:8px 0}
+.wovl{position:fixed;inset:0;background:rgba(5,9,18,.85);display:flex;align-items:center;justify-content:center;z-index:90}
+.wovl .box{background:#14203a;border:2px solid rgba(217,164,65,.5);border-radius:16px;padding:22px 28px;text-align:center;max-width:88vw}
+.wovl h2{color:#e8c073;margin-bottom:8px}
+.wovl p{color:#a8b3c9;margin-bottom:14px}
+.wog-toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#14203a;border:1px solid rgba(217,164,65,.5);color:#f3ead8;padding:8px 18px;border-radius:12px;opacity:0;transition:.25s;z-index:95;pointer-events:none;font-size:.9rem}
+.wog-toast.on{opacity:1}
+.wgrid{display:grid;border:2px solid rgba(217,164,65,.5);border-radius:10px;overflow:hidden;direction:ltr;touch-action:manipulation}
+.wgrid .cell{display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative}
+.cell.light{background:#e8dcc0}.cell.dark{background:#41527a}
+.wcard{display:inline-flex;flex-direction:column;justify-content:space-between;width:52px;height:74px;background:#f6efe0;color:#1c2438;border-radius:7px;padding:3px 5px;font-weight:700;font-size:.9rem;line-height:1;box-shadow:0 2px 5px rgba(0,0,0,.45);cursor:pointer;touch-action:manipulation;flex:none}
+.wcard.red{color:#c0392b}
+.wcard.back{background:linear-gradient(135deg,#2c3a5e,#41527a);border:2px solid rgba(217,164,65,.5)}
+.wcard.back:before{content:'❋';color:rgba(232,192,115,.55);align-self:center;font-size:1.3rem}
+.wcard.small{width:38px;height:54px;font-size:.75rem;border-radius:5px}
+.wcard.tiny{width:30px;height:44px;font-size:.65rem;border-radius:4px;padding:2px 3px}
+.wcard.sel{outline:3px solid #e8c073;transform:translateY(-6px)}
+.wcard .cn{font-size:.7rem;opacity:.85}.wcard .cv{align-self:flex-start}
+.wcard.back .cn,.wcard.back .cv{display:none}
+.wdpad{display:none;grid-template-columns:repeat(3,58px);grid-auto-rows:50px;gap:6px;margin-top:12px}
+.wdpad.on{display:grid}
+.wdpad button{font-size:1.15rem}
+@media(pointer:coarse){.wdpad{display:grid}}
+canvas{touch-action:none;border-radius:10px;border:2px solid rgba(217,164,65,.35);background:#0d1526}
+.wbar{display:flex;gap:8px;justify-content:center;margin:10px 0;flex-wrap:wrap}
+.wbtn{min-width:64px;min-height:44px;border-radius:10px;border:1px solid #d9a441;background:#14203a;color:#d9a441;font-size:15px;padding:8px 14px;touch-action:manipulation;cursor:pointer}
+.wbtn:active{background:#1d2c4e}
+canvas{touch-action:none;max-width:100%;border:1px solid #1e2c4a;border-radius:8px;display:block;margin:0 auto}
+</style>
+</head>
+<body>
+<a class="wog-home" href="../../index.html">⌂ خانه</a>
+<header><h1>❋ دوری از توپ‌ها ❋</h1><div class="hud" id="hud"></div></header>
+<div id="app"></div>
+<p id="hint"></p>
+<div class="wog-toast" id="wog-toast"></div>
+<script>
+(function () {
+'use strict';
+var store = {
+  get: function (k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+  set: function (k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+};
+/*WOG_LOGIC_START*/
+var WOG_LOGIC=(function(){
+'use strict';
+var W=360,H=480,PH=11;
+function intervalFor(k){var v=1.6-k*0.07;return v<0.45?0.45:v;}
+function bounce(b,vx,vy,w,h){var r=b.r||6,x=b.x,y=b.y,nx=vx,ny=vy,hit=0;
+ if(x-r<=0&&nx<0){nx=-nx;hit=1;}
+ if(x+r>=w&&nx>0){nx=-nx;hit=1;}
+ if(y-r<=0&&ny<0){ny=-ny;hit=1;}
+ if(y+r>=h&&ny>0){ny=-ny;hit=1;}
+ return{x:x,y:y,vx:nx,vy:ny,hit:hit};}
+function newState(rng){var r=rng||Math.random;return{w:W,h:H,rng:r,px:W/2,py:H-60,ph:PH,balls:[],spawnT:1.2,spawnCount:0,grace:2,t:0,score:0,over:false};}
+function spawnBall(s,r){var side=Math.floor(r()*4),sp=80+r()*90,j=(r()-0.5)*0.8,x,y,ang;
+ if(side===0){x=r()*s.w;y=8;ang=Math.PI/2+j;}
+ else if(side===1){x=s.w-8;y=r()*s.h;ang=Math.PI+j;}
+ else if(side===2){x=r()*s.w;y=s.h-8;ang=-Math.PI/2+j;}
+ else{x=8;y=r()*s.h;ang=0+j;}
+ s.balls.push({x:x,y:y,vx:Math.cos(ang)*sp,vy:Math.sin(ang)*sp,r:5+r()*5});}
+function hitPlayer(s){if(s.grace>0||s.over)return false;var h=s.ph,i;
+ for(i=0;i<s.balls.length;i++){var b=s.balls[i],cx=Math.max(s.px-h,Math.min(b.x,s.px+h)),cy=Math.max(s.py-h,Math.min(b.y,s.py+h)),dx=b.x-cx,dy=b.y-cy;
+  if(dx*dx+dy*dy<b.r*b.r)return true;}
+ return false;}
+function step(s,dt,vx,vy){if(s.over)return s;var i;
+ s.t+=dt;s.score=Math.floor(s.t*10);
+ if(s.grace>0){s.grace-=dt;if(s.grace<0)s.grace=0;}
+ s.px+=vx*dt;s.py+=vy*dt;
+ if(s.px<s.ph)s.px=s.ph;if(s.px>s.w-s.ph)s.px=s.w-s.ph;
+ if(s.py<s.ph)s.py=s.ph;if(s.py>s.h-s.ph)s.py=s.h-s.ph;
+ s.spawnT-=dt;
+ if(s.spawnT<=0){spawnBall(s,s.rng);s.spawnCount++;s.spawnT=intervalFor(s.spawnCount);}
+ for(i=0;i<s.balls.length;i++){var b=s.balls[i],o=bounce(b,b.vx,b.vy,s.w,s.h);
+  b.vx=o.vx;b.vy=o.vy;b.x=o.x+o.vx*dt;b.y=o.y+o.vy*dt;
+  if(b.x<b.r)b.x=b.r;if(b.x>s.w-b.r)b.x=s.w-b.r;
+  if(b.y<b.r)b.y=b.r;if(b.y>s.h-b.r)b.y=s.h-b.r;}
+ if(hitPlayer(s))s.over=true;
+ return s;}
+return{newState:newState,step:step,bounce:bounce,hitPlayer:hitPlayer,intervalFor:intervalFor};
+})();
+/*WOG_LOGIC_END*/
+var L = WOG_LOGIC;
+function $(s){return document.querySelector(s)}
+function $$(s){return Array.prototype.slice.call(document.querySelectorAll(s))}
+function ce(tag,cls,html){var e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;return e}
+var FA_D='۰۱۲۳۴۵۶۷۸۹';
+function fa(n){return String(n).replace(/\d/g,function(d){return FA_D[+d]})}
+function shuffle(a,rng){a=a.slice();rng=rng||Math.random;for(var i=a.length-1;i>0;i--){var j=Math.floor(rng()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a}
+function rint(a,b,rng){rng=rng||Math.random;return a+Math.floor(rng()*(b-a+1))}
+function pick(arr,rng){rng=rng||Math.random;return arr[Math.floor(rng()*arr.length)]}
+function clamp(v,a,b){return v<a?a:v>b?b:v}
+var _toastT=0;
+function toast(msg,ms){var t=$('#wog-toast');if(!t)return;t.textContent=msg;t.classList.add('on');clearTimeout(_toastT);_toastT=setTimeout(function(){t.classList.remove('on')},ms||1800)}
+function hud(html){var h=$('#hud');if(h)h.innerHTML=html}
+function ovl(title,sub,btn,cb){var o=ce('div','wovl');var b=ce('div','box');b.appendChild(ce('h2',null,title));if(sub)b.appendChild(ce('p',null,sub));var bt=ce('button',null,btn);bt.setAttribute('data-smoke','');bt.addEventListener('click',function(){o.remove();cb&&cb()});b.appendChild(bt);o.appendChild(b);document.body.appendChild(o);return o}
+function bestOf(key,val){var b=parseInt(store.get(key)||'0',10)||0;if(val>b)store.set(key,String(val));return Math.max(b,val)}
+function storeBest(key){return parseInt(store.get(key)||'0',10)||0}
+function makeCanvas(w,h){var cv=document.createElement('canvas');cv.width=w;cv.height=h;cv.style.width='min(96vw,'+w+'px)';cv.style.height='auto';document.getElementById('app').appendChild(cv);return{cv:cv,ctx:cv.getContext('2d'),w:w,h:h}}
+function keyState(){var k={};addEventListener('keydown',function(e){k[e.code]=1;if(/^(Arrow|Space)/.test(e.code))e.preventDefault()});addEventListener('keyup',function(e){k[e.code]=0});return k}
+function bindPad(defs){var d=ce('div','wdpad');var grid={};defs.forEach(function(x){grid[x.k]=x});var cell=function(k){var b;if(k&&grid[k]){b=ce('button',null,grid[k].label);b.setAttribute('data-k',k)}else{b=ce('span');b.style.visibility='hidden'}d.appendChild(b)};cell(defs.length>2?defs[1].k:null);defs.forEach(function(x){cell(x.k)});cell(null);document.getElementById('app').appendChild(d);$$('[data-k]').forEach(function(b){var k=b.getAttribute('data-k');function on(e){e.preventDefault();ks[k]=1}function off(e){e.preventDefault();ks[k]=0}b.addEventListener('touchstart',on,{passive:false});b.addEventListener('touchend',off);b.addEventListener('mousedown',on);b.addEventListener('mouseup',off);b.addEventListener('mouseleave',off)})}
+function rafStep(fn){var last=performance.now();function f(t){var dt=Math.min(.05,(t-last)/1000);last=t;fn(dt);requestAnimationFrame(f)}requestAnimationFrame(f)}
+
+var nb=ce('button','wbtn','بازی جدید');nb.setAttribute('data-smoke','1');nb.onclick=function(){newGame();};$('#app').appendChild(nb);
+var cv=makeCanvas(360,480),ctx=cv.ctx,keys=keyState(),s=null,ended=false;
+var best=storeBest('wog-dodge-best')||0;
+var pt={x:180,y:240,on:false};
+bindPad([{k:'ArrowLeft',label:'◀'},{k:'ArrowRight',label:'▶'},{k:'ArrowUp',label:'▲'},{k:'ArrowDown',label:'▼'}]);
+function setPt(e){var r=cv.cv.getBoundingClientRect();pt.x=(e.clientX-r.left)*cv.w/r.width;pt.y=(e.clientY-r.top)*cv.h/r.height;}
+cv.cv.addEventListener('pointerdown',function(e){pt.on=true;setPt(e);});
+cv.cv.addEventListener('pointermove',function(e){if(pt.on)setPt(e);});
+cv.cv.addEventListener('pointerup',function(){pt.on=false;});
+$('#hint').textContent='با کلیدها، دکمه‌ها یا کشیدن انگشت فرار کن؛ هر ثانیه ۱۰ امتیاز و توپ‌ها بیشتر می‌شوند. ۲ ثانیه سپر داری.';
+function newGame(){s=L.newState(Math.random);ended=false;rep();}
+function rep(){hud('امتیاز '+fa(s.score)+' · رکورد '+fa(Math.max(best,s.score))+' · توپ‌ها '+fa(s.balls.length)+(s.grace>0?' · سپر '+fa(Math.ceil(s.grace)):''));}
+function draw(){ctx.fillStyle='#0b1220';ctx.fillRect(0,0,360,480);var i,b;
+ ctx.fillStyle='#3fb8af';
+ for(i=0;i<s.balls.length;i++){b=s.balls[i];ctx.beginPath();ctx.arc(b.x,b.y,b.r,0,6.2832);ctx.fill();}
+ if(!s.over){if(s.grace>0){ctx.strokeStyle='#67b98a';ctx.lineWidth=2;ctx.strokeRect(s.px-15,s.py-15,30,30);}
+  ctx.fillStyle='#d9a441';ctx.fillRect(s.px-11,s.py-11,22,22);}}
+rafStep(function(dt){if(!s)return;
+ if(!s.over){var vx=0,vy=0;
+  if(keys['ArrowLeft'])vx-=260;if(keys['ArrowRight'])vx+=260;
+  if(keys['ArrowUp'])vy-=260;if(keys['ArrowDown'])vy+=260;
+  if(vx===0&&vy===0&&pt.on){vx=clamp((pt.x-s.px)*9,-400,400);vy=clamp((pt.y-s.py)*9,-400,400);}
+  s=L.step(s,Math.min(dt,0.05),vx,vy);rep();}
+ draw();
+ if(s.over&&!ended){ended=true;best=bestOf('wog-dodge-best',s.score);
+  ovl('برخورد!','امتیاز: '+fa(s.score)+' · '+fa(Math.floor(s.t))+' ثانیه دوام آوردی','بازی دوباره',function(){newGame();});}});
+newGame();
+})();
+</script>
+</body>
+</html>

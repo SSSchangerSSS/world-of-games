@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<title>هزارتو | دنیای بازی‌ها</title>
+<meta name="description" content="هزارتوی کامل (بدون حلقه) در سه اندازه: از خانهٔ شروع تا خروجیِ فیروزه‌ای با کمترین حرکت برس.">
+<style>*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+@font-face{font-family:Vazirmatn;src:url(../../fonts/Vazirmatn-Regular.woff2) format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:Vazirmatn;src:url(../../fonts/Vazirmatn-Bold.woff2) format('woff2');font-weight:700;font-display:swap}
+body{font-family:Vazirmatn,Tahoma,sans-serif;background:linear-gradient(160deg,#101a2e,#0b1220);color:#f3ead8;min-height:100dvh;user-select:none;display:flex;flex-direction:column;align-items:center;padding:12px;padding-top:56px;overflow-x:hidden}
+a.wog-home{position:fixed;top:10px;inset-inline-start:12px;z-index:99;background:rgba(217,164,65,.12);border:1px solid rgba(217,164,65,.45);color:#e8c073;text-decoration:none;padding:6px 12px;border-radius:10px;font-size:.85rem;font-weight:700}
+a.wog-home:hover{background:rgba(217,164,65,.3)}
+header{text-align:center;margin-bottom:8px}
+h1{font-size:1.2rem;color:#d9a441}
+.hud{color:#a8b3c9;font-size:.9rem;margin-top:2px;min-height:1.4em}
+.hud b{color:#e8c073}
+button,.wbtn{font-family:inherit;background:#d9a441;color:#221806;border:0;border-radius:10px;font-weight:700;padding:8px 16px;font-size:.95rem;cursor:pointer;touch-action:manipulation}
+button.sec,.wbtn.sec{background:#14203a;color:#f3ead8;border:1px solid rgba(217,164,65,.35)}
+button:disabled{opacity:.45;cursor:default}
+#hint{color:#a8b3c9;font-size:.85rem;margin-top:10px;text-align:center;max-width:680px;line-height:1.9}
+.wpanel{background:#14203a;border:1px solid rgba(217,164,65,.35);border-radius:14px;padding:14px}
+.wrow{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;align-items:center;margin:8px 0}
+.wovl{position:fixed;inset:0;background:rgba(5,9,18,.85);display:flex;align-items:center;justify-content:center;z-index:90}
+.wovl .box{background:#14203a;border:2px solid rgba(217,164,65,.5);border-radius:16px;padding:22px 28px;text-align:center;max-width:88vw}
+.wovl h2{color:#e8c073;margin-bottom:8px}
+.wovl p{color:#a8b3c9;margin-bottom:14px}
+.wog-toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#14203a;border:1px solid rgba(217,164,65,.5);color:#f3ead8;padding:8px 18px;border-radius:12px;opacity:0;transition:.25s;z-index:95;pointer-events:none;font-size:.9rem}
+.wog-toast.on{opacity:1}
+.wgrid{display:grid;border:2px solid rgba(217,164,65,.5);border-radius:10px;overflow:hidden;direction:ltr;touch-action:manipulation}
+.wgrid .cell{display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative}
+.cell.light{background:#e8dcc0}.cell.dark{background:#41527a}
+.wcard{display:inline-flex;flex-direction:column;justify-content:space-between;width:52px;height:74px;background:#f6efe0;color:#1c2438;border-radius:7px;padding:3px 5px;font-weight:700;font-size:.9rem;line-height:1;box-shadow:0 2px 5px rgba(0,0,0,.45);cursor:pointer;touch-action:manipulation;flex:none}
+.wcard.red{color:#c0392b}
+.wcard.back{background:linear-gradient(135deg,#2c3a5e,#41527a);border:2px solid rgba(217,164,65,.5)}
+.wcard.back:before{content:'❋';color:rgba(232,192,115,.55);align-self:center;font-size:1.3rem}
+.wcard.small{width:38px;height:54px;font-size:.75rem;border-radius:5px}
+.wcard.tiny{width:30px;height:44px;font-size:.65rem;border-radius:4px;padding:2px 3px}
+.wcard.sel{outline:3px solid #e8c073;transform:translateY(-6px)}
+.wcard .cn{font-size:.7rem;opacity:.85}.wcard .cv{align-self:flex-start}
+.wcard.back .cn,.wcard.back .cv{display:none}
+.wdpad{display:none;grid-template-columns:repeat(3,58px);grid-auto-rows:50px;gap:6px;margin-top:12px}
+.wdpad.on{display:grid}
+.wdpad button{font-size:1.15rem}
+@media(pointer:coarse){.wdpad{display:grid}}
+canvas{touch-action:none;border-radius:10px;border:2px solid rgba(217,164,65,.35);background:#0d1526}
+.p-bar{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;align-items:center;margin:12px 0 4px}
+.btn{min-width:44px;min-height:40px;padding:7px 13px;border-radius:9px;border:1px solid #2a3b5e;background:#14203a;color:#cdd8ee;font-size:14px;cursor:pointer;touch-action:manipulation;font-family:inherit}
+.btn.p-gold{background:#d9a441;border-color:#d9a441;color:#10192e;font-weight:bold}
+.btn.p-on{border-color:#d9a441;color:#d9a441}
+.p-lbl{font-size:13px;color:#8fa3c8}
+
+.m-grid{position:relative;display:grid;direction:ltr;width:max-content;margin:14px auto;padding:4px;background:#14203a;border-radius:8px}
+.m-w{background:#0d1526;border-radius:1px}
+.m-o{background:#223252}
+.m-start{background:#2b4a3f}
+.m-exit{background:#3fb8af;box-shadow:0 0 6px #3fb8af inset}
+.m-hint{background:#3f6f6b}
+.m-player{position:absolute;top:0;left:0;border-radius:30%;background:#d9a441;box-shadow:0 0 8px rgba(217,164,65,.8);transition:transform .12s;pointer-events:none;z-index:2}
+.m-pad{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:10px 0 4px;direction:ltr}
+.m-pad .btn{width:56px}
+</style>
+</head>
+<body>
+<a class="wog-home" href="../../index.html">⌂ خانه</a>
+<header><h1>❋ هزارتو ❋</h1><div class="hud" id="hud"></div></header>
+<div id="app"></div>
+<p id="hint"></p>
+<div class="wog-toast" id="wog-toast"></div>
+<script>
+(function () {
+'use strict';
+var store = {
+  get: function (k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+  set: function (k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+};
+/*WOG_LOGIC_START*/
+var WOG_LOGIC = (function () {
+  function genMaze(n, rng) {
+    rng = rng || Math.random;
+    var W = 2 * n + 1, g = [], vis = [], i, j;
+    for (i = 0; i < W; i++) { g.push([]); for (j = 0; j < W; j++) g[i].push(1); }
+    for (i = 0; i < n; i++) { vis.push([]); for (j = 0; j < n; j++) vis[i].push(false); }
+    var DR = [-1, 1, 0, 0], DC = [0, 0, -1, 1];
+    var stack = [[0, 0]];
+    vis[0][0] = true; g[1][1] = 0;
+    while (stack.length) {
+      var cur = stack[stack.length - 1], opts = [], d;
+      for (d = 0; d < 4; d++) {
+        var nr = cur[0] + DR[d], nc = cur[1] + DC[d];
+        if (nr >= 0 && nr < n && nc >= 0 && nc < n && !vis[nr][nc]) opts.push(d);
+      }
+      if (!opts.length) { stack.pop(); continue; }
+      d = opts[Math.floor(rng() * opts.length)];
+      var r2 = cur[0] + DR[d], c2 = cur[1] + DC[d];
+      vis[r2][c2] = true;
+      g[cur[0] * 2 + 1 + DR[d]][cur[1] * 2 + 1 + DC[d]] = 0;
+      g[r2 * 2 + 1][c2 * 2 + 1] = 0;
+      stack.push([r2, c2]);
+    }
+    return { n: n, g: g };
+  }
+  function neighbors(maze, r, c) {
+    var n = maze.n, out = [], DR = [-1, 1, 0, 0], DC = [0, 0, -1, 1];
+    for (var d = 0; d < 4; d++) {
+      var nr = r + DR[d], nc = c + DC[d];
+      if (nr < 0 || nr >= n || nc < 0 || nc >= n) continue;
+      if (maze.g[r * 2 + 1 + DR[d]][c * 2 + 1 + DC[d]] === 0) out.push([nr, nc]);
+    }
+    return out;
+  }
+  function bfs(maze, start, goal) {
+    var n = maze.n, prev = [], seen = [], i, j;
+    for (i = 0; i < n; i++) { prev.push([]); seen.push([]); for (j = 0; j < n; j++) { prev[i].push(null); seen[i].push(false); } }
+    var q = [start];
+    seen[start[0]][start[1]] = true;
+    var head = 0;
+    while (head < q.length) {
+      var cur = q[head++];
+      if (cur[0] === goal[0] && cur[1] === goal[1]) break;
+      var nb = neighbors(maze, cur[0], cur[1]);
+      for (var k = 0; k < nb.length; k++) {
+        if (!seen[nb[k][0]][nb[k][1]]) { seen[nb[k][0]][nb[k][1]] = true; prev[nb[k][0]][nb[k][1]] = cur; q.push(nb[k]); }
+      }
+    }
+    if (!seen[goal[0]][goal[1]]) return null;
+    var path = [], cur2 = goal;
+    while (cur2) { path.push(cur2); cur2 = prev[cur2[0]][cur2[1]]; }
+    path.reverse();
+    return path;
+  }
+  function isPerfect(maze) {
+    var n = maze.n, g = maze.g, edges = 0, r, c;
+    for (r = 0; r < n; r++) for (c = 0; c < n; c++) {
+      if (c + 1 < n && g[2 * r + 1][2 * c + 2] === 0) edges++;
+      if (r + 1 < n && g[2 * r + 2][2 * c + 1] === 0) edges++;
+    }
+    if (edges !== n * n - 1) return false;
+    var seen = [], stack = [[0, 0]], count = 0;
+    for (r = 0; r < n; r++) { seen.push([]); for (c = 0; c < n; c++) seen[r].push(false); }
+    seen[0][0] = true;
+    while (stack.length) {
+      var cur = stack.pop(); count++;
+      var nb = neighbors(maze, cur[0], cur[1]);
+      for (var k = 0; k < nb.length; k++) if (!seen[nb[k][0]][nb[k][1]]) { seen[nb[k][0]][nb[k][1]] = true; stack.push(nb[k]); }
+    }
+    return count === n * n;
+  }
+  function canMove(maze, r, c, dr, dc) {
+    var n = maze.n, nr = r + dr, nc = c + dc;
+    if (nr < 0 || nr >= n || nc < 0 || nc >= n) return false;
+    return maze.g[2 * r + 1 + dr][2 * c + 1 + dc] === 0;
+  }
+  return { genMaze: genMaze, neighbors: neighbors, bfs: bfs, isPerfect: isPerfect, canMove: canMove };
+})();
+/*WOG_LOGIC_END*/
+var L = WOG_LOGIC;
+function $(s){return document.querySelector(s)}
+function $$(s){return Array.prototype.slice.call(document.querySelectorAll(s))}
+function ce(tag,cls,html){var e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;return e}
+var FA_D='۰۱۲۳۴۵۶۷۸۹';
+function fa(n){return String(n).replace(/\d/g,function(d){return FA_D[+d]})}
+function shuffle(a,rng){a=a.slice();rng=rng||Math.random;for(var i=a.length-1;i>0;i--){var j=Math.floor(rng()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a}
+function rint(a,b,rng){rng=rng||Math.random;return a+Math.floor(rng()*(b-a+1))}
+function pick(arr,rng){rng=rng||Math.random;return arr[Math.floor(rng()*arr.length)]}
+function clamp(v,a,b){return v<a?a:v>b?b:v}
+var _toastT=0;
+function toast(msg,ms){var t=$('#wog-toast');if(!t)return;t.textContent=msg;t.classList.add('on');clearTimeout(_toastT);_toastT=setTimeout(function(){t.classList.remove('on')},ms||1800)}
+function hud(html){var h=$('#hud');if(h)h.innerHTML=html}
+function ovl(title,sub,btn,cb){var o=ce('div','wovl');var b=ce('div','box');b.appendChild(ce('h2',null,title));if(sub)b.appendChild(ce('p',null,sub));var bt=ce('button',null,btn);bt.setAttribute('data-smoke','');bt.addEventListener('click',function(){o.remove();cb&&cb()});b.appendChild(bt);o.appendChild(b);document.body.appendChild(o);return o}
+function bestOf(key,val){var b=parseInt(store.get(key)||'0',10)||0;if(val>b)store.set(key,String(val));return Math.max(b,val)}
+function storeBest(key){return parseInt(store.get(key)||'0',10)||0}
+
+var N = 11, mz, pr, pc, mvs, t0, timer, solved = false, S, cellEls, plEl, hintEls;
+var SIZES = [11, 17, 25];
+function newGame(size) {
+  N = size || N;
+  mz = L.genMaze(N);
+  pr = 0; pc = 0; mvs = 0; solved = false; hintEls = [];
+  if (timer) clearInterval(timer);
+  t0 = Date.now();
+  build();
+  timer = setInterval(tick, 500);
+  tick();
+}
+function tick() {
+  if (solved) return;
+  hud('زمان: ' + fa(Math.floor((Date.now() - t0) / 1000)) + ' ثانیه · حرکت‌ها: ' + fa(mvs) + ' · اندازه: ' + fa(N) + '×' + fa(N));
+}
+function build() {
+  var app = $('#app');
+  app.innerHTML = '';
+  var W = 2 * N + 1;
+  S = Math.max(7, Math.floor(350 / W));
+  var grid = ce('div', 'm-grid');
+  grid.style.gridTemplateColumns = 'repeat(' + W + ', ' + S + 'px)';
+  grid.style.gridAutoRows = S + 'px';
+  cellEls = [];
+  for (var r = 0; r < W; r++) {
+    cellEls.push([]);
+    for (var c = 0; c < W; c++) {
+      var d = ce('div', mz.g[r][c] ? 'm-w' : 'm-o');
+      grid.appendChild(d);
+      cellEls[r].push(d);
+    }
+  }
+  cellEls[1][1].className = 'm-o m-start';
+  cellEls[2 * N - 1][2 * N - 1].className = 'm-o m-exit';
+  plEl = ce('div', 'm-player');
+  plEl.style.width = S + 'px';
+  plEl.style.height = S + 'px';
+  grid.appendChild(plEl);
+  app.appendChild(grid);
+  var bar = ce('div', 'p-bar');
+  var nb = ce('button', 'btn', 'بازی جدید');
+  nb.setAttribute('data-smoke', '1');
+  nb.addEventListener('click', function () { newGame(N); });
+  bar.appendChild(nb);
+  var hb = ce('button', 'btn p-gold', 'راهنما');
+  hb.addEventListener('click', showHint);
+  bar.appendChild(hb);
+  for (var i = 0; i < SIZES.length; i++) {
+    (function (s) {
+      var b = ce('button', 'btn' + (s === N ? ' p-on' : ''), fa(s) + '×' + fa(s));
+      b.addEventListener('click', function () { newGame(s); });
+      bar.appendChild(b);
+    })(SIZES[i]);
+  }
+  app.appendChild(bar);
+  var pad = ce('div', 'm-pad');
+  var dirs = [[-1, 0, '▲'], [1, 0, '▼'], [0, -1, '◀'], [0, 1, '▶']];
+  for (var k = 0; k < 4; k++) {
+    (function (dr, dc, lbl) {
+      var b = ce('button', 'btn', lbl);
+      b.addEventListener('click', function () { step(dr, dc); });
+      pad.appendChild(b);
+    })(dirs[k][0], dirs[k][1], dirs[k][2]);
+  }
+  app.appendChild(pad);
+  place();
+}
+function place() {
+  plEl.style.transform = 'translate(' + (pc * 2 + 1) * S + 'px,' + (pr * 2 + 1) * S + 'px)';
+}
+function step(dr, dc) {
+  if (solved) return;
+  if (L.canMove(mz, pr, pc, dr, dc)) {
+    pr += dr; pc += dc; mvs++;
+    place(); tick();
+    if (pr === N - 1 && pc === N - 1) win();
+  }
+}
+function clearHint() {
+  for (var i = 0; i < hintEls.length; i++) hintEls[i].className = 'm-o';
+  hintEls = [];
+}
+function showHint() {
+  if (solved) return;
+  clearHint();
+  var path = L.bfs(mz, [pr, pc], [N - 1, N - 1]);
+  if (!path) { toast('مسیری وجود ندارد!'); return; }
+  for (var i = 0; i < path.length; i++) {
+    var el = cellEls[path[i][0] * 2 + 1][path[i][1] * 2 + 1];
+    if (el.className === 'm-o') { el.className = 'm-o m-hint'; hintEls.push(el); }
+  }
+  toast('کوتاه‌ترین مسیر تا خروجی: ' + fa(path.length - 1) + ' گام');
+}
+function win() {
+  solved = true;
+  clearInterval(timer);
+  var sec = Math.floor((Date.now() - t0) / 1000);
+  bestOf('wog-maze-best-' + N, mvs);
+  ovl('به خروجی رسیدی!', 'زمان: ' + fa(sec) + ' ثانیه · حرکت‌ها: ' + fa(mvs), 'بازی جدید', function () { newGame(N); });
+}
+document.addEventListener('keydown', function (e) {
+  var map = { ArrowUp: [-1, 0], ArrowDown: [1, 0], ArrowLeft: [0, -1], ArrowRight: [0, 1], w: [-1, 0], s: [1, 0], a: [0, -1], d: [0, 1] };
+  var m = map[e.key];
+  if (m) { e.preventDefault(); step(m[0], m[1]); }
+});
+newGame(11);
+$('#hint').textContent = 'با فلش‌ها یا دکمه‌های جهت‌دار حرکت کن و خودت را به خانهٔ فیروزه‌ای برسان. راهنما کوتاه‌ترین مسیر را نشان می‌دهد.';
+})();
+</script>
+</body>
+</html>

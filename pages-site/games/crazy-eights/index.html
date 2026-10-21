@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<title>هشت دیوانه | دنیای بازی‌ها</title>
+<meta name="description" content="هشت دیوانه در برابر حریف هوشمند؛ هشت جانشین هر خالی است و مسابقه تا ۲۰۰ امتیاز ادامه دارد.">
+<style>*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+@font-face{font-family:Vazirmatn;src:url(../../fonts/Vazirmatn-Regular.woff2) format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:Vazirmatn;src:url(../../fonts/Vazirmatn-Bold.woff2) format('woff2');font-weight:700;font-display:swap}
+body{font-family:Vazirmatn,Tahoma,sans-serif;background:linear-gradient(160deg,#101a2e,#0b1220);color:#f3ead8;min-height:100dvh;user-select:none;display:flex;flex-direction:column;align-items:center;padding:12px;padding-top:56px;overflow-x:hidden}
+a.wog-home{position:fixed;top:10px;inset-inline-start:12px;z-index:99;background:rgba(217,164,65,.12);border:1px solid rgba(217,164,65,.45);color:#e8c073;text-decoration:none;padding:6px 12px;border-radius:10px;font-size:.85rem;font-weight:700}
+a.wog-home:hover{background:rgba(217,164,65,.3)}
+header{text-align:center;margin-bottom:8px}
+h1{font-size:1.2rem;color:#d9a441}
+.hud{color:#a8b3c9;font-size:.9rem;margin-top:2px;min-height:1.4em}
+.hud b{color:#e8c073}
+button,.wbtn{font-family:inherit;background:#d9a441;color:#221806;border:0;border-radius:10px;font-weight:700;padding:8px 16px;font-size:.95rem;cursor:pointer;touch-action:manipulation}
+button.sec,.wbtn.sec{background:#14203a;color:#f3ead8;border:1px solid rgba(217,164,65,.35)}
+button:disabled{opacity:.45;cursor:default}
+#hint{color:#a8b3c9;font-size:.85rem;margin-top:10px;text-align:center;max-width:680px;line-height:1.9}
+.wpanel{background:#14203a;border:1px solid rgba(217,164,65,.35);border-radius:14px;padding:14px}
+.wrow{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;align-items:center;margin:8px 0}
+.wovl{position:fixed;inset:0;background:rgba(5,9,18,.85);display:flex;align-items:center;justify-content:center;z-index:90}
+.wovl .box{background:#14203a;border:2px solid rgba(217,164,65,.5);border-radius:16px;padding:22px 28px;text-align:center;max-width:88vw}
+.wovl h2{color:#e8c073;margin-bottom:8px}
+.wovl p{color:#a8b3c9;margin-bottom:14px}
+.wog-toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#14203a;border:1px solid rgba(217,164,65,.5);color:#f3ead8;padding:8px 18px;border-radius:12px;opacity:0;transition:.25s;z-index:95;pointer-events:none;font-size:.9rem}
+.wog-toast.on{opacity:1}
+.wgrid{display:grid;border:2px solid rgba(217,164,65,.5);border-radius:10px;overflow:hidden;direction:ltr;touch-action:manipulation}
+.wgrid .cell{display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative}
+.cell.light{background:#e8dcc0}.cell.dark{background:#41527a}
+.wcard{display:inline-flex;flex-direction:column;justify-content:space-between;width:52px;height:74px;background:#f6efe0;color:#1c2438;border-radius:7px;padding:3px 5px;font-weight:700;font-size:.9rem;line-height:1;box-shadow:0 2px 5px rgba(0,0,0,.45);cursor:pointer;touch-action:manipulation;flex:none}
+.wcard.red{color:#c0392b}
+.wcard.back{background:linear-gradient(135deg,#2c3a5e,#41527a);border:2px solid rgba(217,164,65,.5)}
+.wcard.back:before{content:'❋';color:rgba(232,192,115,.55);align-self:center;font-size:1.3rem}
+.wcard.small{width:38px;height:54px;font-size:.75rem;border-radius:5px}
+.wcard.tiny{width:30px;height:44px;font-size:.65rem;border-radius:4px;padding:2px 3px}
+.wcard.sel{outline:3px solid #e8c073;transform:translateY(-6px)}
+.wcard .cn{font-size:.7rem;opacity:.85}.wcard .cv{align-self:flex-start}
+.wcard.back .cn,.wcard.back .cv{display:none}
+.wdpad{display:none;grid-template-columns:repeat(3,58px);grid-auto-rows:50px;gap:6px;margin-top:12px}
+.wdpad.on{display:grid}
+.wdpad button{font-size:1.15rem}
+@media(pointer:coarse){.wdpad{display:grid}}
+canvas{touch-action:none;border-radius:10px;border:2px solid rgba(217,164,65,.35);background:#0d1526}
+#app{max-width:720px;margin:0 auto}.panel{background:#14203a;border:1px solid #22335c;border-radius:14px;padding:10px;margin:8px 0}.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:center;min-height:44px}.lbl{color:#9fb0cf;font-size:14px}.cnt{color:#d9a441;font-size:13px}.tslot{width:30px;height:44px;border:1px dashed #2a3a5f;border-radius:6px}button{min-height:44px;border-radius:10px;border:1px solid #2a3a5f;background:#1b2a4a;color:#e8ecf4;font-size:15px;padding:8px 14px;cursor:pointer;touch-action:manipulation}button.gold{background:#d9a441;border-color:#d9a441;color:#1a1408;font-weight:700}.wcard.live{outline:2px solid #d9a441;cursor:pointer}.suit{font-size:24px;color:#e8ecf4}.suit.red{color:#e26d5c}
+</style>
+</head>
+<body>
+<a class="wog-home" href="../../index.html">⌂ خانه</a>
+<header><h1>❋ هشت دیوانه ❋</h1><div class="hud" id="hud"></div></header>
+<div id="app"></div>
+<p id="hint"></p>
+<div class="wog-toast" id="wog-toast"></div>
+<script>
+(function () {
+'use strict';
+var store = {
+  get: function (k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+  set: function (k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+};
+/*WOG_LOGIC_START*/
+var WOG_LOGIC=(function(){
+function mkD(){var d=[],s,r;for(s=0;s<4;s++)for(r=1;r<14;r++)d.push({s:s,r:r});return d;}
+function shuf(a,f){var i,j,t;for(i=a.length-1;i>0;i--){j=Math.floor(f()*(i+1));t=a[i];a[i]=a[j];a[j]=t;}return a;}
+function newGame(rng,prev){var f=rng||Math.random,d=shuf(mkD(),f),h0=[],h1=[],i,c;
+ for(i=0;i<5;i++){h0.push(d.pop());h1.push(d.pop());}
+ for(;;){c=d.pop();if(c.r===8){d.unshift(c);}else break;}
+ var sc=(prev&&prev.scores)?[prev.scores[0],prev.scores[1]]:[0,0];
+ var rd=(prev&&typeof prev.round==='number')?prev.round:0;
+ return{hands:[h0,h1],stock:d,discard:[c],suit:c.s,turn:rd%2,scores:sc,round:rd,passes:0,over:false,winner:-1,pts:0};}
+function topCard(st){return st.discard[st.discard.length-1];}
+function legalPlays(st,p){var h=st.hands[p],t=topCard(st),out=[],i,c;
+ for(i=0;i<h.length;i++){c=h[i];
+  if(c.r===8||c.s===st.suit||(t.r!==8&&c.r===t.r))out.push(c);}
+ return out;}
+function findIdx(h,card){var i;for(i=0;i<h.length;i++)if(h[i].s===card.s&&h[i].r===card.r)return i;return -1;}
+function playCard(st,p,card,chosen){var h=st.hands[p],i=findIdx(h,card),t=topCard(st);
+ if(i<0)throw new Error('not-in-hand');
+ if(!(card.r===8||card.s===st.suit||(t.r!==8&&card.r===t.r)))throw new Error('illegal');
+ h.splice(i,1);st.discard.push(card);
+ st.suit=(card.r===8&&typeof chosen==='number'&&chosen>=0&&chosen<=3)?chosen:card.s;
+ st.passes=0;
+ if(!h.length){st.over=true;st.winner=p;st.pts=handPoints(st.hands[1-p]);st.scores[p]+=st.pts;}
+ else st.turn=1-p;
+ return st;}
+function drawUpTo(st,p,n){var h=st.hands[p],k=0;while(k<n&&st.stock.length){h.push(st.stock.pop());k++;}if(k)st.passes=0;return k;}
+function passTurn(st,p){st.passes++;if(st.passes>=2){st.over=true;st.winner=-1;st.pts=0;}else st.turn=1-p;return st;}
+function handPoints(h){var n=0,i,c;for(i=0;i<h.length;i++){c=h[i];if(c.r===8)n+=50;else if(c.r===1)n+=1;else if(c.r>=11)n+=10;else n+=c.r;}return n;}
+function isRoundOver(st){return !!st.over;}
+function isMatchOver(st){return st.scores[0]>=200?0:(st.scores[1]>=200?1:-1);}
+function aiChooseSuit(h){var cnt=[0,0,0,0],i,b=0;for(i=0;i<h.length;i++)cnt[h[i].s]++;for(i=1;i<4;i++)if(cnt[i]>cnt[b])b=i;return b;}
+function no8(h){var out=[],i,g=false;for(i=0;i<h.length;i++){if(!g&&h[i].r===8){g=true;continue;}out.push(h[i]);}return out;}
+function pick(legal){var i;for(i=0;i<legal.length;i++)if(legal[i].r!==8)return legal[i];return legal.length?legal[0]:null;}
+function aiTurn(st){if(st.over)return null;var p=st.turn,b=pick(legalPlays(st,p)),cs;
+ if(!b){drawUpTo(st,p,3);b=pick(legalPlays(st,p));}
+ if(!b)return passTurn(st,p);
+ if(b.r===8){var rem=no8(st.hands[p]);cs=rem.length?aiChooseSuit(rem):b.s;}
+ return playCard(st,p,b,cs);}
+return{newGame:newGame,legalPlays:legalPlays,playCard:playCard,drawUpTo:drawUpTo,passTurn:passTurn,handPoints:handPoints,isRoundOver:isRoundOver,isMatchOver:isMatchOver,aiChooseSuit:aiChooseSuit,aiTurn:aiTurn};
+})();
+/*WOG_LOGIC_END*/
+var L = WOG_LOGIC;
+function $(s){return document.querySelector(s)}
+function $$(s){return Array.prototype.slice.call(document.querySelectorAll(s))}
+function ce(tag,cls,html){var e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;return e}
+var FA_D='۰۱۲۳۴۵۶۷۸۹';
+function fa(n){return String(n).replace(/\d/g,function(d){return FA_D[+d]})}
+function shuffle(a,rng){a=a.slice();rng=rng||Math.random;for(var i=a.length-1;i>0;i--){var j=Math.floor(rng()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a}
+function rint(a,b,rng){rng=rng||Math.random;return a+Math.floor(rng()*(b-a+1))}
+function pick(arr,rng){rng=rng||Math.random;return arr[Math.floor(rng()*arr.length)]}
+function clamp(v,a,b){return v<a?a:v>b?b:v}
+var _toastT=0;
+function toast(msg,ms){var t=$('#wog-toast');if(!t)return;t.textContent=msg;t.classList.add('on');clearTimeout(_toastT);_toastT=setTimeout(function(){t.classList.remove('on')},ms||1800)}
+function hud(html){var h=$('#hud');if(h)h.innerHTML=html}
+function ovl(title,sub,btn,cb){var o=ce('div','wovl');var b=ce('div','box');b.appendChild(ce('h2',null,title));if(sub)b.appendChild(ce('p',null,sub));var bt=ce('button',null,btn);bt.setAttribute('data-smoke','');bt.addEventListener('click',function(){o.remove();cb&&cb()});b.appendChild(bt);o.appendChild(b);document.body.appendChild(o);return o}
+function bestOf(key,val){var b=parseInt(store.get(key)||'0',10)||0;if(val>b)store.set(key,String(val));return Math.max(b,val)}
+function storeBest(key){return parseInt(store.get(key)||'0',10)||0}
+var SUITS='♠♥♦♣';
+function makeDeck(){var d=[];for(var s=0;s<4;s++)for(var r=1;r<=13;r++)d.push({s:s,r:r});return d}
+function isRed(c){return c.s===1||c.s===2}
+function suitOf(c){return SUITS[c.s]}
+function rankShort(r){return r===1?'A':r===11?'J':r===12?'Q':r===13?'K':String(r)}
+function rankFa(r){return r===1?'آس':r===11?'سرباز':r===12?'بی‌بی':r===13?'شاه':fa(r)}
+function cardEl(c,faceUp,size){var e=ce('div','wcard'+(faceUp?(isRed(c)?' red':''):' back')+(size?' '+size:''));if(faceUp)e.innerHTML='<span class="cn">'+rankShort(c.r)+suitOf(c)+'</span><span class="cv">'+suitOf(c)+'</span>';return e}
+function cardStack(el,cs,faceUp,size){cs.forEach(function(c){el.appendChild(cardEl(c,faceUp,size))});return el}
+
+var st=null,pending=null,ended=false;
+function fresh(s,r){
+ st=s?L.newGame(null,{scores:s,round:r}):L.newGame();
+ pending=null;ended=false;render();tick();
+}
+function deal(){fresh(null,0);}
+function render(){
+ hud('تو <b>'+fa(st.scores[0])+'</b> · حریف <b>'+fa(st.scores[1])+'</b> · دست '+fa(st.round+1)+' · '+(st.turn===0?'نوبت تو':'نوبت حریف'));
+ var app=$('#app');app.innerHTML='';
+ var ai=ce('div','panel row','');
+ ai.appendChild(ce('span','lbl','حریف: '+fa(st.hands[1].length)+' کارت'));
+ app.appendChild(ai);
+ var mid=ce('div','panel row','');
+ mid.appendChild(ce('span','lbl','روی میز:'));
+ mid.appendChild(cardEl(st.discard[st.discard.length-1],true,'small'));
+ mid.appendChild(ce('span','suit'+((st.suit===1||st.suit===2)?' red':''),SUITS[st.suit]));
+ mid.appendChild(ce('span','lbl','دانته: '+fa(st.stock.length)));
+ app.appendChild(mid);
+ if(pending){app.appendChild(suitChooser());app.appendChild(hintBtns(true,[]));}
+ else{
+  var lp=(st.turn===0&&!st.over)?L.legalPlays(st,0):[];
+  var hr=ce('div','panel row','');
+  st.hands[0].forEach(function(c){
+   var el=cardEl(c,true,'small');
+   var ok=lp.some(function(x){return x.s===c.s&&x.r===c.r;});
+   if(ok)el.classList.add('live');
+   el.onclick=function(){humanPlay(c);};
+   hr.appendChild(el);
+  });
+  app.appendChild(hr);
+  app.appendChild(hintBtns(false,lp));
+ }
+ $('#hint').textContent='با خال یا عدد یکسان بازی کن؛ هشت هر وقت بخواهی میافتد و خال بعدی را خودت تعیین میکنی؛ اگر ساخ نیست تا ۳ کارت بکش.';
+}
+function hintBtns(choosing,lp){
+ var r=ce('div','row','');
+ if(!choosing&&st.turn===0&&!st.over&&lp&&!lp.length){
+  var db=ce('button','gold','نداری؟ تا ۳ کارت بکش');
+  db.setAttribute('data-smoke','1');
+  db.onclick=function(){
+   var got=L.drawUpTo(st,0,3);
+   toast(fa(got)+' کارت کشیدی');
+   render();
+   if(!L.legalPlays(st,0).length){toast('باز هم ساخ نیست — رد');L.passTurn(st,0);render();tick();}
+  };
+  r.appendChild(db);
+ }
+ var nb=ce('button','','بازی جدید');nb.onclick=deal;r.appendChild(nb);
+ return r;
+}
+function suitChooser(){
+ var p=ce('div','panel row','');
+ p.appendChild(ce('span','lbl','خال بعدی را انتخاب کن:'));
+ for(var k=0;k<4;k++){
+  (function(k){
+   var b=ce('button','gold'+((k===1||k===2)?' red':''),SUITS[k]);
+   b.setAttribute('data-smoke','1');
+   b.onclick=function(){var c=pending;pending=null;L.playCard(st,0,c,k);render();tick();};
+   p.appendChild(b);
+  })(k);
+ }
+ return p;
+}
+function humanPlay(c){
+ if(st.over||st.turn!==0||pending)return;
+ if(c.r===8){pending=c;render();return;}
+ var lp=L.legalPlays(st,0);
+ var ok=lp.some(function(x){return x.s===c.s&&x.r===c.r;});
+ if(!ok){toast('این کارت الان ساخ نیست');return;}
+ L.playCard(st,0,c);render();tick();
+}
+function tick(){
+ if(st.over){roundEnd();return;}
+ if(st.turn===1){
+  setTimeout(function(){
+   if(st.over)return;
+   L.aiTurn(st);render();
+   if(st.over)roundEnd();
+  },700);
+ }
+}
+function roundEnd(){
+ if(ended)return;ended=true;
+ var mw=L.isMatchOver(st);
+ if(mw>=0){
+  ovl(mw===0?'بردی!':'باختی','پایان مسابقه: '+fa(st.scores[0])+' در برابر '+fa(st.scores[1]),'بازی جدید',deal);
+  return;
+ }
+ var w=st.winner;
+ ovl(w===0?'دست را بردی':'دست را باختی',w>=0?(fa(st.pts)+' امتیاز گرفتی'):'بازی قفل شد؛ بدون امتیاز','دست بعد',function(){
+  fresh(st.scores,st.round+1);
+ });
+}
+deal();
+})();
+</script>
+</body>
+</html>

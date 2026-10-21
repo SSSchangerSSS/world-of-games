@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<title>شبکهٔ حافظه | دنیای بازی‌ها</title>
+<meta name="description" content="خانه‌های روشن را لحظه‌ای ببین و بعد پیدا کن؛ هر مرحله خانه‌های بیشتری دارد.">
+<style>*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+@font-face{font-family:Vazirmatn;src:url(../../fonts/Vazirmatn-Regular.woff2) format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:Vazirmatn;src:url(../../fonts/Vazirmatn-Bold.woff2) format('woff2');font-weight:700;font-display:swap}
+body{font-family:Vazirmatn,Tahoma,sans-serif;background:linear-gradient(160deg,#101a2e,#0b1220);color:#f3ead8;min-height:100dvh;user-select:none;display:flex;flex-direction:column;align-items:center;padding:12px;padding-top:56px;overflow-x:hidden}
+a.wog-home{position:fixed;top:10px;inset-inline-start:12px;z-index:99;background:rgba(217,164,65,.12);border:1px solid rgba(217,164,65,.45);color:#e8c073;text-decoration:none;padding:6px 12px;border-radius:10px;font-size:.85rem;font-weight:700}
+a.wog-home:hover{background:rgba(217,164,65,.3)}
+header{text-align:center;margin-bottom:8px}
+h1{font-size:1.2rem;color:#d9a441}
+.hud{color:#a8b3c9;font-size:.9rem;margin-top:2px;min-height:1.4em}
+.hud b{color:#e8c073}
+button,.wbtn{font-family:inherit;background:#d9a441;color:#221806;border:0;border-radius:10px;font-weight:700;padding:8px 16px;font-size:.95rem;cursor:pointer;touch-action:manipulation}
+button.sec,.wbtn.sec{background:#14203a;color:#f3ead8;border:1px solid rgba(217,164,65,.35)}
+button:disabled{opacity:.45;cursor:default}
+#hint{color:#a8b3c9;font-size:.85rem;margin-top:10px;text-align:center;max-width:680px;line-height:1.9}
+.wpanel{background:#14203a;border:1px solid rgba(217,164,65,.35);border-radius:14px;padding:14px}
+.wrow{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;align-items:center;margin:8px 0}
+.wovl{position:fixed;inset:0;background:rgba(5,9,18,.85);display:flex;align-items:center;justify-content:center;z-index:90}
+.wovl .box{background:#14203a;border:2px solid rgba(217,164,65,.5);border-radius:16px;padding:22px 28px;text-align:center;max-width:88vw}
+.wovl h2{color:#e8c073;margin-bottom:8px}
+.wovl p{color:#a8b3c9;margin-bottom:14px}
+.wog-toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#14203a;border:1px solid rgba(217,164,65,.5);color:#f3ead8;padding:8px 18px;border-radius:12px;opacity:0;transition:.25s;z-index:95;pointer-events:none;font-size:.9rem}
+.wog-toast.on{opacity:1}
+.wgrid{display:grid;border:2px solid rgba(217,164,65,.5);border-radius:10px;overflow:hidden;direction:ltr;touch-action:manipulation}
+.wgrid .cell{display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative}
+.cell.light{background:#e8dcc0}.cell.dark{background:#41527a}
+.wcard{display:inline-flex;flex-direction:column;justify-content:space-between;width:52px;height:74px;background:#f6efe0;color:#1c2438;border-radius:7px;padding:3px 5px;font-weight:700;font-size:.9rem;line-height:1;box-shadow:0 2px 5px rgba(0,0,0,.45);cursor:pointer;touch-action:manipulation;flex:none}
+.wcard.red{color:#c0392b}
+.wcard.back{background:linear-gradient(135deg,#2c3a5e,#41527a);border:2px solid rgba(217,164,65,.5)}
+.wcard.back:before{content:'❋';color:rgba(232,192,115,.55);align-self:center;font-size:1.3rem}
+.wcard.small{width:38px;height:54px;font-size:.75rem;border-radius:5px}
+.wcard.tiny{width:30px;height:44px;font-size:.65rem;border-radius:4px;padding:2px 3px}
+.wcard.sel{outline:3px solid #e8c073;transform:translateY(-6px)}
+.wcard .cn{font-size:.7rem;opacity:.85}.wcard .cv{align-self:flex-start}
+.wcard.back .cn,.wcard.back .cv{display:none}
+.wdpad{display:none;grid-template-columns:repeat(3,58px);grid-auto-rows:50px;gap:6px;margin-top:12px}
+.wdpad.on{display:grid}
+.wdpad button{font-size:1.15rem}
+@media(pointer:coarse){.wdpad{display:grid}}
+canvas{touch-action:none;border-radius:10px;border:2px solid rgba(217,164,65,.35);background:#0d1526}
+body{background:#0b1526;color:#e8edf7;font-family:Tahoma,'Segoe UI',sans-serif;margin:0;padding:10px;text-align:center}
+h1{color:#d9a441;font-size:1.25em;margin:.3em}
+#hud{color:#3fb8af;min-height:1.3em;font-size:.95em}
+.wog-home{color:#3fb8af;font-size:.8em;text-decoration:none}
+button{background:#14203a;color:#e8edf7;border:1px solid #d9a441;border-radius:8px;padding:9px 13px;min-height:40px;margin:3px;font-size:1em;touch-action:manipulation;cursor:pointer}
+.mg{display:grid;grid-template-columns:repeat(5,54px);gap:6px;justify-content:center;margin:12px 0}
+.mc{height:54px;border-radius:8px;background:#14203a;border:1px solid #1c2c4a;cursor:pointer;transition:background .25s;touch-action:manipulation}
+.mc.tg{background:#3fb8af;border-color:#3fb8af}
+.mc.fd{background:#67b98a;border-color:#67b98a}
+.bar{margin:8px 0}
+#hint{color:#8fa3c8;font-size:.85em}
+</style>
+</head>
+<body>
+<a class="wog-home" href="../../index.html">⌂ خانه</a>
+<header><h1>❋ شبکهٔ حافظه ❋</h1><div class="hud" id="hud"></div></header>
+<div id="app"></div>
+<p id="hint"></p>
+<div class="wog-toast" id="wog-toast"></div>
+<script>
+(function () {
+'use strict';
+var store = {
+  get: function (k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+  set: function (k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+};
+/*WOG_LOGIC_START*/
+var WOG_LOGIC=(function(){
+function genCells(level,rng){
+ if(!rng)rng=Math.random;
+ var n=Math.min(3+level,12),pool=[],i;
+ for(i=0;i<25;i++)pool.push(i);
+ for(i=pool.length-1;i>0;i--){
+  var j=Math.floor(rng()*(i+1)),t=pool[i];
+  pool[i]=pool[j];pool[j]=t;
+ }
+ return pool.slice(0,n);
+}
+function check(cells,picked){
+ var mark={},i,misses=[];
+ for(i=0;i<cells.length;i++)mark[cells[i]]=1;
+ var hit=picked.length>0&&mark[picked[picked.length-1]]===1;
+ for(i=0;i<picked.length;i++)if(mark[picked[i]]!==1)misses.push(picked[i]);
+ var complete=true;
+ for(i=0;i<cells.length;i++)if(picked.indexOf(cells[i])<0){complete=false;break;}
+ return {hit:hit,complete:complete,misses:misses};
+}
+function isLevelUp(foundCount,target){return foundCount>=target;}
+function afterMiss(lives){var l=lives-1;return {lives:l,dead:l<=0};}
+return {genCells:genCells,check:check,isLevelUp:isLevelUp,afterMiss:afterMiss};
+})();
+/*WOG_LOGIC_END*/
+var L = WOG_LOGIC;
+function $(s){return document.querySelector(s)}
+function $$(s){return Array.prototype.slice.call(document.querySelectorAll(s))}
+function ce(tag,cls,html){var e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;return e}
+var FA_D='۰۱۲۳۴۵۶۷۸۹';
+function fa(n){return String(n).replace(/\d/g,function(d){return FA_D[+d]})}
+function shuffle(a,rng){a=a.slice();rng=rng||Math.random;for(var i=a.length-1;i>0;i--){var j=Math.floor(rng()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a}
+function rint(a,b,rng){rng=rng||Math.random;return a+Math.floor(rng()*(b-a+1))}
+function pick(arr,rng){rng=rng||Math.random;return arr[Math.floor(rng()*arr.length)]}
+function clamp(v,a,b){return v<a?a:v>b?b:v}
+var _toastT=0;
+function toast(msg,ms){var t=$('#wog-toast');if(!t)return;t.textContent=msg;t.classList.add('on');clearTimeout(_toastT);_toastT=setTimeout(function(){t.classList.remove('on')},ms||1800)}
+function hud(html){var h=$('#hud');if(h)h.innerHTML=html}
+function ovl(title,sub,btn,cb){var o=ce('div','wovl');var b=ce('div','box');b.appendChild(ce('h2',null,title));if(sub)b.appendChild(ce('p',null,sub));var bt=ce('button',null,btn);bt.setAttribute('data-smoke','');bt.addEventListener('click',function(){o.remove();cb&&cb()});b.appendChild(bt);o.appendChild(b);document.body.appendChild(o);return o}
+function bestOf(key,val){var b=parseInt(store.get(key)||'0',10)||0;if(val>b)store.set(key,String(val));return Math.max(b,val)}
+function storeBest(key){return parseInt(store.get(key)||'0',10)||0}
+
+var level=0,lives=3,targets=[],found=[],showing=false;
+function newGame(){level=0;lives=3;newRound();}
+function newRound(){
+ targets=L.genCells(level);
+ found=[];showing=true;
+ render();
+ setTimeout(function(){showing=false;render();},1100+targets.length*90);
+}
+function render(){
+ var app=$('#app');app.innerHTML='';
+ var tb=ce('div','mg');
+ for(var i=0;i<25;i++){
+  (function(i){
+   var d=ce('div','mc');
+   if(showing&&targets.indexOf(i)>=0)d.className+=' tg';
+   if(!showing&&found.indexOf(i)>=0)d.className+=' fd';
+   d.onclick=function(){pick(i);};
+   tb.appendChild(d);
+  })(i);
+ }
+ app.appendChild(tb);
+ var bar=ce('div','bar');
+ var nb=ce('button','','بازی جدید');nb.setAttribute('data-smoke','1');nb.onclick=newGame;bar.appendChild(nb);
+ app.appendChild(bar);
+ var hearts='';
+ for(var h=0;h<lives;h++)hearts+='♥';
+ hud('مرحلهٔ '+fa(level+1)+' | جان: '+hearts+' | پیداشده: '+fa(found.length)+' از '+fa(targets.length));
+}
+function pick(i){
+ if(showing)return;
+ if(found.indexOf(i)>=0)return;
+ var res=L.check(targets,found.concat([i]));
+ if(res.hit){
+  found.push(i);render();
+  if(res.complete){
+   toast('مرحله کامل شد!');
+   setTimeout(function(){level++;newRound();},800);
+  }
+ }else{
+  var r=L.afterMiss(lives);
+  lives=r.lives;
+  if(r.dead){
+   render();
+   var best=parseInt(store.get('wog-memory-grid-best')||'0',10)||0;
+   if(level>best)store.set('wog-memory-grid-best',String(level));
+   ovl('باختی!','به مرحلهٔ '+fa(level+1)+' رسیدی | رکورد: '+fa(Math.max(best,level)),'بازی جدید',function(){newGame();});
+  }else{
+   toast('اشتباه بود! یک جان کم شد؛ دوباره نگاه کن');
+   found=[];
+   showing=true;
+   render();
+   setTimeout(function(){showing=false;render();},1100+targets.length*90);
+  }
+ }
+}
+$('#hint').textContent='خانه‌های روشن را به خاطر بسپار و بعد از خاموشی همهٔ آن‌ها را پیدا کن؛ هر خطا یک جان می‌گیرد.';
+newGame();
+})();
+</script>
+</body>
+</html>

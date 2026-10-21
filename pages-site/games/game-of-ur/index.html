@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<title>بازی سلطنتی اور | دنیای بازی‌ها</title>
+<meta name="description" content="نژاد کهن سلطنتی اور بین تو و ربات: با تاس‌های چهارگانه مهره‌ها را از مسیر ۲۰ خانه‌ای عبور بده و زودتر از حریف هر ۷ مهره را بیرون بفرست.">
+<style>*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+@font-face{font-family:Vazirmatn;src:url(../../fonts/Vazirmatn-Regular.woff2) format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:Vazirmatn;src:url(../../fonts/Vazirmatn-Bold.woff2) format('woff2');font-weight:700;font-display:swap}
+body{font-family:Vazirmatn,Tahoma,sans-serif;background:linear-gradient(160deg,#101a2e,#0b1220);color:#f3ead8;min-height:100dvh;user-select:none;display:flex;flex-direction:column;align-items:center;padding:12px;padding-top:56px;overflow-x:hidden}
+a.wog-home{position:fixed;top:10px;inset-inline-start:12px;z-index:99;background:rgba(217,164,65,.12);border:1px solid rgba(217,164,65,.45);color:#e8c073;text-decoration:none;padding:6px 12px;border-radius:10px;font-size:.85rem;font-weight:700}
+a.wog-home:hover{background:rgba(217,164,65,.3)}
+header{text-align:center;margin-bottom:8px}
+h1{font-size:1.2rem;color:#d9a441}
+.hud{color:#a8b3c9;font-size:.9rem;margin-top:2px;min-height:1.4em}
+.hud b{color:#e8c073}
+button,.wbtn{font-family:inherit;background:#d9a441;color:#221806;border:0;border-radius:10px;font-weight:700;padding:8px 16px;font-size:.95rem;cursor:pointer;touch-action:manipulation}
+button.sec,.wbtn.sec{background:#14203a;color:#f3ead8;border:1px solid rgba(217,164,65,.35)}
+button:disabled{opacity:.45;cursor:default}
+#hint{color:#a8b3c9;font-size:.85rem;margin-top:10px;text-align:center;max-width:680px;line-height:1.9}
+.wpanel{background:#14203a;border:1px solid rgba(217,164,65,.35);border-radius:14px;padding:14px}
+.wrow{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;align-items:center;margin:8px 0}
+.wovl{position:fixed;inset:0;background:rgba(5,9,18,.85);display:flex;align-items:center;justify-content:center;z-index:90}
+.wovl .box{background:#14203a;border:2px solid rgba(217,164,65,.5);border-radius:16px;padding:22px 28px;text-align:center;max-width:88vw}
+.wovl h2{color:#e8c073;margin-bottom:8px}
+.wovl p{color:#a8b3c9;margin-bottom:14px}
+.wog-toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#14203a;border:1px solid rgba(217,164,65,.5);color:#f3ead8;padding:8px 18px;border-radius:12px;opacity:0;transition:.25s;z-index:95;pointer-events:none;font-size:.9rem}
+.wog-toast.on{opacity:1}
+.wgrid{display:grid;border:2px solid rgba(217,164,65,.5);border-radius:10px;overflow:hidden;direction:ltr;touch-action:manipulation}
+.wgrid .cell{display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative}
+.cell.light{background:#e8dcc0}.cell.dark{background:#41527a}
+.wcard{display:inline-flex;flex-direction:column;justify-content:space-between;width:52px;height:74px;background:#f6efe0;color:#1c2438;border-radius:7px;padding:3px 5px;font-weight:700;font-size:.9rem;line-height:1;box-shadow:0 2px 5px rgba(0,0,0,.45);cursor:pointer;touch-action:manipulation;flex:none}
+.wcard.red{color:#c0392b}
+.wcard.back{background:linear-gradient(135deg,#2c3a5e,#41527a);border:2px solid rgba(217,164,65,.5)}
+.wcard.back:before{content:'❋';color:rgba(232,192,115,.55);align-self:center;font-size:1.3rem}
+.wcard.small{width:38px;height:54px;font-size:.75rem;border-radius:5px}
+.wcard.tiny{width:30px;height:44px;font-size:.65rem;border-radius:4px;padding:2px 3px}
+.wcard.sel{outline:3px solid #e8c073;transform:translateY(-6px)}
+.wcard .cn{font-size:.7rem;opacity:.85}.wcard .cv{align-self:flex-start}
+.wcard.back .cn,.wcard.back .cv{display:none}
+.wdpad{display:none;grid-template-columns:repeat(3,58px);grid-auto-rows:50px;gap:6px;margin-top:12px}
+.wdpad.on{display:grid}
+.wdpad button{font-size:1.15rem}
+@media(pointer:coarse){.wdpad{display:grid}}
+canvas{touch-action:none;border-radius:10px;border:2px solid rgba(217,164,65,.35);background:#0d1526}
+body{background:#0b1220;color:#e8e6df;font-family:Tahoma,'Segoe UI',sans-serif;margin:0;padding:12px}
+.wog-home{color:#3fb8af;font-size:12px;text-decoration:none}
+header h1{color:#d9a441;font-size:20px;margin:6px 0;text-align:center}
+#hud{color:#3fb8af;font-size:14px;text-align:center}
+.uboard{display:grid;grid-template-columns:repeat(8,1fr);gap:5px;direction:ltr;max-width:600px;margin:10px auto}
+.ucell{min-height:46px;background:#14203a;border:1px solid #2a3b5e;border-radius:8px;display:flex;align-items:center;justify-content:center;touch-action:manipulation}
+.ushr{background:#1b2c4f;border-color:#33507e}
+.uros{border-color:#d9a441;box-shadow:inset 0 0 0 2px rgba(217,164,65,.55)}
+.up{font-size:24px;line-height:1}
+.p0{color:#d9a441}.p1{color:#3fb8af}
+.canmv{border-color:#67b98a;cursor:pointer;box-shadow:0 0 0 2px rgba(103,185,138,.6)}
+.urow{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:8px 0}
+.upanel{background:#14203a;border:1px solid #2a3b5e;border-radius:8px;padding:8px 10px;font-size:13px}
+.ubar{display:flex;gap:10px;justify-content:center;align-items:center;flex-wrap:wrap;margin-top:8px}
+.btn{min-height:44px;min-width:44px;padding:8px 16px;border-radius:10px;border:1px solid #33507e;background:#1b2c4f;color:#e8e6df;font-size:15px;cursor:pointer;touch-action:manipulation}
+.btn.prime{background:#d9a441;color:#14203a;border-color:#d9a441;font-weight:bold}
+.udice{display:flex;gap:4px;align-items:center}
+.die{width:16px;height:16px;border-radius:50%;border:2px solid #3fb8af;display:inline-block}
+.die.on{background:#d9a441;border-color:#d9a441}
+#wog-toast{position:fixed;bottom:14px;left:50%;transform:translateX(-50%);background:#1b2c4f;color:#e8e6df;padding:8px 14px;border-radius:8px;border:1px solid #33507e;font-size:14px;pointer-events:none;z-index:9}
+p#hint{color:#8fa3c7;text-align:center;font-size:13px}
+</style>
+</head>
+<body>
+<a class="wog-home" href="../../index.html">⌂ خانه</a>
+<header><h1>❋ بازی سلطنتی اور ❋</h1><div class="hud" id="hud"></div></header>
+<div id="app"></div>
+<p id="hint"></p>
+<div class="wog-toast" id="wog-toast"></div>
+<script>
+(function () {
+'use strict';
+var store = {
+  get: function (k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+  set: function (k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+};
+/*WOG_LOGIC_START*/
+var PATH=[[0,0],[1,0],[2,0],[3,0],[4,0],[5,0],[6,0],[7,0],[7,1],[6,1],[5,1],[4,1],[3,1],[2,1],[1,1],[0,1],[0,2],[1,2],[2,2],[3,2]];
+var ROSETTES=[4,8,14];
+var SHARED=[5,6,7,8,9,10,11,12];
+function isRos(i){return ROSETTES.indexOf(i)>=0}
+function isShr(i){return i>=5&&i<=12}
+function newState(){return{p:[[-1,-1,-1,-1,-1,-1,-1],[-1,-1,-1,-1,-1,-1,-1]],t:0}}
+function occAt(s,i){for(var pl=0;pl<2;pl++)for(var k=0;k<7;k++)if(s.p[pl][k]===i)return pl;return -1}
+function targetOf(pos,steps){return pos<0?steps-1:pos+steps}
+function canLand(s,pl,tg){
+ if(tg===20)return true;
+ if(tg<0||tg>19)return false;
+ var o=occAt(s,tg);
+ if(o===pl)return false;
+ if(isRos(tg)&&o>=0)return false;
+ if(o===1-pl)return isShr(tg);
+ return true;
+}
+function legalMoves(s,pl,steps){
+ var out=[],k;
+ for(k=0;k<7;k++){var pos=s.p[pl][k];if(pos===20)continue;if(canLand(s,pl,targetOf(pos,steps)))out.push(k)}
+ return out;
+}
+function applyMove(s,pl,k,steps){
+ var pos=s.p[pl][k],tg=targetOf(pos,steps),cap=false,extra=false,j;
+ if(tg===20){s.p[pl][k]=20;return{captured:false,extra:false}}
+ var o=occAt(s,tg);
+ if(o===1-pl){for(j=0;j<7;j++)if(s.p[1-pl][j]===tg){s.p[1-pl][j]=-1;cap=true;break}}
+ s.p[pl][k]=tg;
+ if(isRos(tg))extra=true;
+ return{captured:cap,extra:extra};
+}
+function pieceStates(s,pl){var st=0,pa=0,bo=0,k,pos;for(k=0;k<7;k++){pos=s.p[pl][k];if(pos===-1)st++;else if(pos===20)bo++;else pa++}return{start:st,path:pa,borne:bo}}
+function isWin(s,pl){return pieceStates(s,pl).borne===7}
+function roll4(rng){var r=rng||Math.random,n=0,i;for(i=0;i<4;i++)if(r()<0.5)n++;return n}
+function moveScore(s,pl,k,steps){
+ var pos=s.p[pl][k],tg=targetOf(pos,steps),sc=0;
+ if(tg<=19){var o=occAt(s,tg);if(o===1-pl)sc+=100;if(isRos(tg))sc+=40}
+ sc+=(pos>=0?pos:-1);
+ return sc;
+}
+function aiChoose(s,a,b,c){
+ var pl,steps,rng;
+ if(c===undefined){pl=s.t;steps=a;rng=b}else{pl=a;steps=b;rng=c}
+ rng=rng||Math.random;
+ var ms=legalMoves(s,pl,steps);
+ if(!ms.length)return -1;
+ var bs=-1e9,i,sc;
+ for(i=0;i<ms.length;i++){sc=moveScore(s,pl,ms[i],steps);if(sc>bs)bs=sc}
+ var ties=[];
+ for(i=0;i<ms.length;i++)if(moveScore(s,pl,ms[i],steps)===bs)ties.push(ms[i]);
+ return ties[(rng()*ties.length)|0];
+}
+var WOG_LOGIC={PATH:PATH,ROSETTES:ROSETTES,SHARED:SHARED,newState:newState,occAt:occAt,targetOf:targetOf,canLand:canLand,legalMoves:legalMoves,applyMove:applyMove,pieceStates:pieceStates,isWin:isWin,roll4:roll4,aiChoose:aiChoose};
+/*WOG_LOGIC_END*/
+var L = WOG_LOGIC;
+function $(s){return document.querySelector(s)}
+function $$(s){return Array.prototype.slice.call(document.querySelectorAll(s))}
+function ce(tag,cls,html){var e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;return e}
+var FA_D='۰۱۲۳۴۵۶۷۸۹';
+function fa(n){return String(n).replace(/\d/g,function(d){return FA_D[+d]})}
+function shuffle(a,rng){a=a.slice();rng=rng||Math.random;for(var i=a.length-1;i>0;i--){var j=Math.floor(rng()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a}
+function rint(a,b,rng){rng=rng||Math.random;return a+Math.floor(rng()*(b-a+1))}
+function pick(arr,rng){rng=rng||Math.random;return arr[Math.floor(rng()*arr.length)]}
+function clamp(v,a,b){return v<a?a:v>b?b:v}
+var _toastT=0;
+function toast(msg,ms){var t=$('#wog-toast');if(!t)return;t.textContent=msg;t.classList.add('on');clearTimeout(_toastT);_toastT=setTimeout(function(){t.classList.remove('on')},ms||1800)}
+function hud(html){var h=$('#hud');if(h)h.innerHTML=html}
+function ovl(title,sub,btn,cb){var o=ce('div','wovl');var b=ce('div','box');b.appendChild(ce('h2',null,title));if(sub)b.appendChild(ce('p',null,sub));var bt=ce('button',null,btn);bt.setAttribute('data-smoke','');bt.addEventListener('click',function(){o.remove();cb&&cb()});b.appendChild(bt);o.appendChild(b);document.body.appendChild(o);return o}
+function bestOf(key,val){var b=parseInt(store.get(key)||'0',10)||0;if(val>b)store.set(key,String(val));return Math.max(b,val)}
+function storeBest(key){return parseInt(store.get(key)||'0',10)||0}
+
+var S=L.newState(),phase='roll',steps=0,lock=false,gen=0;
+function cnt(pl,v){var n=0,k;for(k=0;k<7;k++)if(S.p[pl][k]===v)n++;return n}
+function movableSet(){var ms=L.legalMoves(S,S.t,steps),set={},i;for(i=0;i<ms.length;i++)set[ms[i]]=1;return set}
+function hudUp(){hud('نوبت: <b>'+(S.t===0?'تو':'ربات')+'</b> · بیرون‌آمده — تو: '+fa(cnt(0,20))+' / ربات: '+fa(cnt(1,20)))}
+function diceHtml(){var h='',i;for(i=0;i<4;i++)h+='<span class="die'+(i<steps?' on':'')+'"></span>';return h}
+function later(ms,fn){var g0=gen;setTimeout(function(){if(g0===gen)fn()},ms)}
+function fresh(){gen++;S=L.newState();phase='roll';steps=0;lock=false;render();hudUp();toast('بازی تازه شروع شد')}
+function humanApply(k){
+ if(S.t!==0||phase!=='move')return;
+ var res=L.applyMove(S,0,k,steps);
+ steps=0;
+ if(L.isWin(S,0)){phase='over';render();hudUp();ovl('بردی!','هر ۷ مهره‌ات به خانه رسید','بازی دوباره',fresh);return}
+ if(res.extra){toast('روزت! نوبت اضافه داری');phase='roll';render();hudUp();return}
+ if(res.captured)toast('مهرهٔ حریف به آغاز برگشت');
+ S.t=1;phase='ai';render();hudUp();later(750,aiStep);
+}
+function aiStep(){
+ steps=L.roll4();
+ var k=L.aiChoose(S,steps,Math.random);
+ if(k<0){steps=0;toast('ربات حرکتی نداشت');S.t=0;phase='roll';render();hudUp();return}
+ var res=L.applyMove(S,1,k,steps);
+ if(res.captured)toast('ربات یکی از مهره‌هایت را گرفت!');
+ if(L.isWin(S,1)){steps=0;phase='over';render();hudUp();ovl('ربات برد','مهره‌های ربات زودتر رسیدند','بازی دوباره',fresh);return}
+ if(res.extra){toast('ربات: روزت! دوباره می‌ریزد');render();hudUp();later(750,aiStep);return}
+ steps=0;S.t=0;phase='roll';render();hudUp();
+}
+function doRoll(){
+ if(lock||phase!=='roll'||S.t!==0)return;
+ steps=L.roll4();
+ var ms=L.legalMoves(S,0,steps);
+ if(!ms.length){lock=true;render();toast('با تاس '+fa(steps)+' حرکتی نیست؛ نوبت رد شد');later(900,function(){lock=false;S.t=1;phase='ai';render();hudUp();later(750,aiStep)});return}
+ phase='move';render();toast('تاس: '+fa(steps)+' — مهرهٔ سبزرنگ را لمس کن');
+}
+function cellClick(i){
+ if(lock||phase!=='move'||S.t!==0)return;
+ var ms=movableSet();
+ for(var k=0;k<7;k++)if(S.p[0][k]===i&&ms[k]){humanApply(k);return}
+ toast('این مهره با تاس '+fa(steps)+' جلو نمی‌رود');
+}
+function render(){
+ var app=$('#app');app.innerHTML='';
+ var ms=(phase==='move'&&S.t===0)?movableSet():{};
+ var board=ce('div','uboard');
+ for(var i=0;i<20;i++){
+  var d=ce('div','ucell'+(L.SHARED.indexOf(i)>=0?' ushr':'')+(L.ROSETTES.indexOf(i)>=0?' uros':''));
+  d.style.gridColumn=''+(L.PATH[i][0]+1);
+  d.style.gridRow=''+(L.PATH[i][1]+1);
+  var o=L.occAt(S,i);
+  if(o>=0)d.appendChild(ce('span','up p'+o,'●'));
+  for(var k=0;k<7;k++)if(S.p[0][k]===i&&ms[k]){d.classList.add('canmv');break}
+  d.addEventListener('click',function(ii){return function(){cellClick(ii)}}(i));
+  board.appendChild(d);
+ }
+ var ek=-1,k2;
+ if(phase==='move'&&S.t===0)for(k2=0;k2<7;k2++)if(S.p[0][k2]===-1&&ms[k2])ek=k2;
+ var row=ce('div','urow');
+ var p0=ce('div','upanel'+(ek>=0?' canmv':''),'در آغاز — تو: '+fa(cnt(0,-1))+' · ربات: '+fa(cnt(1,-1)));
+ if(ek>=0)p0.addEventListener('click',function(){humanApply(ek)});
+ row.appendChild(p0);
+ row.appendChild(ce('div','upanel','به خانه رسیده — تو: '+fa(cnt(0,20))+' · ربات: '+fa(cnt(1,20))));
+ var bar=ce('div','ubar');
+ var rb=ce('button','btn prime','تاس بریز');rb.setAttribute('data-smoke','1');rb.addEventListener('click',doRoll);
+ var nb=ce('button','btn','بازی جدید');nb.setAttribute('data-smoke','1');nb.addEventListener('click',fresh);
+ var dv=ce('div','udice');dv.innerHTML=diceHtml();
+ bar.appendChild(rb);bar.appendChild(dv);bar.appendChild(nb);
+ app.appendChild(board);app.appendChild(row);app.appendChild(bar);
+ $('#hint').textContent='تاس بریز؛ مهره‌ای که دقیقاً به‌اندازهٔ تاس جلو می‌رود سبز می‌شود (ورود از پنل «در آغاز»). روزت = نوبت اضافه؛ در ناحیهٔ روشن مهرهٔ تکِ حریف را می‌گیری.';
+}
+render();hudUp();
+})();
+</script>
+</body>
+</html>

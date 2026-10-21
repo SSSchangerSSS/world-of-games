@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<title>مرد حلق‌آویز | دنیای بازی‌ها</title>
+<meta name="description" content="واژهٔ پنهان را با حدس حرف‌ها پیدا کن؛ هر پاسخ اشتباه یک اندام به مرد اضافه می‌کند.">
+<style>*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+@font-face{font-family:Vazirmatn;src:url(../../fonts/Vazirmatn-Regular.woff2) format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:Vazirmatn;src:url(../../fonts/Vazirmatn-Bold.woff2) format('woff2');font-weight:700;font-display:swap}
+body{font-family:Vazirmatn,Tahoma,sans-serif;background:linear-gradient(160deg,#101a2e,#0b1220);color:#f3ead8;min-height:100dvh;user-select:none;display:flex;flex-direction:column;align-items:center;padding:12px;padding-top:56px;overflow-x:hidden}
+a.wog-home{position:fixed;top:10px;inset-inline-start:12px;z-index:99;background:rgba(217,164,65,.12);border:1px solid rgba(217,164,65,.45);color:#e8c073;text-decoration:none;padding:6px 12px;border-radius:10px;font-size:.85rem;font-weight:700}
+a.wog-home:hover{background:rgba(217,164,65,.3)}
+header{text-align:center;margin-bottom:8px}
+h1{font-size:1.2rem;color:#d9a441}
+.hud{color:#a8b3c9;font-size:.9rem;margin-top:2px;min-height:1.4em}
+.hud b{color:#e8c073}
+button,.wbtn{font-family:inherit;background:#d9a441;color:#221806;border:0;border-radius:10px;font-weight:700;padding:8px 16px;font-size:.95rem;cursor:pointer;touch-action:manipulation}
+button.sec,.wbtn.sec{background:#14203a;color:#f3ead8;border:1px solid rgba(217,164,65,.35)}
+button:disabled{opacity:.45;cursor:default}
+#hint{color:#a8b3c9;font-size:.85rem;margin-top:10px;text-align:center;max-width:680px;line-height:1.9}
+.wpanel{background:#14203a;border:1px solid rgba(217,164,65,.35);border-radius:14px;padding:14px}
+.wrow{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;align-items:center;margin:8px 0}
+.wovl{position:fixed;inset:0;background:rgba(5,9,18,.85);display:flex;align-items:center;justify-content:center;z-index:90}
+.wovl .box{background:#14203a;border:2px solid rgba(217,164,65,.5);border-radius:16px;padding:22px 28px;text-align:center;max-width:88vw}
+.wovl h2{color:#e8c073;margin-bottom:8px}
+.wovl p{color:#a8b3c9;margin-bottom:14px}
+.wog-toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#14203a;border:1px solid rgba(217,164,65,.5);color:#f3ead8;padding:8px 18px;border-radius:12px;opacity:0;transition:.25s;z-index:95;pointer-events:none;font-size:.9rem}
+.wog-toast.on{opacity:1}
+.wgrid{display:grid;border:2px solid rgba(217,164,65,.5);border-radius:10px;overflow:hidden;direction:ltr;touch-action:manipulation}
+.wgrid .cell{display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative}
+.cell.light{background:#e8dcc0}.cell.dark{background:#41527a}
+.wcard{display:inline-flex;flex-direction:column;justify-content:space-between;width:52px;height:74px;background:#f6efe0;color:#1c2438;border-radius:7px;padding:3px 5px;font-weight:700;font-size:.9rem;line-height:1;box-shadow:0 2px 5px rgba(0,0,0,.45);cursor:pointer;touch-action:manipulation;flex:none}
+.wcard.red{color:#c0392b}
+.wcard.back{background:linear-gradient(135deg,#2c3a5e,#41527a);border:2px solid rgba(217,164,65,.5)}
+.wcard.back:before{content:'❋';color:rgba(232,192,115,.55);align-self:center;font-size:1.3rem}
+.wcard.small{width:38px;height:54px;font-size:.75rem;border-radius:5px}
+.wcard.tiny{width:30px;height:44px;font-size:.65rem;border-radius:4px;padding:2px 3px}
+.wcard.sel{outline:3px solid #e8c073;transform:translateY(-6px)}
+.wcard .cn{font-size:.7rem;opacity:.85}.wcard .cv{align-self:flex-start}
+.wcard.back .cn,.wcard.back .cv{display:none}
+.wdpad{display:none;grid-template-columns:repeat(3,58px);grid-auto-rows:50px;gap:6px;margin-top:12px}
+.wdpad.on{display:grid}
+.wdpad button{font-size:1.15rem}
+@media(pointer:coarse){.wdpad{display:grid}}
+canvas{touch-action:none;border-radius:10px;border:2px solid rgba(217,164,65,.35);background:#0d1526}
+.hmtop{display:flex;justify-content:center;margin:6px 0}
+.chip{background:#1c2b4a;border:1px solid #3fb8af;color:#bfe9e6;border-radius:999px;padding:6px 16px;font-size:14px;font-weight:700}
+.hmstage{position:relative;width:180px;height:190px;margin:8px auto;background:#14203a;border-radius:12px;border:1px solid #223354}
+.hm{position:absolute;background:#8a94ad}
+.hm-base{bottom:12px;left:20px;width:130px;height:6px}
+.hm-pole{bottom:18px;left:46px;width:6px;height:154px}
+.hm-beam{top:18px;left:46px;width:88px;height:6px}
+.hm-rope{top:18px;left:128px;width:6px;height:22px;background:#d9a441}
+.hm-head{top:38px;left:115px;width:32px;height:32px;border-radius:50%;background:transparent;border:5px solid #e26d5c;opacity:0}
+.hm-body{top:75px;left:128px;width:6px;height:42px;opacity:0}
+.hm-arm-l{top:82px;left:108px;width:6px;height:30px;transform:rotate(28deg);opacity:0}
+.hm-arm-r{top:82px;left:148px;width:6px;height:30px;transform:rotate(-28deg);opacity:0}
+.hm-leg-l{top:117px;left:112px;width:6px;height:32px;transform:rotate(20deg);opacity:0}
+.hm-leg-r{top:117px;left:144px;width:6px;height:32px;transform:rotate(-20deg);opacity:0}
+.hm.on{opacity:1}
+.hword{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:12px auto;max-width:420px}
+.hl{min-width:36px;height:46px;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:700;background:#14203a;border:2px solid #2a3a5a;border-radius:8px;color:#eef2fb;padding:0 6px}
+.hl.hid{color:transparent}
+.hl.lost{border-color:#e26d5c;color:#e26d5c}
+.wbar{display:flex;gap:8px;justify-content:center;margin:10px 0;flex-wrap:wrap}
+.wbtn{min-width:64px;min-height:42px;padding:6px 14px;font-size:15px;font-weight:700;border:0;border-radius:8px;background:#2a3a5a;color:#eef2fb;cursor:pointer;touch-action:manipulation}
+.wnew{background:#d9a441;color:#2a1c03}
+.kb-hit{background:#67b98a!important;color:#0b2a1c!important}
+.kb-miss{background:#52303a!important;color:#d8a3ad!important}
+.kb-off{opacity:.85}
+</style>
+</head>
+<body>
+<a class="wog-home" href="../../index.html">⌂ خانه</a>
+<header><h1>❋ مرد حلق‌آویز ❋</h1><div class="hud" id="hud"></div></header>
+<div id="app"></div>
+<p id="hint"></p>
+<div class="wog-toast" id="wog-toast"></div>
+<script>
+(function () {
+'use strict';
+var store = {
+  get: function (k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+  set: function (k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+};
+/*WOG_LOGIC_START*/
+var FA='ابپتثجچحخدذرزژسشصضطظعغفقکگلمنوهی';
+var WORDS=[{w:'خرگوش',cat:'حیوان'},{w:'سنجاب',cat:'حیوان'},{w:'زرافه',cat:'حیوان'},{w:'میمون',cat:'حیوان'},{w:'دلفین',cat:'حیوان'},{w:'تمساح',cat:'حیوان'},{w:'گنجشک',cat:'حیوان'},{w:'کرگدن',cat:'حیوان'},{w:'روباه',cat:'حیوان'},{w:'زنبور',cat:'حیوان'},{w:'شترمرغ',cat:'حیوان'},{w:'عنکبوت',cat:'حیوان'},{w:'انگور',cat:'میوه'},{w:'انجیر',cat:'میوه'},{w:'نارنج',cat:'میوه'},{w:'زیتون',cat:'میوه'},{w:'بادام',cat:'میوه'},{w:'گیلاس',cat:'میوه'},{w:'خربزه',cat:'میوه'},{w:'طالبی',cat:'میوه'},{w:'هندوانه',cat:'میوه'},{w:'نارنگی',cat:'میوه'},{w:'تبریز',cat:'شهر'},{w:'شیراز',cat:'شهر'},{w:'اصفهان',cat:'شهر'},{w:'کاشان',cat:'شهر'},{w:'سمنان',cat:'شهر'},{w:'قزوین',cat:'شهر'},{w:'همدان',cat:'شهر'},{w:'کرمان',cat:'شهر'},{w:'سنندج',cat:'شهر'},{w:'بوشهر',cat:'شهر'},{w:'زاهدان',cat:'شهر'},{w:'ماشین',cat:'شیء'},{w:'رادیو',cat:'شیء'},{w:'لیوان',cat:'شیء'},{w:'فنجان',cat:'شیء'},{w:'چمدان',cat:'شیء'},{w:'جوراب',cat:'شیء'},{w:'شلوار',cat:'شیء'},{w:'دستکش',cat:'شیء'},{w:'چنگال',cat:'شیء'},{w:'بشقاب',cat:'شیء'},{w:'سماور',cat:'شیء'}];
+var MAXL=6;
+function reveal(w,g){var o='',i;for(i=0;i<w.length;i++){o+=(g.indexOf(w[i])>=0?w[i]:'_');}return o;}
+function livesAfter(l,hit){return hit?l:l-1;}
+function isWin(w,g){if(!w||!w.length)return false;for(var i=0;i<w.length;i++){if(g.indexOf(w[i])<0)return false;}return true;}
+function isDead(l){return l<=0;}
+function guess(g,ch){return g.indexOf(ch)>=0?g:g+ch;}
+function hitIn(w,ch){return w.indexOf(ch)>=0;}
+function pickWord(rng){var i=rng?Math.floor(rng()*WORDS.length):Math.floor(Math.random()*WORDS.length);return WORDS[i];}
+var WOG_LOGIC={FA:FA,WORDS:WORDS,MAXL:MAXL,reveal:reveal,livesAfter:livesAfter,isWin:isWin,isDead:isDead,guess:guess,hitIn:hitIn,pickWord:pickWord};
+/*WOG_LOGIC_END*/
+var L = WOG_LOGIC;
+function $(s){return document.querySelector(s)}
+function $$(s){return Array.prototype.slice.call(document.querySelectorAll(s))}
+function ce(tag,cls,html){var e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;return e}
+var FA_D='۰۱۲۳۴۵۶۷۸۹';
+function fa(n){return String(n).replace(/\d/g,function(d){return FA_D[+d]})}
+function shuffle(a,rng){a=a.slice();rng=rng||Math.random;for(var i=a.length-1;i>0;i--){var j=Math.floor(rng()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a}
+function rint(a,b,rng){rng=rng||Math.random;return a+Math.floor(rng()*(b-a+1))}
+function pick(arr,rng){rng=rng||Math.random;return arr[Math.floor(rng()*arr.length)]}
+function clamp(v,a,b){return v<a?a:v>b?b:v}
+var _toastT=0;
+function toast(msg,ms){var t=$('#wog-toast');if(!t)return;t.textContent=msg;t.classList.add('on');clearTimeout(_toastT);_toastT=setTimeout(function(){t.classList.remove('on')},ms||1800)}
+function hud(html){var h=$('#hud');if(h)h.innerHTML=html}
+function ovl(title,sub,btn,cb){var o=ce('div','wovl');var b=ce('div','box');b.appendChild(ce('h2',null,title));if(sub)b.appendChild(ce('p',null,sub));var bt=ce('button',null,btn);bt.setAttribute('data-smoke','');bt.addEventListener('click',function(){o.remove();cb&&cb()});b.appendChild(bt);o.appendChild(b);document.body.appendChild(o);return o}
+function bestOf(key,val){var b=parseInt(store.get(key)||'0',10)||0;if(val>b)store.set(key,String(val));return Math.max(b,val)}
+function storeBest(key){return parseInt(store.get(key)||'0',10)||0}
+var FA_LETTERS=['آ','ا','ب','پ','ت','ث','ج','چ','ح','خ','د','ذ','ر','ز','ژ','س','ش','ص','ض','ط','ظ','ع','غ','ف','ق','ک','گ','ل','م','ن','و','ه','ی'];
+function normFa(s){return (s||'').replace(/ي/g,'ی').replace(/ك/g,'ک').replace(/\u200c/g,' ').replace(/\s+/g,' ').trim()}
+function faKb(onKey,longKeys){var kb=ce('div');kb.style.cssText='display:flex;flex-wrap:wrap;gap:5px;justify-content:center;max-width:560px;margin-top:12px;direction:rtl';FA_LETTERS.forEach(function(ch){var b=ce('button','sec',ch);b.style.cssText='min-width:40px;padding:8px 4px';b.addEventListener('click',function(){onKey(ch)});kb.appendChild(b)});var lk=(longKeys&&longKeys.length&&typeof longKeys.forEach==='function')?longKeys:[];lk.forEach(function(x){var b=ce('button',null,x.label);b.addEventListener('click',function(){onKey(x.k)});kb.appendChild(b)});document.getElementById('app').appendChild(kb);return kb}
+
+var app=$('#app'),MAXL=6,w='',cat='',guessed='',lives=6,over=false,kbwrap=null;
+var wins=parseInt(store.get('wog-hangman-wins')||'0',10)||0;
+function hudUp(){hud('تلاش: '+fa(guessed.length)+' · جان: '+fa(lives)+' · رکورد برد: '+fa(wins));}
+function buildStage(){var s=ce('div','hmstage'),order=['hm-base','hm-pole','hm-beam','hm-rope','hm-head','hm-body','hm-arm-l','hm-arm-r','hm-leg-l','hm-leg-r'],i;for(i=0;i<order.length;i++)s.appendChild(ce('div','hm '+order[i]));app.appendChild(s);}
+function drawParts(){var wrong=MAXL-lives,parts=app.querySelectorAll('.hm'),i;for(i=0;i<parts.length;i++){if(i>=4)parts[i].classList.toggle('on',wrong>=(i-3));}}
+function drawWord(){var show=(over&&L.isDead(lives)),h='',i;for(i=0;i<w.length;i++){var got=guessed.indexOf(w[i])>=0;if(got)h+='<span class="hl">'+w[i]+'</span>';else h+='<span class="hl hid'+(show?' lost':'')+'">'+(show?w[i]:'\u00a0')+'</span>';}$('#hwordbox').innerHTML=h;drawParts();}
+function keyScope(){return (kbwrap&&kbwrap.children.length)?kbwrap:app;}
+function paintKey(ch,cls){var btns=keyScope().querySelectorAll('button,[data-key]'),i;for(i=0;i<btns.length;i++){var b=btns[i],t=(b.getAttribute('data-key')||b.textContent||'').trim();if(t===ch){b.classList.add(cls);b.classList.add('kb-off');}}}
+function onKey(ch){if(over)return;ch=L.norm(String(ch));if(ch.length!==1||L.FA.indexOf(ch)<0)return;if(guessed.indexOf(ch)>=0){toast('این حرف را گفته‌ای');return;}var hit=L.hitIn(w,ch);guessed=L.guess(guessed,ch);lives=L.livesAfter(lives,hit);paintKey(ch,hit?'kb-hit':'kb-miss');drawWord();hudUp();if(L.isWin(w,guessed)){over=true;wins++;store.set('wog-hangman-wins',String(wins));hudUp();ovl('بردی!','واژه: '+w+' — جان باقی‌مانده: '+fa(lives),'بازی جدید',init);}else if(L.isDead(lives)){over=true;drawWord();hudUp();ovl('مرد حلق‌آویز شد!','واژه: '+w+' — دسته: '+cat,'بازی جدید',init);}}
+function init(){app.innerHTML='';var e=L.pickWord();w=e.w;cat=e.cat;guessed='';lives=MAXL;over=false;var top=ce('div','hmtop'),chip=ce('span','chip','دسته: '+cat);top.appendChild(chip);app.appendChild(top);buildStage();var wrd=ce('div','hword');wrd.id='hwordbox';app.appendChild(wrd);var bar=ce('div','wbar'),bn=ce('button','wbtn wnew','بازی جدید');bn.setAttribute('data-smoke','1');bn.onclick=init;bar.appendChild(bn);app.appendChild(bar);kbwrap=ce('div','kbwrap');app.appendChild(kbwrap);var kel=faKb(function(ch){onKey(ch);},{});if(kel&&kel.nodeType===1)kbwrap.appendChild(kel);drawWord();hudUp();}
+document.addEventListener('keydown',function(e){var k=L.norm(e.key||'');if(k.length===1)onKey(k);});
+init();
+$('#hint').textContent='دسته را ببین و حرف حدس بزن؛ هر پاسخ اشتباه یک اندام به مرد اضافه می‌کند — ۶ جان داری.';
+})();
+</script>
+</body>
+</html>

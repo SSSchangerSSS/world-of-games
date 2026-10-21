@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<title>پایتخت‌ها | دنیای بازی‌ها</title>
+<meta name="description" content="پایتخت هر کشور را از میان چهار گزینه حدس بزنید؛ حواستان باشد پایتخت همیشه مشهورترین شهر نیست!">
+<style>*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+@font-face{font-family:Vazirmatn;src:url(../../fonts/Vazirmatn-Regular.woff2) format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:Vazirmatn;src:url(../../fonts/Vazirmatn-Bold.woff2) format('woff2');font-weight:700;font-display:swap}
+body{font-family:Vazirmatn,Tahoma,sans-serif;background:linear-gradient(160deg,#101a2e,#0b1220);color:#f3ead8;min-height:100dvh;user-select:none;display:flex;flex-direction:column;align-items:center;padding:12px;padding-top:56px;overflow-x:hidden}
+a.wog-home{position:fixed;top:10px;inset-inline-start:12px;z-index:99;background:rgba(217,164,65,.12);border:1px solid rgba(217,164,65,.45);color:#e8c073;text-decoration:none;padding:6px 12px;border-radius:10px;font-size:.85rem;font-weight:700}
+a.wog-home:hover{background:rgba(217,164,65,.3)}
+header{text-align:center;margin-bottom:8px}
+h1{font-size:1.2rem;color:#d9a441}
+.hud{color:#a8b3c9;font-size:.9rem;margin-top:2px;min-height:1.4em}
+.hud b{color:#e8c073}
+button,.wbtn{font-family:inherit;background:#d9a441;color:#221806;border:0;border-radius:10px;font-weight:700;padding:8px 16px;font-size:.95rem;cursor:pointer;touch-action:manipulation}
+button.sec,.wbtn.sec{background:#14203a;color:#f3ead8;border:1px solid rgba(217,164,65,.35)}
+button:disabled{opacity:.45;cursor:default}
+#hint{color:#a8b3c9;font-size:.85rem;margin-top:10px;text-align:center;max-width:680px;line-height:1.9}
+.wpanel{background:#14203a;border:1px solid rgba(217,164,65,.35);border-radius:14px;padding:14px}
+.wrow{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;align-items:center;margin:8px 0}
+.wovl{position:fixed;inset:0;background:rgba(5,9,18,.85);display:flex;align-items:center;justify-content:center;z-index:90}
+.wovl .box{background:#14203a;border:2px solid rgba(217,164,65,.5);border-radius:16px;padding:22px 28px;text-align:center;max-width:88vw}
+.wovl h2{color:#e8c073;margin-bottom:8px}
+.wovl p{color:#a8b3c9;margin-bottom:14px}
+.wog-toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#14203a;border:1px solid rgba(217,164,65,.5);color:#f3ead8;padding:8px 18px;border-radius:12px;opacity:0;transition:.25s;z-index:95;pointer-events:none;font-size:.9rem}
+.wog-toast.on{opacity:1}
+.wgrid{display:grid;border:2px solid rgba(217,164,65,.5);border-radius:10px;overflow:hidden;direction:ltr;touch-action:manipulation}
+.wgrid .cell{display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative}
+.cell.light{background:#e8dcc0}.cell.dark{background:#41527a}
+.wcard{display:inline-flex;flex-direction:column;justify-content:space-between;width:52px;height:74px;background:#f6efe0;color:#1c2438;border-radius:7px;padding:3px 5px;font-weight:700;font-size:.9rem;line-height:1;box-shadow:0 2px 5px rgba(0,0,0,.45);cursor:pointer;touch-action:manipulation;flex:none}
+.wcard.red{color:#c0392b}
+.wcard.back{background:linear-gradient(135deg,#2c3a5e,#41527a);border:2px solid rgba(217,164,65,.5)}
+.wcard.back:before{content:'❋';color:rgba(232,192,115,.55);align-self:center;font-size:1.3rem}
+.wcard.small{width:38px;height:54px;font-size:.75rem;border-radius:5px}
+.wcard.tiny{width:30px;height:44px;font-size:.65rem;border-radius:4px;padding:2px 3px}
+.wcard.sel{outline:3px solid #e8c073;transform:translateY(-6px)}
+.wcard .cn{font-size:.7rem;opacity:.85}.wcard .cv{align-self:flex-start}
+.wcard.back .cn,.wcard.back .cv{display:none}
+.wdpad{display:none;grid-template-columns:repeat(3,58px);grid-auto-rows:50px;gap:6px;margin-top:12px}
+.wdpad.on{display:grid}
+.wdpad button{font-size:1.15rem}
+@media(pointer:coarse){.wdpad{display:grid}}
+canvas{touch-action:none;border-radius:10px;border:2px solid rgba(217,164,65,.35);background:#0d1526}
+#app{max-width:560px;margin:0 auto;padding:10px}
+.start{text-align:center;padding:28px 12px}
+.start p{color:#a9b8d8;line-height:2.1;font-size:14px}
+.btn{display:block;width:100%;min-height:48px;border-radius:12px;border:1px solid #d9a441;background:#d9a441;color:#14203a;font-weight:800;font-size:17px;cursor:pointer;touch-action:manipulation;font-family:inherit}
+.qpanel{background:#14203a;border:1px solid #22335c;border-radius:14px;padding:14px 12px;text-align:center;margin-bottom:10px}
+.qtext{font-size:21px;line-height:1.9;font-weight:700}
+.qbig{font-size:56px;line-height:1.5;direction:ltr;unicode-bidi:isolate}
+.qsub{color:#8fa3c8;font-size:13px;margin-top:6px}
+.bar{height:8px;background:#0e1830;border-radius:6px;overflow:hidden;margin:0 0 12px}
+.bar i{display:block;height:100%;background:#3fb8af;transition:width .12s linear}
+.ogrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.opt{min-height:56px;border-radius:12px;border:1px solid #2a3d68;background:#182a4d;color:#e8eefc;font-size:15px;font-weight:600;padding:8px;cursor:pointer;touch-action:manipulation;font-family:inherit;line-height:1.7}
+.opt.correct{background:#1e4d3a;border-color:#67b98a;color:#c9f2dd}
+.opt.wrong{background:#5a2b24;border-color:#e26d5c;color:#ffd9d2}
+.opt:disabled{cursor:default}
+.feedback{min-height:22px;text-align:center;font-weight:700;margin-top:12px;font-size:15px}
+.feedback.ok{color:#67b98a}.feedback.no{color:#e26d5c}
+</style>
+</head>
+<body>
+<a class="wog-home" href="../../index.html">⌂ خانه</a>
+<header><h1>❋ پایتخت‌ها ❋</h1><div class="hud" id="hud"></div></header>
+<div id="app"></div>
+<p id="hint"></p>
+<div class="wog-toast" id="wog-toast"></div>
+<script>
+(function () {
+'use strict';
+var store = {
+  get: function (k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+  set: function (k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+};
+/*WOG_LOGIC_START*/
+var WOG_LOGIC=(function(){
+var ITEMS=[{"q":"پایتختِ ایران؟","options":["تهران","پاریس","لندن","واشینگتن"],"a":0},{"q":"پایتختِ ترکیه؟","options":["آنکارا","پکن","توکیو","سئول"],"a":0},{"q":"پایتختِ آلمان؟","options":["برلین","کانبرا","دهلی نو","اسلام‌آباد"],"a":0},{"q":"پایتختِ فرانسه؟","options":["پاریس","قاهره","رباط","طرابلس"],"a":0},{"q":"پایتختِ انگلستان؟","options":["لندن","وین","استکهلم","اسلو"],"a":0},{"q":"پایتختِ آمریکا؟","options":["واشینگتن","تفلیس","باکو","تهران"],"a":0},{"q":"پایتختِ ایتالیا؟","options":["رم","واشینگتن","مادرید","لیسبون"],"a":0},{"q":"پایتختِ اسپانیا؟","options":["مادرید","سئول","برازیلیا","بوئنوس آیرس"],"a":0},{"q":"پایتختِ پرتغال؟","options":["لیسبون","اسلام‌آباد","ریاض","بغداد"],"a":0},{"q":"پایتختِ روسیه؟","options":["مسکو","طرابلس","آتن","آمستردام"],"a":0},{"q":"پایتختِ چین؟","options":["پکن","اسلو","کپنهاگ","هلسینکی"],"a":0},{"q":"پایتختِ ژاپن؟","options":["توکیو","تهران","آنکارا","برلین"],"a":0},{"q":"پایتختِ کره جنوبی؟","options":["سئول","مادرید","لیسبون","مسکو"],"a":0},{"q":"پایتختِ برزیل؟","options":["برازیلیا","بوئنوس آیرس","مکزیکوسیتی","اتاوا"],"a":0},{"q":"پایتختِ آرژانتین؟","options":["بوئنوس آیرس","بغداد","ابوظبی","دوحه"],"a":0},{"q":"پایتختِ مکزیک؟","options":["مکزیکوسیتی","آمستردام","بروکسل","برن"],"a":0},{"q":"پایتختِ کانادا؟","options":["اتاوا","هلسینکی","ورشو","کی‌یف"],"a":0},{"q":"پایتختِ استرالیا؟","options":["کانبرا","برلین","پاریس","لندن"],"a":0},{"q":"پایتختِ هند؟","options":["دهلی نو","مسکو","پکن","توکیو"],"a":0},{"q":"پایتختِ پاکستان؟","options":["اسلام‌آباد","اتاوا","کانبرا","دهلی نو"],"a":0},{"q":"پایتختِ عربستان سعودی؟","options":["ریاض","دوحه","قاهره","رباط"],"a":0},{"q":"پایتختِ عراق؟","options":["بغداد","برن","وین","استکهلم"],"a":0},{"q":"پایتختِ امارات متحده عربی؟","options":["ابوظبی","کی‌یف","تفلیس","باکو"],"a":0},{"q":"پایتختِ قطر؟","options":["دوحه","لندن","واشینگتن","رم"],"a":0},{"q":"پایتختِ مصر؟","options":["قاهره","توکیو","سئول","برازیلیا"],"a":0},{"q":"پایتختِ مراکش؟","options":["رباط","دهلی نو","اسلام‌آباد","ریاض"],"a":0},{"q":"پایتختِ لیبی؟","options":["طرابلس","رباط","آتن","آمستردام"],"a":0},{"q":"پایتختِ یونان؟","options":["آتن","استکهلم","اسلو","کپنهاگ"],"a":0},{"q":"پایتختِ هلند؟","options":["آمستردام","باکو","تهران","آنکارا"],"a":0},{"q":"پایتختِ بلژیک؟","options":["بروکسل","رم","مادرید","لیسبون"],"a":0},{"q":"پایتختِ سوئیس؟","options":["برن","برازیلیا","بوئنوس آیرس","مکزیکوسیتی"],"a":0},{"q":"پایتختِ اتریش؟","options":["وین","ریاض","بغداد","ابوظبی"],"a":0},{"q":"پایتختِ سوئد؟","options":["استکهلم","آتن","آمستردام","بروکسل"],"a":0},{"q":"پایتختِ نروژ؟","options":["اسلو","کپنهاگ","هلسینکی","ورشو"],"a":0},{"q":"پایتختِ دانمارک؟","options":["کپنهاگ","آنکارا","برلین","پاریس"],"a":0},{"q":"پایتختِ فنلاند؟","options":["هلسینکی","لیسبون","مسکو","پکن"],"a":0},{"q":"پایتختِ لهستان؟","options":["ورشو","مکزیکوسیتی","اتاوا","کانبرا"],"a":0},{"q":"پایتختِ اوکراین؟","options":["کی‌یف","ابوظبی","دوحه","قاهره"],"a":0},{"q":"پایتختِ گرجستان؟","options":["تفلیس","بروکسل","برن","وین"],"a":0},{"q":"پایتختِ آذربایجان؟","options":["باکو","ورشو","کی‌یف","تفلیس"],"a":0}];
+var ROUND=10;
+function range(n){var a=[],i;for(i=0;i<n;i++)a.push(i);return a;}
+function shuffled(arr,rng){rng=rng||Math.random;var a=arr.slice(),i,j,t;for(i=a.length-1;i>0;i--){j=Math.floor(rng()*(i+1));t=a[i];a[i]=a[j];a[j]=t;}return a;}
+function shuffleOptions(item,rng){var idx=shuffled([0,1,2,3],rng),o=[],k,a=0;for(k=0;k<4;k++)o.push(item.options[idx[k]]);for(k=0;k<4;k++)if(idx[k]===item.a)a=k;return{q:item.q,options:o,a:a};}
+function pickPool(n,rng){var res=[],pool=shuffled(range(ITEMS.length),rng);while(res.length<n){if(!pool.length)pool=shuffled(range(ITEMS.length),rng);res.push(pool.pop());}return res;}
+function judge(choice,a){return choice===a;}
+function scoreFlow(score,streak,correct){if(correct){var ns=streak+1,g=10+(ns-1)*2;return{score:score+g,streak:ns,gain:g};}return{score:score,streak:0,gain:0};}
+function start(rng){return{pool:shuffled(range(ITEMS.length),rng),score:0,streak:0,answered:0,seen:[],cur:null,done:false};}
+function next(state,rng){if(state.done)return null;if(!state.pool.length)state.pool=shuffled(range(ITEMS.length),rng);state.cur=shuffleOptions(ITEMS[state.pool.pop()],rng);state.seen.push(state.cur.q);return state.cur;}
+function answer(state,choice){if(!state.cur||state.done)return null;var c=judge(choice,state.cur.a),f=scoreFlow(state.score,state.streak,c);state.score=f.score;state.streak=f.streak;state.answered++;if(state.answered>=ROUND)state.done=true;return{correct:c,gain:f.gain,done:state.done,answer:state.cur.options[state.cur.a]};}
+return{ITEMS:ITEMS,ROUND:ROUND,range:range,shuffled:shuffled,shuffleOptions:shuffleOptions,pickPool:pickPool,judge:judge,scoreFlow:scoreFlow,start:start,next:next,answer:answer};
+})();
+/*WOG_LOGIC_END*/
+var L = WOG_LOGIC;
+function $(s){return document.querySelector(s)}
+function $$(s){return Array.prototype.slice.call(document.querySelectorAll(s))}
+function ce(tag,cls,html){var e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;return e}
+var FA_D='۰۱۲۳۴۵۶۷۸۹';
+function fa(n){return String(n).replace(/\d/g,function(d){return FA_D[+d]})}
+function shuffle(a,rng){a=a.slice();rng=rng||Math.random;for(var i=a.length-1;i>0;i--){var j=Math.floor(rng()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a}
+function rint(a,b,rng){rng=rng||Math.random;return a+Math.floor(rng()*(b-a+1))}
+function pick(arr,rng){rng=rng||Math.random;return arr[Math.floor(rng()*arr.length)]}
+function clamp(v,a,b){return v<a?a:v>b?b:v}
+var _toastT=0;
+function toast(msg,ms){var t=$('#wog-toast');if(!t)return;t.textContent=msg;t.classList.add('on');clearTimeout(_toastT);_toastT=setTimeout(function(){t.classList.remove('on')},ms||1800)}
+function hud(html){var h=$('#hud');if(h)h.innerHTML=html}
+function ovl(title,sub,btn,cb){var o=ce('div','wovl');var b=ce('div','box');b.appendChild(ce('h2',null,title));if(sub)b.appendChild(ce('p',null,sub));var bt=ce('button',null,btn);bt.setAttribute('data-smoke','');bt.addEventListener('click',function(){o.remove();cb&&cb()});b.appendChild(bt);o.appendChild(b);document.body.appendChild(o);return o}
+function bestOf(key,val){var b=parseInt(store.get(key)||'0',10)||0;if(val>b)store.set(key,String(val));return Math.max(b,val)}
+function storeBest(key){return parseInt(store.get(key)||'0',10)||0}
+
+var KEY='wog-capitals-best',SUB='پایتختِ درست کدام است؟',TL=10,BIG=false;
+var app=$('#app'),st=null,timer=null,left=TL,lock=false;
+$('#hint').textContent='پایتخت همیشه بزرگ‌ترین شهر نیست! ۱۰ ثانیه وقت داری.';
+function hudUp(){var b=storeBest(KEY)||0;hud('امتیاز: '+fa(st?st.score:0)+' · پیاپی: '+fa(st?st.streak:0)+' · رکورد: '+fa(b)+' · زمان: <span id="tsec">'+fa(Math.max(0,Math.ceil(left)))+'</span>');}
+function menu(){stopTimer();st=null;app.innerHTML='<div class="start"><p>پایتخت هر کشور را از میان چهار گزینه حدس بزنید؛ حواستان باشد پایتخت همیشه مشهورترین شهر نیست!</p><button id="go" class="btn" data-smoke>شروع بازی</button></div>';$('#go').onclick=newRound;hudUp();}
+function newRound(){stopTimer();st=L.start(Math.random);lock=false;nextQ();}
+function nextQ(){lock=false;var q=L.next(st,Math.random);if(!q){endRound();return;}left=TL;hudUp();var h='<div class="qpanel"><div class="'+(BIG?'qbig':'qtext')+'">'+q.q+'</div><div class="qsub">'+SUB+'</div></div><div class="bar"><i id="tbar" style="width:100%"></i></div><div class="ogrid">';for(var i=0;i<4;i++)h+='<button class="opt" data-i="'+i+'">'+q.options[i]+'</button>';h+='</div><div id="fb" class="feedback"></div>';app.innerHTML=h;var bs=$$('.opt');for(var j=0;j<bs.length;j++)bs[j].onclick=function(){pick(+this.getAttribute('data-i'));};startTimer();}
+function startTimer(){stopTimer();timer=setInterval(tick,100);}
+function tick(){left-=0.1;var b=$('#tbar');if(b)b.style.width=Math.max(0,left/TL*100)+'%';var s=$('#tsec');if(s)s.textContent=fa(Math.max(0,Math.ceil(left)));if(left<=0){stopTimer();timeUp();}}
+function stopTimer(){if(timer){clearInterval(timer);timer=null;}}
+function pick(i){if(lock)return;lock=true;stopTimer();var res=L.answer(st,i);mark(i);var fb=$('#fb');if(res.correct){fb.textContent='آفرین! +'+fa(res.gain)+' امتیاز'+(st.streak>1?' · پیاپیِ '+fa(st.streak):'');fb.className='feedback ok';}else{fb.textContent='اشتباه! پاسخ درست: '+res.answer;fb.className='feedback no';}hudUp();setTimeout(step,1200);}
+function timeUp(){if(lock)return;lock=true;var res=L.answer(st,-1);mark(-1);var fb=$('#fb');fb.textContent='زمان تمام شد! پاسخ درست: '+res.answer;fb.className='feedback no';hudUp();setTimeout(step,1200);}
+function mark(chosen){var bs=$$('.opt');for(var k=0;k<bs.length;k++){bs[k].disabled=true;if(k===st.cur.a)bs[k].classList.add('correct');else if(k===chosen)bs[k].classList.add('wrong');}}
+function step(){if(st.done)endRound();else nextQ();}
+function endRound(){stopTimer();var best=bestOf(KEY,st.score);ovl('پایان دور','امتیاز شما: '+fa(st.score)+' · رکورد: '+fa(best),'بازی جدید',newRound);hudUp();}
+menu();
+})();
+</script>
+</body>
+</html>

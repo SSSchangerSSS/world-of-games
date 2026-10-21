@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<title>چراغ‌ها را خاموش کن | دنیای بازی‌ها</title>
+<meta name="description" content="هر لمس یک خانه و چهار همسایه‌اش را تغییر می‌دهد؛ همهٔ چراغ‌ها را خاموش کن. حالت سریع ۳×۳ هم دارد.">
+<style>*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+@font-face{font-family:Vazirmatn;src:url(../../fonts/Vazirmatn-Regular.woff2) format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:Vazirmatn;src:url(../../fonts/Vazirmatn-Bold.woff2) format('woff2');font-weight:700;font-display:swap}
+body{font-family:Vazirmatn,Tahoma,sans-serif;background:linear-gradient(160deg,#101a2e,#0b1220);color:#f3ead8;min-height:100dvh;user-select:none;display:flex;flex-direction:column;align-items:center;padding:12px;padding-top:56px;overflow-x:hidden}
+a.wog-home{position:fixed;top:10px;inset-inline-start:12px;z-index:99;background:rgba(217,164,65,.12);border:1px solid rgba(217,164,65,.45);color:#e8c073;text-decoration:none;padding:6px 12px;border-radius:10px;font-size:.85rem;font-weight:700}
+a.wog-home:hover{background:rgba(217,164,65,.3)}
+header{text-align:center;margin-bottom:8px}
+h1{font-size:1.2rem;color:#d9a441}
+.hud{color:#a8b3c9;font-size:.9rem;margin-top:2px;min-height:1.4em}
+.hud b{color:#e8c073}
+button,.wbtn{font-family:inherit;background:#d9a441;color:#221806;border:0;border-radius:10px;font-weight:700;padding:8px 16px;font-size:.95rem;cursor:pointer;touch-action:manipulation}
+button.sec,.wbtn.sec{background:#14203a;color:#f3ead8;border:1px solid rgba(217,164,65,.35)}
+button:disabled{opacity:.45;cursor:default}
+#hint{color:#a8b3c9;font-size:.85rem;margin-top:10px;text-align:center;max-width:680px;line-height:1.9}
+.wpanel{background:#14203a;border:1px solid rgba(217,164,65,.35);border-radius:14px;padding:14px}
+.wrow{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;align-items:center;margin:8px 0}
+.wovl{position:fixed;inset:0;background:rgba(5,9,18,.85);display:flex;align-items:center;justify-content:center;z-index:90}
+.wovl .box{background:#14203a;border:2px solid rgba(217,164,65,.5);border-radius:16px;padding:22px 28px;text-align:center;max-width:88vw}
+.wovl h2{color:#e8c073;margin-bottom:8px}
+.wovl p{color:#a8b3c9;margin-bottom:14px}
+.wog-toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#14203a;border:1px solid rgba(217,164,65,.5);color:#f3ead8;padding:8px 18px;border-radius:12px;opacity:0;transition:.25s;z-index:95;pointer-events:none;font-size:.9rem}
+.wog-toast.on{opacity:1}
+.wgrid{display:grid;border:2px solid rgba(217,164,65,.5);border-radius:10px;overflow:hidden;direction:ltr;touch-action:manipulation}
+.wgrid .cell{display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative}
+.cell.light{background:#e8dcc0}.cell.dark{background:#41527a}
+.wcard{display:inline-flex;flex-direction:column;justify-content:space-between;width:52px;height:74px;background:#f6efe0;color:#1c2438;border-radius:7px;padding:3px 5px;font-weight:700;font-size:.9rem;line-height:1;box-shadow:0 2px 5px rgba(0,0,0,.45);cursor:pointer;touch-action:manipulation;flex:none}
+.wcard.red{color:#c0392b}
+.wcard.back{background:linear-gradient(135deg,#2c3a5e,#41527a);border:2px solid rgba(217,164,65,.5)}
+.wcard.back:before{content:'❋';color:rgba(232,192,115,.55);align-self:center;font-size:1.3rem}
+.wcard.small{width:38px;height:54px;font-size:.75rem;border-radius:5px}
+.wcard.tiny{width:30px;height:44px;font-size:.65rem;border-radius:4px;padding:2px 3px}
+.wcard.sel{outline:3px solid #e8c073;transform:translateY(-6px)}
+.wcard .cn{font-size:.7rem;opacity:.85}.wcard .cv{align-self:flex-start}
+.wcard.back .cn,.wcard.back .cv{display:none}
+.wdpad{display:none;grid-template-columns:repeat(3,58px);grid-auto-rows:50px;gap:6px;margin-top:12px}
+.wdpad.on{display:grid}
+.wdpad button{font-size:1.15rem}
+@media(pointer:coarse){.wdpad{display:grid}}
+canvas{touch-action:none;border-radius:10px;border:2px solid rgba(217,164,65,.35);background:#0d1526}
+.p-bar{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;align-items:center;margin:12px 0 4px}
+.btn{min-width:44px;min-height:40px;padding:7px 13px;border-radius:9px;border:1px solid #2a3b5e;background:#14203a;color:#cdd8ee;font-size:14px;cursor:pointer;touch-action:manipulation;font-family:inherit}
+.btn.p-gold{background:#d9a441;border-color:#d9a441;color:#10192e;font-weight:bold}
+.btn.p-on{border-color:#d9a441;color:#d9a441}
+.p-lbl{font-size:13px;color:#8fa3c8}
+
+.l-grid{display:grid;gap:6px;width:max-content;margin:16px auto}
+.l-cell{width:52px;height:52px;border-radius:10px;border:2px solid #223252;cursor:pointer;touch-action:manipulation}
+.l-on{background:#d9a441;box-shadow:0 0 10px rgba(217,164,65,.55)}
+.l-off{background:#16233d}
+.l-hint{outline:2px solid #3fb8af}
+</style>
+</head>
+<body>
+<a class="wog-home" href="../../index.html">⌂ خانه</a>
+<header><h1>❋ چراغ‌ها را خاموش کن ❋</h1><div class="hud" id="hud"></div></header>
+<div id="app"></div>
+<p id="hint"></p>
+<div class="wog-toast" id="wog-toast"></div>
+<script>
+(function () {
+'use strict';
+var store = {
+  get: function (k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+  set: function (k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+};
+/*WOG_LOGIC_START*/
+var WOG_LOGIC = (function () {
+  function toggle(state, r, c) {
+    var n = state.length;
+    var cells = [[r, c], [r - 1, c], [r + 1, c], [r, c - 1], [r, c + 1]];
+    for (var i = 0; i < cells.length; i++) {
+      var rr = cells[i][0], cc = cells[i][1];
+      if (rr < 0 || rr >= n || cc < 0 || cc >= state[rr].length) continue;
+      state[rr][cc] = state[rr][cc] ? 0 : 1;
+    }
+    return state;
+  }
+  function isWin(board) {
+    for (var r = 0; r < board.length; r++)
+      for (var c = 0; c < board[r].length; c++)
+        if (board[r][c]) return false;
+    return true;
+  }
+  function genBoard(size, k, rng) {
+    rng = rng || Math.random;
+    var total = size * size, i, board, presses;
+    for (var attempt = 0; attempt < 20; attempt++) {
+      var idx = [];
+      for (i = 0; i < total; i++) idx.push(i);
+      for (i = 0; i < k; i++) {
+        var j = i + Math.floor(rng() * (total - i));
+        var t = idx[i]; idx[i] = idx[j]; idx[j] = t;
+      }
+      board = [];
+      for (i = 0; i < size; i++) { board.push([]); for (var c = 0; c < size; c++) board[i].push(0); }
+      presses = [];
+      for (i = 0; i < k; i++) {
+        var p = idx[i], pr = Math.floor(p / size), pc = p % size;
+        presses.push([pr, pc]);
+        toggle(board, pr, pc);
+      }
+      if (!isWin(board)) return { board: board, presses: presses };
+    }
+    return { board: board, presses: presses };
+  }
+  var _l3 = null;
+  function pressesToSolve(board) {
+    if (!_l3) {
+      _l3 = {};
+      for (var m = 0; m < 512; m++) {
+        var b = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
+        for (var i = 0; i < 9; i++) if ((m >> i) & 1) toggle(b, Math.floor(i / 3), i % 3);
+        var key = '';
+        for (var r = 0; r < 3; r++) for (var c = 0; c < 3; c++) key += b[r][c];
+        _l3[key] = m;
+      }
+    }
+    var key2 = '';
+    for (var r2 = 0; r2 < 3; r2++) for (var c2 = 0; c2 < 3; c2++) key2 += board[r2][c2];
+    var mask = _l3[key2];
+    if (mask === undefined) return null;
+    var out = [];
+    for (var i2 = 0; i2 < 9; i2++) if ((mask >> i2) & 1) out.push([Math.floor(i2 / 3), i2 % 3]);
+    return out;
+  }
+  return { toggle: toggle, genBoard: genBoard, isWin: isWin, pressesToSolve: pressesToSolve };
+})();
+/*WOG_LOGIC_END*/
+var L = WOG_LOGIC;
+function $(s){return document.querySelector(s)}
+function $$(s){return Array.prototype.slice.call(document.querySelectorAll(s))}
+function ce(tag,cls,html){var e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;return e}
+var FA_D='۰۱۲۳۴۵۶۷۸۹';
+function fa(n){return String(n).replace(/\d/g,function(d){return FA_D[+d]})}
+function shuffle(a,rng){a=a.slice();rng=rng||Math.random;for(var i=a.length-1;i>0;i--){var j=Math.floor(rng()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a}
+function rint(a,b,rng){rng=rng||Math.random;return a+Math.floor(rng()*(b-a+1))}
+function pick(arr,rng){rng=rng||Math.random;return arr[Math.floor(rng()*arr.length)]}
+function clamp(v,a,b){return v<a?a:v>b?b:v}
+var _toastT=0;
+function toast(msg,ms){var t=$('#wog-toast');if(!t)return;t.textContent=msg;t.classList.add('on');clearTimeout(_toastT);_toastT=setTimeout(function(){t.classList.remove('on')},ms||1800)}
+function hud(html){var h=$('#hud');if(h)h.innerHTML=html}
+function ovl(title,sub,btn,cb){var o=ce('div','wovl');var b=ce('div','box');b.appendChild(ce('h2',null,title));if(sub)b.appendChild(ce('p',null,sub));var bt=ce('button',null,btn);bt.setAttribute('data-smoke','');bt.addEventListener('click',function(){o.remove();cb&&cb()});b.appendChild(bt);o.appendChild(b);document.body.appendChild(o);return o}
+function bestOf(key,val){var b=parseInt(store.get(key)||'0',10)||0;if(val>b)store.set(key,String(val));return Math.max(b,val)}
+function storeBest(key){return parseInt(store.get(key)||'0',10)||0}
+
+var SIZE = 5, board, mvs, done = false;
+function litCount() {
+  var n = 0;
+  for (var r = 0; r < SIZE; r++) for (var c = 0; c < SIZE; c++) if (board[r][c]) n++;
+  return n;
+}
+function bestStr(v) { return v ? fa(parseInt(v, 10)) : '—'; }
+function newGame(size) {
+  SIZE = size || SIZE;
+  var g = L.genBoard(SIZE, SIZE === 3 ? 4 : 6, Math.random);
+  board = g.board; mvs = 0; done = false;
+  render();
+}
+function render() {
+  var app = $('#app');
+  app.innerHTML = '';
+  var gd = ce('div', 'l-grid');
+  gd.style.gridTemplateColumns = 'repeat(' + SIZE + ', 52px)';
+  for (var r = 0; r < SIZE; r++) for (var c = 0; c < SIZE; c++) {
+    (function (r, c) {
+      var b = ce('button', 'l-cell ' + (board[r][c] ? 'l-on' : 'l-off'));
+      b.addEventListener('click', function () { tap(r, c); });
+      gd.appendChild(b);
+    })(r, c);
+  }
+  app.appendChild(gd);
+  var bar = ce('div', 'p-bar');
+  var nb = ce('button', 'btn', 'بازی جدید');
+  nb.setAttribute('data-smoke', '1');
+  nb.addEventListener('click', function () { newGame(SIZE); });
+  bar.appendChild(nb);
+  var b3 = ce('button', 'btn' + (SIZE === 3 ? ' p-on' : ''), '۳×۳ سریع');
+  b3.addEventListener('click', function () { newGame(3); });
+  bar.appendChild(b3);
+  var b5 = ce('button', 'btn' + (SIZE === 5 ? ' p-on' : ''), '۵×۵');
+  b5.addEventListener('click', function () { newGame(5); });
+  bar.appendChild(b5);
+  var hb = ce('button', 'btn p-gold', 'راهنما');
+  hb.addEventListener('click', hintSol);
+  bar.appendChild(hb);
+  app.appendChild(bar);
+  hud('حرکت‌ها: ' + fa(mvs) + ' · روشن: ' + fa(litCount()) + ' · رکورد: ' + bestStr(store.get('wog-lights-best-' + SIZE)));
+}
+function tap(r, c) {
+  if (done) return;
+  L.toggle(board, r, c);
+  mvs++;
+  render();
+  if (L.isWin(board)) {
+    done = true;
+    var best = bestOf('wog-lights-best-' + SIZE, mvs);
+    ovl('همهٔ چراغ‌ها خاموش شد!', fa(mvs) + ' حرکت' + (best ? ' · رکورد: ' + bestStr(best) : ''), 'بازی جدید', function () { newGame(SIZE); });
+  }
+}
+function hintSol() {
+  if (SIZE !== 3) { toast('راهنما فقط در حالت ۳×۳ فعال است'); return; }
+  var sol = L.pressesToSolve(board);
+  if (!sol) { toast('راه‌حلی یافت نشد'); return; }
+  var cells = $('#app').querySelectorAll('.l-cell');
+  for (var i = 0; i < sol.length; i++) cells[sol[i][0] * SIZE + sol[i][1]].className += ' l-hint';
+  toast('راه‌حل: ' + fa(sol.length) + ' خانهٔ مشخص‌شده را بزن');
+  setTimeout(function () {
+    var cs = $('#app').querySelectorAll('.l-hint');
+    for (var i = 0; i < cs.length; i++) cs[i].className = cs[i].className.replace(' l-hint', '');
+  }, 1400);
+}
+newGame(5);
+$('#hint').textContent = 'با هر لمس، آن خانه و چهار همسایهٔ بالا/پایین/چپ/راست تغییر می‌کنند. همه را خاموش کن!';
+})();
+</script>
+</body>
+</html>
