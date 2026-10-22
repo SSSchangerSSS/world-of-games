@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+<title>مارِ گرسنه | دنیای بازی‌ها</title>
+<meta name="description" content="مار کلاسیک در صحنه سه‌بعدی: با کلید، کشیدن انگشت یا دکمه‌ها مار را هدایت کن؛ هر غذا ۱۰ امتیاز و هر ۵ غذا سریع‌تر." />
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  @font-face{font-family:Vazirmatn;src:url(../../fonts/Vazirmatn-Regular.woff2) format('woff2');font-weight:400;font-display:swap}
+  @font-face{font-family:Vazirmatn;src:url(../../fonts/Vazirmatn-Bold.woff2) format('woff2');font-weight:700;font-display:swap}
+  body {
+    font-family: Vazirmatn, Tahoma, sans-serif;
+    background:
+      radial-gradient(900px 420px at 50% -80px, rgba(103,185,138,.30), transparent 68%),
+      radial-gradient(700px 460px at 106% 112%, rgba(44,90,63,.42), transparent 58%),
+      linear-gradient(180deg, #0a1024, #080d1b 52%, #060a15);
+    color: #f3ead8; min-height: 100dvh;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 14px; padding-top: 64px; user-select: none; touch-action: manipulation; position: relative; overflow-x: hidden;
+  }
+  a.wog-home{position:fixed;top:12px;inset-inline-start:14px;z-index:99;display:inline-flex;align-items:center;gap:6px;background:linear-gradient(140deg,rgba(217,164,65,.16),rgba(217,164,65,.06));border:1px solid rgba(217,164,65,.5);color:#e8c073;text-decoration:none;padding:7px 14px;border-radius:12px;font-size:.85rem;font-weight:700;box-shadow:0 2px 10px rgba(0,0,0,.35);transition:.18s}
+  a.wog-home:hover{background:rgba(217,164,65,.3);transform:translateY(-1px)}
+  header { text-align: center; margin-bottom: 12px; position: relative; z-index: 1; }
+  h1 { font-size: 1.25rem; font-weight: 800; display: inline-flex; align-items: center; gap: 10px;
+       background: linear-gradient(180deg, #f6d996, #8fd7a5 55%, #67b98a); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  h1:before, h1:after { content: '❋'; font-size: .85em; color: #67b98a; -webkit-text-fill-color: #67b98a; }
+  .hud { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; color: #a8b3c9; font-size: .9rem; margin-top: 6px; }
+  .hud b { color: #e8c073; }
+  .stage3d { position: relative; width: min(92vw, 520px); aspect-ratio: 1 / 1; border-radius: 16px; overflow: hidden;
+    box-shadow: 0 14px 36px rgba(0,0,0,.55), 0 0 0 2px rgba(103,185,138,.45), 0 0 0 6px rgba(10,18,14,.95), 0 0 30px rgba(103,185,138,.10);
+    z-index: 1; }
+  .stage3d canvas { display: block; width: 100%; height: 100%; touch-action: none; }
+  .stage3d.shake { animation: shk .5s ease; }
+  @keyframes shk { 0%,100%{transform:translate(0,0)} 20%{transform:translate(-6px,3px)} 40%{transform:translate(5px,-4px)} 60%{transform:translate(-4px,-2px)} 80%{transform:translate(3px,2px)} }
+  .flash { position: absolute; inset: 0; background: radial-gradient(60% 60% at 50% 50%, rgba(226,109,92,.42), transparent 75%); opacity: 0; transition: opacity .5s; pointer-events: none; }
+  .flash.on { opacity: 1; transition: none; }
+  .panel { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 12px; padding: 20px; text-align: center; background: rgba(8,14,10,.82); backdrop-filter: blur(4px); z-index: 5; }
+  .panel.hidden { display: none; }
+  .panel p { font-size: 1.12rem; font-weight: 700; line-height: 1.9; }
+  .panel .sub { font-size: .88rem; color: #a8b3c9; font-weight: 400; }
+  button { font-family: inherit; font-weight: 800; border: 0; cursor: pointer; touch-action: manipulation;
+    background: linear-gradient(180deg, #e9bd68, #c8922f); color: #251905; border-radius: 12px; padding: 10px 22px; font-size: .98rem;
+    box-shadow: 0 3px 10px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.35); }
+  button:active { transform: translateY(1px); }
+  .dpad { display: none; grid-template-columns: repeat(3, 64px); grid-auto-rows: 54px; gap: 8px; margin-top: 14px; position: relative; z-index: 1; }
+  .dpad.on { display: grid; }
+  .dpad button { font-size: 1.2rem; background: linear-gradient(180deg, #16281d, #0e1a12); color: #bfe3c0; border: 1px solid rgba(103,185,138,.5); box-shadow: 0 2px 8px rgba(0,0,0,.4); }
+  @media (pointer: coarse) { .dpad { display: grid; } }
+  #hint { color: #96a2ba; font-size: .84rem; margin-top: 12px; text-align: center; max-width: 660px; line-height: 2; position: relative; z-index: 1; }
+</style>
+<script src="../../js/vendor/three.min.js"></script>
+</head>
+<body data-cat="arcade" data-slug="snake" data-flag3d="1" style="--g1:#67b98a;--g2:#2c5a3f">
+<a class="wog-home" href="../../index.html">⌂ خانه</a>
+<header>
+  <h1>❋ مارِ گرسنه ❋</h1>
+  <div class="hud">
+    <span>امتیاز: <b id="score">۰</b></span>
+    <span>رکورد: <b id="best">۰</b></span>
+  </div>
+</header>
+<div class="stage3d" id="stage">
+  <div class="flash" id="flash"></div>
+  <div class="panel" id="panel">
+    <p id="pMsg" aria-live="polite"></p>
+    <p class="sub" id="pSub"></p>
+    <button id="pBtn" data-smoke="start">شروع بازی</button>
+  </div>
+</div>
+<div class="dpad" id="dpad" aria-hidden="true">
+  <span></span><button data-k="u">▲</button><span></span>
+  <button data-k="l">◀</button><button data-k="d">▼</button><button data-k="r">▶</button>
+</div>
+<p id="hint">راهنما: با کلیدهای جهت، WASD یا کشیدن انگشت مار را در دشتِ سه‌بعدی هدایت کن؛ هر غذا ۱۰ امتیاز و هر ۵ غذا کمی سریع‌تر. دیوار و بدنِ خودت دشمن مارند!</p>
+
+<script>
+(function () {
+'use strict';
+/*WOG_LOGIC_START*/
+var WOG_LOGIC = {
+  COLS: 17, ROWS: 17, BASE_TICK: 140, MIN_TICK: 70, TICK_STEP: 14,
+  newState: function (rng) {
+    rng = rng || Math.random;
+    var s = {
+      snake: [{ x: 8, y: 8 }, { x: 7, y: 8 }, { x: 6, y: 8 }],
+      dir: { x: 1, y: 0 }, queue: [],
+      score: 0, eaten: 0, tickMs: this.BASE_TICK, state: 'run', food: null
+    };
+    s.food = this.spawnFood(s, rng);
+    return s;
+  },
+  spawnFood: function (s, rng) {
+    rng = rng || Math.random;
+    var free = [], x, y, i, on;
+    for (x = 0; x < this.COLS; x++) {
+      for (y = 0; y < this.ROWS; y++) {
+        on = false;
+        for (i = 0; i < s.snake.length; i++) {
+          if (s.snake[i].x === x && s.snake[i].y === y) { on = true; break; }
+        }
+        if (!on) free.push({ x: x, y: y });
+      }
+    }
+    if (!free.length) return null;
+    return free[Math.floor(rng() * free.length)];
+  },
+  setDir: function (s, nx, ny) {
+    var last = s.queue.length ? s.queue[s.queue.length - 1] : s.dir;
+    if ((nx === last.x && ny === last.y) || (nx === -last.x && ny === -last.y)) return false;
+    if (s.queue.length < 3) { s.queue.push({ x: nx, y: ny }); return true; }
+    return false;
+  },
+  tickMsFor: function (eaten) {
+    return Math.max(this.MIN_TICK, this.BASE_TICK - this.TICK_STEP * Math.floor(eaten / 5));
+  },
+  step: function (s, rng) {
+    if (s.state !== 'run') return s.state;
+    if (s.queue.length) s.dir = s.queue.shift();
+    var head = { x: s.snake[0].x + s.dir.x, y: s.snake[0].y + s.dir.y };
+    if (head.x < 0 || head.x >= this.COLS || head.y < 0 || head.y >= this.ROWS) { s.state = 'over'; return 'over'; }
+    var grow = !!s.food && head.x === s.food.x && head.y === s.food.y;
+    var i, limit = grow ? s.snake.length : s.snake.length - 1;
+    for (i = 0; i < limit; i++) {
+      if (s.snake[i].x === head.x && s.snake[i].y === head.y) { s.state = 'over'; return 'over'; }
+    }
+    s.snake.unshift(head);
+    if (grow) {
+      s.score += 10; s.eaten++;
+      s.tickMs = this.tickMsFor(s.eaten);
+      s.food = this.spawnFood(s, rng);
+      if (!s.food) { s.state = 'win'; return 'win'; }
+    } else {
+      s.snake.pop();
+    }
+    return s.state;
+  }
+};
+/*WOG_LOGIC_END*/
+var L = WOG_LOGIC;
+
+// ---------- UI helpers ----------
+var FA_D = '۰۱۲۳۴۵۶۷۸۹';
+function fa(n) { return String(n).replace(/\d/g, function (d) { return FA_D[+d]; }); }
+var store = {
+  get: function (k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+  set: function (k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+};
+
+var stage = document.getElementById('stage');
+var flash = document.getElementById('flash');
+var panel = document.getElementById('panel');
+var pMsg = document.getElementById('pMsg');
+var pSub = document.getElementById('pSub');
+var pBtn = document.getElementById('pBtn');
+var scoreEl = document.getElementById('score');
+var bestEl = document.getElementById('best');
+var best = Number(store.get('wog-snake-best')) || 0;
+bestEl.textContent = fa(best);
+
+// ---------- 3D scene ----------
+var ok3d = true, renderer, scene, camera;
+var C = L.COLS, R = L.ROWS;
+function wx(x) { return x - (C - 1) / 2; }
+function wz(y) { return y - (R - 1) / 2; }
+var segMeshes = [], foodMesh, foodLight, headGroup, camLook = { x: 0, z: 0 }, camPos = { x: 0, z: 14.5 };
+try {
+  renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  stage.insertBefore(renderer.domElement, stage.firstChild);
+  scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x0a1810);
+  scene.fog = new THREE.Fog(0x0a1810, 20, 46);
+  camera = new THREE.PerspectiveCamera(50, 1, .1, 120);
+
+  var ground = new THREE.Mesh(
+    new THREE.PlaneGeometry(C + 8, R + 8),
+    new THREE.MeshStandardMaterial({ color: 0x0f2317, roughness: .95, metalness: 0 }));
+  ground.rotation.x = -Math.PI / 2; ground.position.y = -.32; scene.add(ground);
+  var grid = new THREE.GridHelper(C, C, 0x67b98a, 0x2c5a3f);
+  grid.material.transparent = true; grid.material.opacity = .22; scene.add(grid);
+
+  var wallMat = new THREE.MeshStandardMaterial({ color: 0x1c3526, roughness: .6, metalness: .25 });
+  var stripMat = new THREE.MeshStandardMaterial({ color: 0xd9a441, roughness: .35, metalness: .5, emissive: 0x8a6420, emissiveIntensity: .45 });
+  var half = C / 2;
+  [[0, -half - .5, C + 2, 1], [0, half + .5, C + 2, 1], [-half - .5, 0, 1, C + 2], [half + .5, 0, 1, C + 2]].forEach(function (w) {
+    var wall = new THREE.Mesh(new THREE.BoxGeometry(w[2], .55, w[3]), wallMat);
+    wall.position.set(w[0], .27, w[1]); scene.add(wall);
+    var strip = new THREE.Mesh(new THREE.BoxGeometry(w[2], .05, w[3]), stripMat);
+    strip.position.set(w[0], .57, w[1]); scene.add(strip);
+  });
+
+  scene.add(new THREE.HemisphereLight(0xbfe3c0, 0x0a1810, .9));
+  var dl = new THREE.DirectionalLight(0xe8c073, .75); dl.position.set(6, 12, 5); scene.add(dl);
+  var dl2 = new THREE.DirectionalLight(0x9fd8ff, .25); dl2.position.set(-6, 8, -6); scene.add(dl2);
+
+  var bodyGeo = new THREE.BoxGeometry(.82, .58, .82);
+  var headGeo = new THREE.BoxGeometry(.9, .7, .9);
+  var eyeGeo = new THREE.SphereGeometry(.085, 10, 10);
+  var eyeMat = new THREE.MeshStandardMaterial({ color: 0x0b1220, roughness: .3 });
+  for (var i = 0; i < C * R; i++) {
+    var t = i / (C * R - 1);
+    var mat = new THREE.MeshStandardMaterial({
+      color: new THREE.Color().setHSL(.44 - t * .05, .5, .5 - t * .22),
+      roughness: .38, metalness: .28, emissive: 0x0f3a2c, emissiveIntensity: .3
+    });
+    var m = new THREE.Mesh(bodyGeo, mat);
+    m.visible = false; scene.add(m); segMeshes.push(m);
+  }
+  headGroup = new THREE.Group();
+  var headMat = new THREE.MeshStandardMaterial({ color: 0xf2cf82, roughness: .3, metalness: .35, emissive: 0xe8c073, emissiveIntensity: .4 });
+  var headMesh = new THREE.Mesh(headGeo, headMat);
+  headGroup.add(headMesh);
+  var e1 = new THREE.Mesh(eyeGeo, eyeMat), e2 = new THREE.Mesh(eyeGeo, eyeMat);
+  e1.position.set(.2, .18, -.34); e2.position.set(-.2, .18, -.34);
+  headGroup.add(e1); headGroup.add(e2);
+  scene.add(headGroup);
+
+  foodMesh = new THREE.Mesh(
+    new THREE.IcosahedronGeometry(.4, 0),
+    new THREE.MeshStandardMaterial({ color: 0xe26d5c, roughness: .25, metalness: .4, emissive: 0xe26d5c, emissiveIntensity: .75 }));
+  scene.add(foodMesh);
+  foodLight = new THREE.PointLight(0xff8c66, .9, 5); scene.add(foodLight);
+
+  function resize() {
+    var w = stage.clientWidth || 480;
+    renderer.setSize(w, w, false);
+    camera.aspect = 1; camera.updateProjectionMatrix();
+  }
+  window.addEventListener('resize', resize);
+  resize();
+} catch (e) { ok3d = false; }
+
+// ---------- game state ----------
+var st = null, prev = null, state = 'menu', timer = 0, lastStepAt = 0;
+var shakeT = 0;
+
+function show(msg, sub, btn) {
+  pMsg.textContent = msg;
+  pSub.textContent = sub || '';
+  pSub.style.display = sub ? '' : 'none';
+  pBtn.textContent = btn;
+  panel.classList.remove('hidden');
+}
+
+function start() {
+  clearTimeout(timer);
+  st = L.newState();
+  prev = st.snake.map(function (c) { return { x: c.x, y: c.y }; });
+  state = 'run';
+  lastStepAt = performance.now();
+  panel.classList.add('hidden');
+  flash.classList.remove('on');
+  scoreEl.textContent = fa(st.score);
+  schedule();
+}
+
+function schedule() {
+  timer = setTimeout(function () {
+    if (state !== 'run') return;
+    prev = st.snake.map(function (c) { return { x: c.x, y: c.y }; });
+    var res = L.step(st);
+    lastStepAt = performance.now();
+    scoreEl.textContent = fa(st.score);
+    if (res === 'over') return die();
+    if (res === 'win') return win();
+    schedule();
+  }, st.tickMs);
+}
+
+function die() {
+  state = 'over';
+  clearTimeout(timer);
+  var record = st.score > best;
+  if (record) {
+    best = st.score;
+    store.set('wog-snake-best', String(best));
+    bestEl.textContent = fa(best);
+  }
+  shakeT = .55;
+  stage.classList.remove('shake'); void stage.offsetWidth; stage.classList.add('shake');
+  flash.classList.add('on');
+  setTimeout(function () { flash.classList.remove('on'); }, 60);
+  show('باختی! امتیاز: ' + fa(st.score),
+    record ? 'رکورد جدید! یک بار دیگر تلاش کن.' : 'دیوار و بدنِ خودت دشمن مارند!', 'شروع دوباره');
+}
+
+function win() {
+  state = 'over';
+  clearTimeout(timer);
+  show('بردی!', 'کل دشت مالِ مار شد؛ امتیاز: ' + fa(st.score), 'شروع دوباره');
+}
+
+// ---------- input ----------
+var KEYS = {
+  ArrowUp: [0, -1], ArrowDown: [0, 1], ArrowLeft: [-1, 0], ArrowRight: [1, 0],
+  KeyW: [0, -1], KeyS: [0, 1], KeyA: [-1, 0], KeyD: [1, 0]
+};
+document.addEventListener('keydown', function (e) {
+  if (e.code === 'Space' || e.code === 'Enter') { e.preventDefault(); if (state !== 'run') start(); return; }
+  var d = KEYS[e.code]; if (!d) return;
+  e.preventDefault();
+  if (state === 'menu') start();
+  if (state === 'run') L.setDir(st, d[0], d[1]);
+});
+
+var tX = null, tY = null;
+stage.addEventListener('touchstart', function (e) {
+  tX = e.touches[0].clientX; tY = e.touches[0].clientY;
+}, { passive: true });
+stage.addEventListener('touchend', function (e) {
+  if (tX === null) return;
+  var dx = e.changedTouches[0].clientX - tX, dy = e.changedTouches[0].clientY - tY;
+  tX = null;
+  if (Math.max(Math.abs(dx), Math.abs(dy)) < 24) return;
+  if (state === 'menu') start();
+  if (state === 'run') {
+    if (Math.abs(dx) > Math.abs(dy)) L.setDir(st, dx > 0 ? 1 : -1, 0);
+    else L.setDir(st, 0, dy > 0 ? 1 : -1);
+  }
+});
+document.querySelectorAll('#dpad [data-k]').forEach(function (b) {
+  var map = { u: [0, -1], d: [0, 1], l: [-1, 0], r: [1, 0] };
+  b.addEventListener('pointerdown', function (e) {
+    e.preventDefault();
+    if (state === 'menu') start();
+    if (state === 'run') L.setDir(st, map[b.getAttribute('data-k')][0], map[b.getAttribute('data-k')][1]);
+  });
+});
+pBtn.addEventListener('click', start);
+
+// ---------- render loop ----------
+var lastT = performance.now();
+function frame(now) {
+  requestAnimationFrame(frame);
+  var dt = Math.min(.05, (now - lastT) / 1000); lastT = now;
+  if (!ok3d || !renderer) return;
+
+  if (st) {
+    var tt = state === 'run' ? Math.min(1, (now - lastStepAt) / st.tickMs) : 1;
+    var n = st.snake.length, i, cur, pr;
+    for (i = 0; i < segMeshes.length; i++) {
+      if (i >= n) { segMeshes[i].visible = false; continue; }
+      cur = st.snake[i];
+      pr = prev[i] || prev[prev.length - 1] || cur;
+      var mx = segMeshes[i];
+      mx.visible = true;
+      mx.position.set(
+        wx(pr.x + (cur.x - pr.x) * tt), .31, wz(pr.y + (cur.y - pr.y) * tt));
+      var sc = 1 - Math.min(.35, i / n * .5) * .4;
+      mx.scale.setScalar(sc);
+    }
+    var h = st.snake[0], hp = prev[0] || h;
+    headGroup.position.set(
+      wx(hp.x + (h.x - hp.x) * tt), .36, wz(hp.y + (h.y - hp.y) * tt));
+    var targetRot = Math.atan2(st.dir.x, st.dir.y);
+    var dr = targetRot - headGroup.rotation.y;
+    while (dr > Math.PI) dr -= Math.PI * 2;
+    while (dr < -Math.PI) dr += Math.PI * 2;
+    headGroup.rotation.y += dr * .25;
+    if (st.food) {
+      var bob = .45 + Math.sin(now / 300) * .09;
+      foodMesh.visible = true;
+      foodMesh.position.set(wx(st.food.x), bob, wz(st.food.y));
+      foodMesh.rotation.y += dt * 2.2; foodMesh.rotation.x += dt * 1.1;
+      foodLight.position.copy(foodMesh.position);
+    } else foodMesh.visible = false;
+  }
+
+  var hx = st ? wx(st.snake[0].x) : 0, hz = st ? wz(st.snake[0].y) : 0;
+  camLook.x += (hx * .35 - camLook.x) * .06;
+  camLook.z += (hz * .35 - camLook.z) * .06;
+  camPos.x += (hx * .28 - camPos.x) * .04;
+  camPos.z += (14.5 + hz * .18 - camPos.z) * .04;
+  camera.position.set(camPos.x, 13.2, camPos.z);
+  if (shakeT > 0) {
+    shakeT -= dt;
+    camera.position.x += (Math.random() - .5) * shakeT * 1.6;
+    camera.position.y += (Math.random() - .5) * shakeT * 1.2;
+  }
+  camera.lookAt(camLook.x, 0, camLook.z);
+  renderer.render(scene, camera);
+}
+requestAnimationFrame(frame);
+
+if (!ok3d) {
+  show('WebGL در دسترس نیست', 'مرورگر شما از گرافیک سه‌بعدی پشتیبانی نمی‌کند.', 'تلاش دوباره');
+  pBtn.onclick = function () { location.reload(); };
+} else {
+  st = L.newState();
+  prev = st.snake.map(function (c) { return { x: c.x, y: c.y }; });
+  show('آماده‌ای؟', 'با کلیدهای جهت، WASD یا کشیدن انگشت مار را در دشت سه‌بعدی هدایت کن.', 'شروع بازی');
+}
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+<title>دوز — World of Games</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: Vazirmatn, Tahoma, sans-serif; background: linear-gradient(160deg, #101a2e, #0b1220);
+         color: #f3ead8; min-height: 100dvh; user-select: none; -webkit-user-select: none;
+         display: flex; flex-direction: column; align-items: center; padding: 18px 12px 30px; }
+  header { text-align: center; }
+  header h1 { color: #d9a441; font-size: 1.55rem; letter-spacing: .5px; }
+  .hud { color: #a8b3c9; margin-top: 8px; font-size: .98rem; display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+  .hud b { color: #e8c073; }
+  #status { min-height: 1.5em; margin-top: 12px; color: #a8b3c9; font-size: 1.02rem; text-align: center; }
+  #status b { color: #e8c073; }
+  #board { position: relative; width: min(92vw, 440px); aspect-ratio: 1; margin-top: 12px;
+           display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(3, 1fr);
+           gap: 10px; padding: 10px; background: #14203a; border: 1px solid rgba(217,164,65,.35);
+           border-radius: 16px; box-shadow: 0 12px 36px rgba(0,0,0,.45); }
+  .cell { border: none; border-radius: 12px; background: #1a2a4a; cursor: pointer; position: relative;
+          display: flex; align-items: center; justify-content: center; font-family: inherit;
+          touch-action: manipulation; transition: background .15s; }
+  .cell:hover:not(.x):not(.o) { background: #24375f; }
+  #board.done .cell:hover { background: #1a2a4a; }
+  .cell:focus-visible { outline: 2px solid #3fb8af; outline-offset: 2px; }
+  .cell.x, .cell.o { cursor: default; }
+  .cell.win { background: #2c2210; box-shadow: inset 0 0 0 2px rgba(217,164,65,.6); }
+  .mark-x { color: #d9a441; font-size: min(13vw, 64px); font-weight: 700; line-height: 1; }
+  .ring { width: 54%; aspect-ratio: 1; border-radius: 50%; border: 6px solid #3fb8af; }
+  #winline { position: absolute; height: 7px; border-radius: 4px; pointer-events: none; z-index: 3;
+             background: linear-gradient(90deg, rgba(232,192,115,.2), #d9a441, rgba(232,192,115,.2));
+             box-shadow: 0 0 16px rgba(217,164,65,.85); opacity: 0; transition: opacity .3s; }
+  #winline.show { opacity: 1; }
+  .row-btns { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; justify-content: center; }
+  .btn { background: #d9a441; color: #221806; border: none; border-radius: 10px; font-weight: 700;
+         font-family: inherit; font-size: 1rem; padding: 10px 20px; cursor: pointer; touch-action: manipulation; }
+  .btn:active { transform: translateY(1px); }
+  .btn.ghost { background: #1c2a47; color: #e8c073; border: 1px solid rgba(217,164,65,.35); }
+  #overlay { position: fixed; inset: 0; background: rgba(6,10,19,.66); display: flex; align-items: center;
+             justify-content: center; opacity: 0; pointer-events: none; transition: opacity .2s; z-index: 30; }
+  #overlay.show { opacity: 1; pointer-events: auto; }
+  .panel { background: #14203a; border: 1px solid rgba(217,164,65,.35); border-radius: 16px;
+           padding: 26px 34px; text-align: center; box-shadow: 0 14px 44px rgba(0,0,0,.55); max-width: 86vw; }
+  .panel h2 { color: #d9a441; font-size: 1.5rem; margin-bottom: 8px; }
+  .panel p { color: #a8b3c9; margin-bottom: 18px; line-height: 1.8; }
+  #hint { color: #a8b3c9; font-size: .85rem; margin-top: 18px; text-align: center; max-width: 460px; line-height: 1.9; }
+a.wog-home{position:fixed;top:10px;inset-inline-start:12px;z-index:99;background:rgba(217,164,65,.12);border:1px solid rgba(217,164,65,.45);color:#e8c073;text-decoration:none;padding:6px 12px;border-radius:10px;font-size:.85rem;font-weight:700;font-family:Vazirmatn,Tahoma,sans-serif}
+a.wog-home:hover{background:rgba(217,164,65,.3)}
+
+body{background:radial-gradient(900px 420px at 50% -80px,var(--g1a),transparent 68%),radial-gradient(720px 480px at 108% 112%,var(--g2a),transparent 60%),linear-gradient(168deg,#111c33 0%,#0b1220 58%,#0a0f1d 100%);background-attachment:fixed}
+
+/* ===== WOG Design System v2 ===== */
+body:before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.5;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72' viewBox='0 0 72 72'%3E%3Cg fill='none' stroke='%23d9a441' stroke-opacity='0.07' stroke-width='1'%3E%3Cpath d='M36 6l8 14 16-2-2 16 14 8-14 8 2 16-16-2-8 14-8-14-16 2 2-16-14-8 14-8-2-16 16 2z'/%3E%3Ccircle cx='36' cy='36' r='10'/%3E%3C/g%3E%3C/svg%3E");background-size:72px 72px}
+body:after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(120% 90% at 50% 30%,transparent 55%,rgba(4,7,14,.55) 100%)}
+a.wog-home,header,#app,.stage,.panel,.bar,.toast{position:relative;z-index:1}
+a.wog-home{position:fixed;top:12px;inset-inline-start:14px;z-index:99;display:inline-flex;align-items:center;gap:6px;background:linear-gradient(140deg,rgba(217,164,65,.16),rgba(217,164,65,.06));border:1px solid rgba(217,164,65,.5);color:#e8c073;text-decoration:none;padding:7px 14px;border-radius:12px;font-size:.85rem;font-weight:700;box-shadow:0 2px 10px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.06);transition:.18s}
+a.wog-home:hover{background:rgba(217,164,65,.3);transform:translateY(-1px)}
+h1{font-size:1.3rem;font-weight:800;display:inline-flex;align-items:center;gap:10px;background:linear-gradient(180deg,#f6d996,var(--g1b) 55%,var(--g1));-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 2px 8px rgba(217,164,65,.22))}
+h1:before,h1:after{content:'❋';font-size:.85em;color:var(--g2);-webkit-text-fill-color:var(--g2)}
+button{font-weight:800;border-radius:12px;transition:transform .12s,box-shadow .15s,filter .15s}
+button:active{transform:translateY(1px)}
+.panel{border:1px solid rgba(217,164,65,.4);border-radius:18px;background:linear-gradient(180deg,#182646,#101a30);box-shadow:0 20px 60px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.07)}
+.hud{color:#a8b3c9}
+.hud b{color:#e8c073}
+
+.cell{background:linear-gradient(150deg,#1c2a4c,#142038);border-radius:14px;border:1px solid rgba(217,164,65,.35);box-shadow:0 4px 10px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.06);transition:.14s}
+.cell:hover{transform:translateY(-2px);box-shadow:0 8px 18px rgba(0,0,0,.5),0 0 14px rgba(217,164,65,.2)}
+.cell.x{color:#e8c073;text-shadow:0 0 16px rgba(232,192,115,.55)}
+.cell.o{color:#3fb8af;text-shadow:0 0 16px rgba(63,184,175,.55)}
+.cell.win{background:linear-gradient(150deg,#2c4a3a,#1c3628);box-shadow:0 0 20px rgba(103,185,138,.5)}
+.ring{filter:drop-shadow(0 4px 8px rgba(0,0,0,.5))}
+#wog3d{position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.9}
+</style>
+<script src="../../js/vendor/three.min.js"></script>
+</head>
+<body data-cat="board" data-slug="tic-tac-toe" style="--g1:#e8c073;--g2:#6b5426;--g1a:rgba(232,192,115,0.30);--g2a:rgba(107,84,38,0.42);--g1b:#6b5426">
+<a class="wog-home" href="../../index.html">⌂ خانه</a>
+<header>
+  <h1>❋ دوز ❋</h1>
+  <div class="hud">برد <b id="w">۰</b> · باخت <b id="l">۰</b> · مساوی <b id="d">۰</b></div>
+</header>
+<div id="status"></div>
+<div id="board"><div id="winline"></div></div>
+<div class="row-btns">
+  <button class="btn" id="next">دور بعد</button>
+  <button class="btn ghost" id="reset">صفر کردن شمارش</button>
+</div>
+<div id="hint">سه علامت هم‌راستا (افقی، عمودی یا قطری) بچین. کامپیوتر با الگوریتم مینی‌مکس بازی می‌کند و شکست‌ناپذیر است؛ بهترین نتیجه‌ات می‌تواند مساوی باشد. شروع‌کننده هر دور یک‌درمیان عوض می‌شود.</div>
+<div id="overlay">
+  <div class="panel">
+    <h2 id="ptitle"></h2>
+    <p id="ptext"></p>
+    <button class="btn" id="pnext">دور بعد</button>
+  </div>
+</div>
+<script>
+(function () {
+  'use strict';
+  var store = {
+    get: function (k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+    set: function (k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+  };
+  var FD = '۰۱۲۳۴۵۶۷۸۹';
+  function fa(n) { return String(n).replace(/[0-9]/g, function (c) { return FD[+c]; }); }
+
+  var LINES = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+  var boardEl = document.getElementById('board');
+  var statusEl = document.getElementById('status');
+  var winlineEl = document.getElementById('winline');
+  var overlay = document.getElementById('overlay');
+  var pTitle = document.getElementById('ptitle');
+  var pText = document.getElementById('ptext');
+  var wEl = document.getElementById('w'), lEl = document.getElementById('l'), dEl = document.getElementById('d');
+
+  var b = new Array(9), cells = [];
+  var turn = 'X', starter = 'X', startedOnce = false, over = false, busy = false;
+
+  var tally = { w: 0, l: 0, d: 0 };
+  try {
+    var saved = JSON.parse(store.get('wog-ttt-tally') || 'null');
+    if (saved && typeof saved.w === 'number') tally = saved;
+  } catch (e) {}
+  function showTally() { wEl.textContent = fa(tally.w); lEl.textContent = fa(tally.l); dEl.textContent = fa(tally.d); }
+  function saveTally() { store.set('wog-ttt-tally', JSON.stringify(tally)); showTally(); }
+  showTally();
+
+  for (var i = 0; i < 9; i++) {
+    (function (idx) {
+      var c = document.createElement('button');
+      c.className = 'cell';
+      c.setAttribute('aria-label', 'خانه ' + fa(idx + 1));
+      c.addEventListener('click', function () { play(idx); });
+      boardEl.appendChild(c);
+      cells.push(c);
+    })(i);
+  }
+
+  function findWin(brd) {
+    for (var i = 0; i < LINES.length; i++) {
+      var L = LINES[i];
+      if (brd[L[0]] && brd[L[0]] === brd[L[1]] && brd[L[0]] === brd[L[2]]) return { p: brd[L[0]], line: L };
+    }
+    return null;
+  }
+  function empties(brd) { var r = []; for (var i = 0; i < 9; i++) if (!brd[i]) r.push(i); return r; }
+
+  /* مینی‌مکس کامل — امتیاز از دید کامپیوتر (O) */
+  function mini(brd, cur, depth) {
+    var w = findWin(brd);
+    if (w) return w.p === 'O' ? 10 - depth : depth - 10;
+    if (empties(brd).length === 0) return 0;
+    var list = empties(brd), i, s;
+    var best = (cur === 'O') ? -Infinity : Infinity;
+    for (i = 0; i < list.length; i++) {
+      brd[list[i]] = cur;
+      s = mini(brd, cur === 'O' ? 'X' : 'O', depth + 1);
+      brd[list[i]] = null;
+      if (cur === 'O' ? s > best : s < best) best = s;
+    }
+    return best;
+  }
+  function aiPick() {
+    var list = empties(b), best = -Infinity, picks = [], i;
+    for (i = 0; i < list.length; i++) {
+      b[list[i]] = 'O';
+      var s = mini(b, 'X', 1);
+      b[list[i]] = null;
+      if (s > best) { best = s; picks = [list[i]]; }
+      else if (s === best) picks.push(list[i]);
+    }
+    /* اولین حرکت کامپیوتر: انتخاب تصادفی میان خانه‌های با امتیاز برتر */
+    var firstAiMove = true;
+    for (i = 0; i < 9; i++) if (b[i] === 'O') { firstAiMove = false; break; }
+    if (firstAiMove && picks.length > 1) return picks[Math.floor(Math.random() * picks.length)];
+    return picks[0];
+  }
+
+  function put(idx, p) {
+    b[idx] = p;
+    var c = cells[idx];
+    if (p === 'X') {
+      c.classList.add('x');
+      var s = document.createElement('span');
+      s.className = 'mark-x';
+      s.textContent = '✕';
+      c.appendChild(s);
+    } else {
+      c.classList.add('o');
+      var r = document.createElement('span');
+      r.className = 'ring';
+      c.appendChild(r);
+    }
+  }
+  function setStatus(html) { statusEl.innerHTML = html; }
+
+  function play(idx) {
+    if (over || busy || turn !== 'X' || b[idx]) return;
+    put(idx, 'X');
+    if (endCheck()) return;
+    turn = 'O';
+    setStatus('کامپیوتر در حال فکر…');
+    busy = true;
+    setTimeout(function () {
+      busy = false;
+      if (over) return;
+      put(aiPick(), 'O');
+      if (endCheck()) return;
+      turn = 'X';
+      setStatus('نوبت شما: <b>✕</b>');
+    }, 420 + Math.random() * 280);
+  }
+
+  function endCheck() {
+    var w = findWin(b);
+    if (w) {
+      over = true;
+      boardEl.classList.add('done');
+      w.line.forEach(function (i2) { cells[i2].classList.add('win'); });
+      drawWinLine(w.line);
+      if (w.p === 'X') { tally.w++; finish('بردی!', 'سه ✕ هم‌راستا چیدی و دست را بردی.'); }
+      else { tally.l++; finish('باختی!', 'کامپیوتر خطش را کامل کرد. دور بعد دوباره تلاش کن.'); }
+      saveTally();
+      return true;
+    }
+    if (empties(b).length === 0) {
+      over = true;
+      boardEl.classList.add('done');
+      tally.d++;
+      saveTally();
+      finish('مساوی', 'هیچ‌کس نتوانست ببرد؛ بازی متقارن ماند.');
+      return true;
+    }
+    return false;
+  }
+  function finish(title, text) {
+    setStatus('<b>' + title + '</b>');
+    pTitle.textContent = title;
+    pText.textContent = text;
+    setTimeout(function () { overlay.classList.add('show'); }, 700);
+  }
+
+  function center(i) {
+    var el = cells[i];
+    return { x: el.offsetLeft + el.offsetWidth / 2, y: el.offsetTop + el.offsetHeight / 2 };
+  }
+  function drawWinLine(L) {
+    var a = center(L[0]), c = center(L[2]);
+    var dx = c.x - a.x, dy = c.y - a.y;
+    var len = Math.sqrt(dx * dx + dy * dy) * 1.15;
+    var ang = Math.atan2(dy, dx) * 180 / Math.PI;
+    winlineEl.style.left = ((a.x + c.x) / 2) + 'px';
+    winlineEl.style.top = ((a.y + c.y) / 2) + 'px';
+    winlineEl.style.width = len + 'px';
+    winlineEl.style.transform = 'translate(-50%,-50%) rotate(' + ang + 'deg)';
+    winlineEl.classList.add('show');
+  }
+
+  function nextRound() {
+    overlay.classList.remove('show');
+    b = new Array(9);
+    over = false; busy = false;
+    boardEl.classList.remove('done');
+    cells.forEach(function (c) { c.className = 'cell'; c.innerHTML = ''; });
+    winlineEl.classList.remove('show');
+    if (startedOnce) starter = (starter === 'X') ? 'O' : 'X';
+    startedOnce = true;
+    turn = starter;
+    if (turn === 'O') {
+      setStatus('کامپیوتر شروع می‌کند…');
+      busy = true;
+      setTimeout(function () {
+        busy = false;
+        put(aiPick(), 'O');
+        turn = 'X';
+        setStatus('نوبت شما: <b>✕</b>');
+      }, 550);
+    } else {
+      setStatus('نوبت شما: <b>✕</b>');
+    }
+  }
+
+  document.getElementById('next').addEventListener('click', function () { if (!busy) nextRound(); });
+  document.getElementById('pnext').addEventListener('click', nextRound);
+  document.getElementById('reset').addEventListener('click', function () {
+    tally = { w: 0, l: 0, d: 0 };
+    saveTally();
+  });
+
+  nextRound();
+})();
+</script>
+<script>(function(){try{
+if(typeof THREE==='undefined')return;
+var b=document.body;if(!b||b.getAttribute('data-flag3d')==='1')return;
+var cat=b.getAttribute('data-cat')||'board';
+var cs=getComputedStyle(b);
+var G1=new THREE.Color((cs.getPropertyValue('--g1')||'#d9a441').trim());
+var G2=new THREE.Color((cs.getPropertyValue('--g2')||'#3fb8af').trim());
+var c=document.createElement('canvas');c.id='wog3d';c.setAttribute('aria-hidden','true');
+b.appendChild(c);
+var r=new THREE.WebGLRenderer({canvas:c,antialias:true,alpha:true,powerPreference:'low-power'});
+r.setClearColor(0x000000,0);r.setPixelRatio(Math.min(window.devicePixelRatio||1,1.5));
+var s=new THREE.Scene();s.fog=new THREE.FogExp2(0x0b1220,.05);
+var cam=new THREE.PerspectiveCamera(55,1,.1,160);cam.position.set(0,2.8,10);
+function rs(){var w=innerWidth,h=innerHeight;r.setSize(w,h,false);cam.aspect=w/h;cam.updateProjectionMatrix()}
+addEventListener('resize',rs,{passive:true});rs();
+s.add(new THREE.HemisphereLight(0x93b8e0,0x141d33,.95));
+var dl=new THREE.DirectionalLight(0xe8c073,.8);dl.position.set(5,8,6);s.add(dl);
+function std(cc,e){var m=new THREE.MeshStandardMaterial({color:cc,roughness:.38,metalness:.3});if(e){m.emissive=new THREE.Color(e);m.emissiveIntensity=.45}return m}
+var items=[],rnd=Math.random;
+function put(g,x,y,z){g.position.set(x,y,z);g.userData={rx:(rnd()-.5)*.02,ry:(rnd()-.5)*.03,ph:rnd()*6.28,sp:.4+rnd()*.7};s.add(g);items.push(g);return g}
+var i,m;
+if(cat==='board'){
+ var fl=new THREE.Mesh(new THREE.PlaneGeometry(28,28),new THREE.MeshStandardMaterial({color:0x101a30,roughness:.9,metalness:.1}));fl.rotation.x=-Math.PI/2;fl.position.y=-2.6;s.add(fl);
+ var gr=new THREE.GridHelper(28,14,0x3fb8af,0x24406b);gr.material.transparent=true;gr.material.opacity=.32;gr.position.y=-2.58;s.add(gr);
+ var cg=new THREE.CylinderGeometry(1,1.06,.4,28);
+ for(i=0;i<14;i++){m=new THREE.Mesh(cg,std(i%2?0x1c2a4a:0xe8c073));m.scale.setScalar(.5+rnd()*.5);put(m,(rnd()-.5)*16,rnd()*6-1,(rnd()-.5)*10-3)}
+}else if(cat==='cards'){
+ var fg=new THREE.BoxGeometry(2.1,.05,3);
+ for(i=0;i<16;i++){m=new THREE.Mesh(fg,std(0x1d2a4a,0xd9a441));m.rotation.set((rnd()-.5)*.9,(rnd()-.5)*1.2,(rnd()-.5)*.5);put(m,(rnd()-.5)*15,rnd()*7-1.5,(rnd()-.5)*9-3)}
+ var felt=new THREE.Mesh(new THREE.PlaneGeometry(32,32),new THREE.MeshStandardMaterial({color:0x0f2230,roughness:.95}));felt.rotation.x=-Math.PI/2;felt.position.y=-3.2;s.add(felt)
+}else if(cat==='puzzle'){
+ var ico=new THREE.Mesh(new THREE.IcosahedronGeometry(3.1,0),new THREE.MeshBasicMaterial({color:0xd9a441,wireframe:true,transparent:true,opacity:.28}));put(ico,0,1.8,-4);
+ var tg=new THREE.BoxGeometry(1.5,.24,1.5);
+ for(i=0;i<12;i++){m=new THREE.Mesh(tg,std(i%2?0x20304f:0xe8c073,0x3fb8af));m.rotation.y=rnd()*3.14;put(m,(rnd()-.5)*14,rnd()*6-1,(rnd()-.5)*9-3)}
+}else if(cat==='arcade'){
+ var n=420,pos=new Float32Array(n*3);
+ for(i=0;i<n;i++){pos[i*3]=(rnd()-.5)*46;pos[i*3+1]=(rnd()-.5)*28;pos[i*3+2]=(rnd()-.5)*30-4}
+ var pg=new THREE.BufferGeometry();pg.setAttribute('position',new THREE.BufferAttribute(pos,3));
+ s.add(new THREE.Points(pg,new THREE.PointsMaterial({color:0xcfe0ff,size:.09,transparent:true,opacity:.85})));
+ var rg=new THREE.DodecahedronGeometry(.9,0);
+ for(i=0;i<10;i++){m=new THREE.Mesh(rg,std(0x2a3a5e,0x3fb8af));m.scale.setScalar(.5+rnd());put(m,(rnd()-.5)*18,rnd()*8-2,(rnd()-.5)*10-5)}
+}else if(cat==='word'){
+ var LT=['ا','ب','پ','ت','س','ش','د','ن','م','ی','و','ک'];
+ function ltex(ch){var cv=document.createElement('canvas');cv.width=cv.height=128;var x=cv.getContext('2d');x.fillStyle='#16233f';x.fillRect(0,0,128,128);x.strokeStyle='rgba(217,164,65,.8)';x.lineWidth=6;x.strokeRect(4,4,120,120);x.fillStyle='#e8c073';x.font='bold 78px Tahoma';x.textAlign='center';x.textBaseline='middle';x.fillText(ch,64,70);return new THREE.CanvasTexture(cv)}
+ var wm=LT.map(function(ch){return new THREE.MeshStandardMaterial({map:ltex(ch),roughness:.5})});
+ var wg=new THREE.BoxGeometry(1.35,1.35,.22);
+ for(i=0;i<14;i++){m=new THREE.Mesh(wg,wm[i%wm.length]);put(m,(rnd()-.5)*15,rnd()*7-1.5,(rnd()-.5)*9-3)}
+}else{
+ function pipTex(){var cv=document.createElement('canvas');cv.width=cv.height=128;var x=cv.getContext('2d');x.fillStyle='#f3ead8';x.fillRect(0,0,128,128);x.fillStyle='#1c2438';var P=[[40,40],[88,40],[40,88],[88,88],[64,64]];for(var j=0;j<P.length;j++){x.beginPath();x.arc(P[j][0],P[j][1],9,0,6.29);x.fill()}return new THREE.CanvasTexture(cv)}
+ var dm=new THREE.MeshStandardMaterial({map:pipTex(),roughness:.35});
+ var dg=new THREE.BoxGeometry(1.5,1.5,1.5);
+ for(i=0;i<9;i++){m=new THREE.Mesh(dg,dm);put(m,(rnd()-.5)*13,rnd()*6-1,(rnd()-.5)*8-3)}
+ var ring=new THREE.Mesh(new THREE.TorusGeometry(4.6,.06,10,60),std(0xd9a441,0xd9a441));ring.rotation.x=Math.PI/2.2;put(ring,0,1.2,-5)
+}
+var mx=0,my=0;
+addEventListener('pointermove',function(e){mx=e.clientX/innerWidth-.5;my=e.clientY/innerHeight-.5},{passive:true});
+var app=document.getElementById('app');
+var rm=false;try{rm=matchMedia('(prefers-reduced-motion: reduce)').matches}catch(_){ }
+var hid=false;document.addEventListener('visibilitychange',function(){hid=document.hidden});
+function draw1(){cam.lookAt(0,1.2,0);r.render(s,cam)}
+if(rm){draw1();return}
+document.addEventListener('visibilitychange',function(){if(!document.hidden){rs()}});
+var t=0,lx=99,ly=99;
+function frame(){
+ requestAnimationFrame(frame);
+ if(hid)return;
+ t+=.016;
+ cam.position.x+=((mx*2.2)-cam.position.x)*.04;
+ cam.position.y+=((2.8-my*1.4)-cam.position.y)*.04;
+ for(var i2=0;i2<items.length;i2++){var mm=items[i2],u=mm.userData;
+  mm.rotation.x+=u.rx;mm.rotation.y+=u.ry;
+  mm.position.y+=Math.sin(t*u.sp+u.ph)*.0016}
+ if(cat!=='arcade'&&app){
+  var ax=(mx*3.2).toFixed(2),ay=(1.6-my*3).toFixed(2);
+  if(ax!==lx||ay!==ly){lx=ax;ly=ay;app.style.transform='perspective(1100px) rotateX('+ay+'deg) rotateY('+ax+'deg)'}
+ }
+ r.render(s,cam);
+}
+frame();
+}catch(e){}})();</script>
+</body>
+</html>

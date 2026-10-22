@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+<title>پرش از البرز</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  @font-face{font-family:Vazirmatn;src:url(../../fonts/Vazirmatn-Regular.woff2) format('woff2');font-weight:400;font-display:swap}
+  @font-face{font-family:Vazirmatn;src:url(../../fonts/Vazirmatn-Bold.woff2) format('woff2');font-weight:700;font-display:swap}
+  body {
+    font-family: Vazirmatn, Tahoma, sans-serif;
+    background:
+      radial-gradient(900px 420px at 50% -80px, rgba(122,179,232,.30), transparent 68%),
+      radial-gradient(720px 480px at 106% 112%, rgba(44,74,110,.42), transparent 58%),
+      linear-gradient(168deg, #111c33 0%, #0b1220 58%, #0a0f1d 100%);
+    background-attachment: fixed;
+    color: #f3ead8; min-height: 100dvh;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 14px; padding-top: 64px; user-select: none; touch-action: manipulation; position: relative; overflow-x: hidden;
+  }
+  a.wog-home{position:fixed;top:12px;inset-inline-start:14px;z-index:99;display:inline-flex;align-items:center;gap:6px;background:linear-gradient(140deg,rgba(217,164,65,.16),rgba(217,164,65,.06));border:1px solid rgba(217,164,65,.5);color:#e8c073;text-decoration:none;padding:7px 14px;border-radius:12px;font-size:.85rem;font-weight:700;box-shadow:0 2px 10px rgba(0,0,0,.35);transition:.18s}
+  a.wog-home:hover{background:rgba(217,164,65,.3);transform:translateY(-1px)}
+  header { text-align: center; margin-bottom: 12px; position: relative; z-index: 1; }
+  h1 { font-size: 1.25rem; font-weight: 800; display: inline-flex; align-items: center; gap: 10px;
+       background: linear-gradient(180deg, #f6d996, #a9cbe8 55%, #7ab3e8); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  h1:before, h1:after { content: '❋'; font-size: .85em; color: #2c4a6e; -webkit-text-fill-color: #7ab3e8; }
+  .hud { color: #a8b3c9; font-size: .9rem; margin-top: 6px; }
+  .hud b { color: #e8c073; }
+  .stage3d { position: relative; width: min(92vw, 460px); aspect-ratio: 3 / 4; border-radius: 16px; overflow: hidden;
+    box-shadow: 0 14px 36px rgba(0,0,0,.55), 0 0 0 2px rgba(122,179,232,.45), 0 0 0 6px rgba(8,12,20,.95), 0 0 30px rgba(122,179,232,.10);
+    z-index: 1; }
+  .stage3d canvas { display: block; width: 100%; height: 100%; touch-action: none; }
+  .panel { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 12px; padding: 20px; text-align: center; background: rgba(8,14,22,.82); backdrop-filter: blur(4px); z-index: 5; }
+  .panel.hidden { display: none; }
+  .panel p { font-size: 1.12rem; font-weight: 700; line-height: 1.9; }
+  .panel .sub { font-size: .88rem; color: #a8b3c9; font-weight: 400; }
+  button { font-family: inherit; font-weight: 800; border: 0; cursor: pointer; touch-action: manipulation;
+    background: linear-gradient(180deg, #e9bd68, #c8922f); color: #251905; border-radius: 12px; padding: 10px 22px; font-size: .98rem;
+    box-shadow: 0 3px 10px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.35); }
+  button:active { transform: translateY(1px); }
+  #hint { color: #96a2ba; font-size: .84rem; margin-top: 12px; text-align: center; max-width: 660px; line-height: 2; position: relative; z-index: 1; }
+</style>
+<script src="../../js/vendor/three.min.js"></script>
+</head>
+<body data-cat="arcade" data-slug="alborz-jump" data-flag3d="1" style="--g1:#7ab3e8;--g2:#2c4a6e">
+<a class="wog-home" href="../../index.html">⌂ خانه</a>
+<header>
+  <h1>❋ پرش از البرز ❋</h1>
+  <div class="hud">امتیاز: <b id="score">۰</b> · رکورد: <b id="best">۰</b> · بلندی: <b id="alt">۰</b></div>
+</header>
+<div class="stage3d" id="stage">
+  <div class="panel" id="panel">
+    <p id="pMsg" aria-live="polite"></p>
+    <p class="sub" id="pSub"></p>
+    <button id="pBtn" data-smoke="start">شروع بازی</button>
+  </div>
+</div>
+<p id="hint">راهنما: لمس/کلیک = پرش · کشیدن انگشت = حرکت افقی · کلیدها: پرش با Space یا ↑، حرکت با →/← یا A/D. از سنگ‌چین‌های طلایی بال برو، گوهرها را بگیر و به تیغه‌های سرخ نزدیک نشو؛ اگر از پایینِ دوربین بیفتی بازی تمام است.</p>
+
+<script>
+(function () {
+'use strict';
+/*WOG_LOGIC_START*/
+var WOG_LOGIC = {
+  W: 420, H: 560,
+  GRAV: .55, JUMP: 9.5, MOVE: 4.5, DRAG_MAX: 8,
+  HERO_W: 32, HERO_H: 32,
+  SCORE_TICK: 6, CAM_OFF: 300, CAM_LAG: .08, KILL_BELOW: 40,
+  GAP_MIN: 46, GAP_MAX0: 62, GAP_MAX_ADD: 14,
+  BEST_KEY: 'wog-alborz-best',
+  speedFor: function (score) { return 2.4 + score / 400; },
+  gapMax: function (s) { return this.GAP_MAX0 + Math.min(this.GAP_MAX_ADD, s.score / 40); },
+  newState: function (rng) {
+    rng = rng || Math.random;
+    var s = {
+      t: 0, score: 0, gemsGot: 0, alive: true, started: false, state: 'idle',
+      hero: { x: this.W / 2 - this.HERO_W / 2, y: 0, vy: 0, onGround: true },
+      dirX: 0, dragX: null, gp: null,
+      cam: -88, platforms: [], gems: [], hazards: [], events: [], topY: 0, n: 0
+    };
+    s.platforms.push({ x: this.W / 2 - 35, y: 0, w: 70, h: 18, mv: 0, x0: this.W / 2 - 35, dir: 1 });
+    s.n = 1; s.topY = 0;
+    this.ensure(s, rng);
+    return s;
+  },
+  ensure: function (s, rng) {
+    while (s.topY < s.cam + this.H + 140) {
+      var gm = this.gapMax(s);
+      var gap = this.GAP_MIN + rng() * (gm - this.GAP_MIN);
+      var w = 50 + rng() * 38 - Math.min(22, s.score / 40);
+      if (w < 40) w = 40;
+      var x = 8 + rng() * (this.W - 16 - w);
+      var mv = (s.n > 4 && s.score > 60 && rng() < Math.min(.3, s.score / 500))
+        ? (.6 + this.speedFor(s.score) * .35) : 0;
+      var p = { x: x, y: s.topY + gap, w: w, h: 18, mv: mv, x0: x, dir: rng() < .5 ? -1 : 1 };
+      s.platforms.push(p);
+      s.topY = p.y;
+      s.n++;
+      if (rng() < .5) s.gems.push({ x: p.x + p.w / 2, y: p.y + 34 + rng() * 24, taken: false });
+      if (s.n > 7 && s.score > 40 && rng() < Math.min(.26, .05 + s.score / 400))
+        s.hazards.push({ x: 24 + rng() * (this.W - 48), y: p.y + 54 + rng() * 26, r: 9 });
+    }
+  },
+  jump: function (s) {
+    if (!s.alive) return 'dead';
+    if (s.hero.onGround) {
+      s.hero.vy = this.JUMP;
+      s.hero.onGround = false;
+      s.gp = null;
+      if (!s.started) { s.started = true; s.state = 'run'; }
+      return 'jump';
+    }
+    return 'air';
+  },
+  die: function (s) {
+    s.alive = false;
+    s.state = 'dead';
+    s.events.push({ k: 'die' });
+    return 'dead';
+  },
+  step: function (s, rng) {
+    s.events = [];
+    if (!s.alive) { s.state = 'dead'; return 'dead'; }
+    if (!s.started) { s.state = 'idle'; return 'idle'; }
+    s.t++;
+    var self = this, W = this.W, h = s.hero, i, p, g, z;
+    // carry by moving platform
+    if (h.onGround && s.gp && s.gp.mv) {
+      h.x += s.gp.dir * s.gp.mv;
+      if (h.x < 0) h.x = 0;
+      if (h.x > W - this.HERO_W) h.x = W - this.HERO_W;
+    }
+    // horizontal input
+    if (s.dragX !== null) {
+      var tx = s.dragX - this.HERO_W / 2, d = tx - h.x;
+      var mx = Math.min(Math.abs(d), this.DRAG_MAX);
+      h.x += d > 0 ? mx : -mx;
+    } else if (s.dirX) {
+      h.x += s.dirX * this.MOVE;
+    }
+    if (h.x < 0) h.x = 0;
+    if (h.x > W - this.HERO_W) h.x = W - this.HERO_W;
+    // vertical physics + platform-top collision (one-way, like 2D)
+    h.vy -= this.GRAV;
+    var prevFeet = h.y;
+    h.y += h.vy;
+    h.onGround = false;
+    var landed = null;
+    for (i = 0; i < s.platforms.length; i++) {
+      p = s.platforms[i];
+      if (p.mv) {
+        p.x += p.dir * p.mv;
+        if (p.x < 6) { p.x = 6; p.dir = 1; }
+        else if (p.x > W - 6 - p.w) { p.x = W - 6 - p.w; p.dir = -1; }
+      }
+      if (h.vy <= 0 && prevFeet >= p.y - 2 && h.y <= p.y + 14 &&
+          h.x + this.HERO_W > p.x && h.x < p.x + p.w) {
+        h.y = p.y; h.vy = 0; h.onGround = true; landed = p;
+        s.events.push({ k: 'land', x: p.x + p.w / 2, y: p.y });
+        break;
+      }
+    }
+    s.gp = landed;
+    // camera follows up with lag (up-only ratchet)
+    var target = h.y - this.CAM_OFF;
+    var c = s.cam + (target - s.cam) * this.CAM_LAG;
+    if (c > s.cam) s.cam = c;
+    // gems
+    for (i = 0; i < s.gems.length; i++) {
+      g = s.gems[i];
+      if (!g.taken && Math.abs(g.x - (h.x + this.HERO_W / 2)) < 22 && Math.abs(g.y - (h.y + this.HERO_H / 2)) < 26) {
+        g.taken = true;
+        s.score += 5; s.gemsGot++;
+        s.events.push({ k: 'gem', x: g.x, y: g.y });
+      }
+    }
+    // hazards
+    for (i = 0; i < s.hazards.length; i++) {
+      z = s.hazards[i];
+      var dx = (h.x + this.HERO_W / 2) - z.x, dy = (h.y + this.HERO_H / 2) - z.y;
+      if (dx * dx + dy * dy < (z.r + 13) * (z.r + 13)) return this.die(s);
+    }
+    // death below camera
+    if (h.y < s.cam - this.KILL_BELOW) return this.die(s);
+    // cull below camera
+    s.platforms = s.platforms.filter(function (q) { return q.y > s.cam - 60; });
+    s.gems = s.gems.filter(function (q) { return !q.taken && q.y > s.cam - 60; });
+    s.hazards = s.hazards.filter(function (q) { return q.y > s.cam - 60; });
+    if (s.gp && s.platforms.indexOf(s.gp) === -1) s.gp = null;
+    this.ensure(s, rng);
+    // score (like 2D: every SCORE_TICK frames)
+    if (s.t % this.SCORE_TICK === 0) s.score++;
+    s.state = 'run';
+    return 'run';
+  }
+};
+/*WOG_LOGIC_END*/
+var L = WOG_LOGIC;
+
+// ---------- helpers ----------
+var FA_D = '۰۱۲۳۴۵۶۷۸۹';
+function fa(n) { return String(n).replace(/\d/g, function (d) { return FA_D[+d]; }); }
+var store = {
+  get: function (k) { try { return window.localStorage.getItem(k); } catch (e) { return null; } },
+  set: function (k, v) { try { window.localStorage.setItem(k, v); } catch (e) {} }
+};
+
+var stage = document.getElementById('stage');
+var panel = document.getElementById('panel');
+var pMsg = document.getElementById('pMsg');
+var pSub = document.getElementById('pSub');
+var pBtn = document.getElementById('pBtn');
+var scoreEl = document.getElementById('score');
+var bestEl = document.getElementById('best');
+var altEl = document.getElementById('alt');
+
+var best = Number(store.get(L.BEST_KEY)) || 0;
+bestEl.textContent = fa(best);
+
+function show(msg, sub, btn) {
+  pMsg.textContent = msg;
+  pSub.textContent = sub || '';
+  pSub.style.display = sub ? '' : 'none';
+  pBtn.textContent = btn;
+  panel.classList.remove('hidden');
+}
+
+// ---------- 3D scene ----------
+var ok3d = true, renderer, scene, camera;
+var U = 1 / 32; // px -> world units
+var walls = [], rims = [], slabPool = [], gemPool = [], hzPool = [], slabMatA = null, slabMatB = null;
+var heroG, heroBody, hatG, mountains, clouds = [], keyLight, gemLight;
+var camY = 0, heroLean = 0, squash = 0, camX = 0;
+var SKY0, SKY1;
+try {
+  renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  stage.insertBefore(renderer.domElement, stage.firstChild);
+  scene = new THREE.Scene();
+  SKY0 = new THREE.Color(0x7fd0da); SKY1 = new THREE.Color(0x256d84);
+  scene.background = SKY0.clone();
+  scene.fog = new THREE.Fog(SKY0.clone(), 14, 46);
+  camera = new THREE.PerspectiveCamera(55, 1, .1, 120);
+
+  // shaft walls (stone + gold rim), repositioned with camera
+  var stoneMat = new THREE.MeshStandardMaterial({ color: 0x5d6f85, roughness: .9, metalness: .05 });
+  var stoneMat2 = new THREE.MeshStandardMaterial({ color: 0x4c5d73, roughness: .95, metalness: .05 });
+  var rimMat = new THREE.MeshStandardMaterial({ color: 0xd9a441, roughness: .35, metalness: .5, emissive: 0x8a6420, emissiveIntensity: .45 });
+  for (var wi = 0; wi < 2; wi++) {
+    var wall = new THREE.Mesh(new THREE.BoxGeometry(1.6, 90, 14), wi ? stoneMat : stoneMat2);
+    wall.position.set((wi ? 1 : -1) * 7.9, 0, -3);
+    scene.add(wall); walls.push(wall);
+    var rim = new THREE.Mesh(new THREE.BoxGeometry(.14, 90, 14.2), rimMat);
+    rim.position.set((wi ? 1 : -1) * 7.0, 0, -3);
+    scene.add(rim); rims.push(rim);
+  }
+  var floor = new THREE.Mesh(new THREE.BoxGeometry(16, .8, 14), stoneMat);
+  floor.position.set(0, -.9, -3); scene.add(floor);
+
+  // low-poly mountains (distant, slow parallax)
+  mountains = new THREE.Group();
+  var mMatA = new THREE.MeshStandardMaterial({ color: 0x2c5a78, roughness: 1, flatShading: true });
+  var mMatB = new THREE.MeshStandardMaterial({ color: 0x1e4662, roughness: 1, flatShading: true });
+  var mDefs = [[-13, 11, 7, mMatA], [-6, 15, 9, mMatB], [2, 9, 6, mMatA], [9, 13, 8, mMatB], [15, 17, 10, mMatA], [-17, 13, 8, mMatB]];
+  for (var mi = 0; mi < mDefs.length; mi++) {
+    var md = mDefs[mi];
+    var mtn = new THREE.Mesh(new THREE.ConeGeometry(md[2], md[1], 5), md[3]);
+    mtn.position.set(md[0], md[1] / 2 - 4, -20 - (mi % 3) * 4);
+    mtn.rotation.y = mi * 1.3;
+    mountains.add(mtn);
+  }
+  scene.add(mountains);
+
+  // clouds
+  var clMat = new THREE.MeshStandardMaterial({ color: 0xf4fafc, roughness: 1, transparent: true, opacity: .85, flatShading: true });
+  for (var ci = 0; ci < 6; ci++) {
+    var cl = new THREE.Group();
+    for (var cj = 0; cj < 3; cj++) {
+      var puff = new THREE.Mesh(new THREE.SphereGeometry(.9 - cj * .18, 7, 6), clMat);
+      puff.position.set(cj * 1.1 - 1.1, (cj % 2) * .25, 0);
+      puff.scale.y = .55;
+      cl.add(puff);
+    }
+    cl.position.set((ci % 3) * 5.2 - 5.2 + (ci > 2 ? 1.6 : 0), ci * 9, -9 - (ci % 2) * 4);
+    cl.userData.rel = ci * 9;
+    cl.userData.v = .35 + (ci % 3) * .12;
+    scene.add(cl); clouds.push(cl);
+  }
+
+  // lights: warm gold key + cool fill
+  scene.add(new THREE.HemisphereLight(0xcfeef2, 0x27476e, .75));
+  keyLight = new THREE.DirectionalLight(0xe8c073, 1.0); keyLight.position.set(4, 10, 6); scene.add(keyLight);
+  var fill = new THREE.DirectionalLight(0x9fd8ff, .3); fill.position.set(-6, 4, -5); scene.add(fill);
+  gemLight = new THREE.PointLight(0xe8c073, 0, 4); scene.add(gemLight);
+
+  // hero: capsule climber with tiny Persian hat
+  heroG = new THREE.Group();
+  heroBody = new THREE.Mesh(
+    new THREE.CapsuleGeometry(.42, .5, 4, 12),
+    new THREE.MeshStandardMaterial({ color: 0xe8c073, roughness: .4, metalness: .3, emissive: 0x6b4c14, emissiveIntensity: .35 }));
+  heroBody.position.y = .5;
+  heroG.add(heroBody);
+  var ring = new THREE.Mesh(
+    new THREE.TorusGeometry(.45, .05, 8, 20),
+    new THREE.MeshStandardMaterial({ color: 0x3fb8af, roughness: .35, metalness: .4, emissive: 0x0f4c47, emissiveIntensity: .5 }));
+  ring.rotation.x = Math.PI / 2; ring.position.y = .5;
+  heroG.add(ring);
+  hatG = new THREE.Group();
+  var brim = new THREE.Mesh(
+    new THREE.CylinderGeometry(.52, .52, .06, 14),
+    new THREE.MeshStandardMaterial({ color: 0xd9a441, roughness: .4, metalness: .45 }));
+  hatG.add(brim);
+  var cap = new THREE.Mesh(
+    new THREE.ConeGeometry(.36, .46, 12),
+    new THREE.MeshStandardMaterial({ color: 0x3fb8af, roughness: .45, metalness: .3, emissive: 0x0f4c47, emissiveIntensity: .4 }));
+  cap.position.y = .26;
+  hatG.add(cap);
+  var capBand = new THREE.Mesh(
+    new THREE.CylinderGeometry(.30, .34, .09, 12),
+    new THREE.MeshStandardMaterial({ color: 0xd9a441, roughness: .4, metalness: .45 }));
+  capBand.position.y = .07;
+  hatG.add(capBand);
+  hatG.position.y = 1.02;
+  heroG.add(hatG);
+  scene.add(heroG);
+
+  // pools
+  var slabGeo = new THREE.BoxGeometry(1, 1, 1);
+  slabMatA = new THREE.MeshStandardMaterial({ color: 0x9aa7b8, roughness: .8, metalness: .1 });
+  slabMatB = new THREE.MeshStandardMaterial({ color: 0x8fb4c9, roughness: .7, metalness: .15 });
+  for (var si = 0; si < 18; si++) {
+    var sg = new THREE.Group();
+    var slab = new THREE.Mesh(slabGeo, slabMatA);
+    slab.scale.set(2, .56, 1.6);
+    sg.add(slab);
+    var trim = new THREE.Mesh(slabGeo, rimMat);
+    trim.scale.set(2, .07, 1.7);
+    trim.position.y = .28;
+    sg.add(trim);
+    sg.visible = false;
+    scene.add(sg); slabPool.push(sg);
+  }
+  var gemGeo = new THREE.OctahedronGeometry(.34, 0);
+  var gemMat = new THREE.MeshStandardMaterial({ color: 0xe8c073, roughness: .25, metalness: .5, emissive: 0xc8922f, emissiveIntensity: .8 });
+  for (var gi = 0; gi < 10; gi++) {
+    var gm = new THREE.Mesh(gemGeo, gemMat);
+    gm.visible = false; scene.add(gm); gemPool.push(gm);
+  }
+  var hzGeo = new THREE.IcosahedronGeometry(.44, 0);
+  var hzMat = new THREE.MeshStandardMaterial({ color: 0xe26d5c, roughness: .4, metalness: .2, emissive: 0x8a2f22, emissiveIntensity: .55, flatShading: true });
+  for (var hi = 0; hi < 8; hi++) {
+    var hm = new THREE.Mesh(hzGeo, hzMat);
+    hm.visible = false; scene.add(hm); hzPool.push(hm);
+  }
+
+  function resize() {
+    var w = stage.clientWidth || 460, h = stage.clientHeight || 600;
+    renderer.setSize(w, h, false);
+    camera.aspect = w / h; camera.updateProjectionMatrix();
+  }
+  window.addEventListener('resize', resize);
+  resize();
+} catch (e) { ok3d = false; }
+
+// ---------- game state ----------
+var S = null, st = 'menu', gemFx = 0, dieFx = 0;
+
+function newRun() {
+  S = L.newState();
+  st = 'ready';
+  scoreEl.textContent = fa(0);
+  altEl.textContent = fa(0);
+  gemFx = 0; dieFx = 0;
+  if (gemLight) gemLight.intensity = 0;
+  heroBody.material.color.set(0xe8c073);
+  camY = S.hero.y * U + 1.4;
+  panel.classList.add('hidden');
+}
+
+function die() {
+  st = 'dead';
+  var record = S.score > best;
+  if (record) {
+    best = S.score;
+    store.set(L.BEST_KEY, String(best));
+    bestEl.textContent = fa(best);
+  }
+  dieFx = .6;
+  heroBody.material.color.set(0xe26d5c);
+  show('پایان بازی — امتیاز: ' + fa(S.score),
+    record ? 'رکورد جدید! برای شروع دوباره لمس کنید' : 'برای شروع دوباره لمس کنید', 'شروع دوباره');
+}
+
+// ---------- input ----------
+function doJump() {
+  if (st === 'menu') return;
+  if (st === 'dead') { newRun(); return; }
+  L.jump(S);
+}
+window.addEventListener('keydown', function (e) {
+  if (e.code === 'Space' || e.code === 'ArrowUp' || e.code === 'KeyW') { e.preventDefault(); doJump(); }
+  else if (e.code === 'ArrowLeft' || e.code === 'KeyA') { e.preventDefault(); if (S) S.dragX = null; if (S) S.dirX = -1; }
+  else if (e.code === 'ArrowRight' || e.code === 'KeyD') { e.preventDefault(); if (S) S.dragX = null; if (S) S.dirX = 1; }
+});
+window.addEventListener('keyup', function (e) {
+  if (!S) return;
+  if ((e.code === 'ArrowLeft' || e.code === 'KeyA') && S.dirX === -1) S.dirX = 0;
+  if ((e.code === 'ArrowRight' || e.code === 'KeyD') && S.dirX === 1) S.dirX = 0;
+});
+var dragging = false;
+function dragTo(e) {
+  if (!S || st !== 'ready' && st !== 'run') return;
+  var r = renderer.domElement.getBoundingClientRect();
+  S.dragX = Math.max(0, Math.min(L.W, (e.clientX - r.left) / r.width * L.W));
+  S.dirX = 0;
+}
+stage.addEventListener('pointerdown', function (e) {
+  if (e.target === pBtn || e.target === panel || e.target === pMsg || e.target === pSub) return;
+  e.preventDefault();
+  if (st === 'dead') { newRun(); return; }
+  if (st === 'ready') { L.jump(S); dragging = true; return; }
+  dragging = true;
+  L.jump(S);
+});
+stage.addEventListener('pointermove', function (e) { if (dragging) dragTo(e); });
+window.addEventListener('pointerup', function () { dragging = false; if (S) S.dragX = null; });
+pBtn.addEventListener('click', function () { if (!ok3d) { location.reload(); return; } newRun(); });
+
+// ---------- world sync ----------
+function syncWorld(now, dt) {
+  var i, m;
+  var hy = S.hero.y * U, hx = (S.hero.x + L.HERO_W / 2 - L.W / 2) * U;
+  // walls + rims follow camera
+  for (i = 0; i < 2; i++) {
+    walls[i].position.y = camY + 30;
+    rims[i].position.y = camY + 30;
+  }
+  // hero
+  heroG.position.set(hx, hy, 0);
+  heroLean += (((S.dirX || 0)) * -.22 - heroLean) * .15;
+  heroG.rotation.z = heroLean;
+  squash *= Math.pow(.02, dt);
+  heroG.scale.y = 1 - squash * .3;
+  heroG.scale.x = heroG.scale.z = 1 + squash * .18;
+  hatG.rotation.y += dt * (S.hero.onGround ? .4 : 1.6);
+  // slabs
+  for (i = 0; i < slabPool.length; i++) slabPool[i].visible = false;
+  for (i = 0; i < S.platforms.length && i < slabPool.length; i++) {
+    var p = S.platforms[i];
+    m = slabPool[i];
+    m.visible = true;
+    m.position.set((p.x + p.w / 2 - L.W / 2) * U, p.y * U - .28, 0);
+    m.scale.set(Math.max(.5, p.w * U / 2), 1, 1);
+    m.children[0].material = p.mv ? slabMatB : slabMatA;
+  }
+  // gems
+  for (i = 0; i < gemPool.length; i++) gemPool[i].visible = false;
+  var gi2 = 0;
+  for (i = 0; i < S.gems.length && gi2 < gemPool.length; i++) {
+    var g = S.gems[i];
+    if (g.taken) continue;
+    m = gemPool[gi2++];
+    m.visible = true;
+    m.position.set((g.x - L.W / 2) * U, g.y * U, 0);
+    m.rotation.y = now / 500 + i;
+    m.position.y += Math.sin(now / 350 + i) * .06;
+  }
+  // hazards
+  for (i = 0; i < hzPool.length; i++) hzPool[i].visible = false;
+  var hi2 = 0;
+  for (i = 0; i < S.hazards.length && hi2 < hzPool.length; i++) {
+    var z = S.hazards[i];
+    m = hzPool[hi2++];
+    m.visible = true;
+    m.position.set((z.x - L.W / 2) * U, z.y * U, 0);
+    m.rotation.y = now / 300 + i;
+    m.rotation.x = now / 460 + i;
+  }
+  // mountains parallax + clouds
+  mountains.position.y = camY * .88;
+  for (i = 0; i < clouds.length; i++) {
+    var cl = clouds[i];
+    cl.userData.rel -= cl.userData.v * dt * 8;
+    if (cl.userData.rel < -14) cl.userData.rel += 68;
+    cl.position.set(cl.position.x, camY + cl.userData.rel, cl.position.z);
+  }
+  // fog thickens with height
+  var hk = Math.min(1, Math.max(0, camY / 26));
+  scene.fog.near = 14 - 6 * hk;
+  scene.fog.far = 46 - 22 * hk;
+  scene.background.copy(SKY0).lerp(SKY1, hk);
+  scene.fog.color.copy(scene.background);
+  // gem fx light
+  if (gemFx > 0) { gemFx *= Math.pow(.02, dt); gemLight.intensity = gemFx * 3; if (gemFx < .02) { gemFx = 0; gemLight.intensity = 0; } }
+  // camera follows up with lag
+  var ty = hy + 1.4;
+  camY += (ty - camY) * Math.min(1, dt * 4.5);
+  camX += (hx * .16 - camX) * .08;
+  camera.position.set(camX, camY + 3.2, 17);
+  camera.lookAt(camX * .5, camY + 1.2, 0);
+}
+
+// ---------- render loop ----------
+var lastT = performance.now();
+function frame(now) {
+  requestAnimationFrame(frame);
+  var dt = Math.min(.05, (now - lastT) / 1000); lastT = now;
+  if (!ok3d || !renderer || document.hidden) return;
+  if (S && (st === 'run' || st === 'ready')) {
+    var prevT = S.t, prevScore = S.score;
+    var res = L.step(S, Math.random);
+    if (res === 'dead') { die(); }
+    else {
+      if (S.score !== prevScore) scoreEl.textContent = fa(S.score);
+      altEl.textContent = fa(Math.max(0, Math.round(S.hero.y / 10)));
+      for (var ei = 0; ei < S.events.length; ei++) {
+        var ev = S.events[ei];
+        if (ev.k === 'land') squash = 1;
+        if (ev.k === 'gem') {
+          gemFx = 1;
+          gemLight.position.set((ev.x - L.W / 2) * U, ev.y * U + .3, .6);
+        }
+      }
+    }
+  }
+  if (dieFx > 0) dieFx -= dt;
+  syncWorld(now, dt);
+  renderer.render(scene, camera);
+}
+
+// ---------- boot ----------
+if (!ok3d) {
+  show('سه‌بعدی در دسترس نیست', 'مرورگر شما از گرافیک سه‌بعدی (WebGL) پشتیبانی نمی‌کند.', 'تلاش دوباره');
+} else {
+  S = L.newState();
+  st = 'menu';
+  camY = S.hero.y * U + 1.4;
+  show('آماده‌ای؟', 'از سنگ‌چین‌های البرز بالا برو: پرش با لمس، حرکت با کشیدن؛ گوهر طلایی +۵ امتیاز و تیغهٔ سرخ پایان راه است.', 'شروع بازی');
+  requestAnimationFrame(frame);
+}
+})();
+</script>
+</body>
+</html>

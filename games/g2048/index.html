@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+<title>۲۰۴۸ سه‌بعدی | دنیای بازی‌ها</title>
+<meta name="description" content="۲۰۴۸ کلاسیک در صحنه سه‌بعدی: کاشی‌های عاج و طلا را با کلید یا کشیدن انگشت بلغزان و به کاشی ۲۰۴۸ برس." />
+<link rel="icon" href="data:," />
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  @font-face{font-family:Vazirmatn;src:url(../../fonts/Vazirmatn-Regular.woff2) format('woff2');font-weight:400;font-display:swap}
+  @font-face{font-family:Vazirmatn;src:url(../../fonts/Vazirmatn-Bold.woff2) format('woff2');font-weight:700;font-display:swap}
+  body {
+    font-family: Vazirmatn, Tahoma, sans-serif;
+    background:
+      radial-gradient(900px 420px at 50% -80px, rgba(217,164,65,.30), transparent 68%),
+      radial-gradient(720px 480px at 108% 112%, rgba(122,90,32,.42), transparent 60%),
+      linear-gradient(168deg, #111c33 0%, #0b1220 58%, #0a0f1d 100%);
+    color: #f3ead8; min-height: 100dvh;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 14px; padding-top: 64px; user-select: none; touch-action: manipulation; position: relative; overflow-x: hidden;
+  }
+  a.wog-home{position:fixed;top:12px;inset-inline-start:14px;z-index:99;display:inline-flex;align-items:center;gap:6px;background:linear-gradient(140deg,rgba(217,164,65,.16),rgba(217,164,65,.06));border:1px solid rgba(217,164,65,.5);color:#e8c073;text-decoration:none;padding:7px 14px;border-radius:12px;font-size:.85rem;font-weight:700;box-shadow:0 2px 10px rgba(0,0,0,.35);transition:.18s}
+  a.wog-home:hover{background:rgba(217,164,65,.3);transform:translateY(-1px)}
+  header { text-align: center; margin-bottom: 10px; position: relative; z-index: 1; }
+  h1 { font-size: 1.3rem; font-weight: 800; display: inline-flex; align-items: center; gap: 10px;
+       background: linear-gradient(180deg, #f6d996, #7a5a20 55%, #d9a441); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  h1:before, h1:after { content: '❋'; font-size: .85em; color: #d9a441; -webkit-text-fill-color: #d9a441; }
+  .hud { color: #a8b3c9; margin-top: 6px; font-size: .98rem; display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+  .hud b { color: #e8c073; }
+  button { font-family: inherit; font-weight: 800; border: 0; cursor: pointer; touch-action: manipulation;
+    background: linear-gradient(180deg, #e9bd68, #c8922f); color: #251905; border-radius: 12px; padding: 10px 22px; font-size: .98rem;
+    box-shadow: 0 3px 10px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.35); transition: transform .12s, box-shadow .15s, filter .15s; }
+  button:active { transform: translateY(1px); }
+  button.ghost { background: #1c2a47; color: #e8c073; border: 1px solid rgba(217,164,65,.35); box-shadow: 0 2px 8px rgba(0,0,0,.35); }
+  button.warn { background: #e26d5c; color: #2b0d08; }
+  #newbtn { margin-top: 10px; position: relative; z-index: 1; }
+  .stage3d { position: relative; width: min(92vw, 480px); aspect-ratio: 1 / 1; border-radius: 18px; overflow: hidden;
+    box-shadow: 0 14px 36px rgba(0,0,0,.55), 0 0 0 2px rgba(217,164,65,.45), 0 0 0 6px rgba(10,14,26,.95), 0 0 30px rgba(217,164,65,.10);
+    z-index: 1; }
+  .stage3d canvas { display: block; width: 100%; height: 100%; touch-action: none; }
+  .panel { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 12px; padding: 20px; text-align: center; background: rgba(8,12,24,.84); backdrop-filter: blur(4px); z-index: 5; }
+  .panel.hidden { display: none; }
+  .panel p { font-size: 1.12rem; font-weight: 700; line-height: 1.9; }
+  .panel .sub { font-size: .88rem; color: #a8b3c9; font-weight: 400; }
+  .row-btns { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+  #hint { color: #a8b3c9; font-size: .84rem; margin-top: 12px; text-align: center; max-width: 520px; line-height: 2; position: relative; z-index: 1; }
+</style>
+<script src="../../js/vendor/three.min.js"></script>
+</head>
+<body data-cat="puzzle" data-slug="g2048" data-flag3d="1" style="--g1:#d9a441;--g2:#7a5a20">
+<a class="wog-home" href="../../index.html">⌂ خانه</a>
+<header>
+  <h1>❋ ۲۰۴۸ ❋</h1>
+  <div class="hud">امتیاز <b id="sc">۰</b> · رکورد <b id="bs">۰</b></div>
+</header>
+<button id="newbtn" data-smoke="new">بازی جدید</button>
+<div class="stage3d" id="stage">
+  <div class="panel hidden" id="panel">
+    <p id="pMsg" aria-live="polite"></p>
+    <p class="sub" id="pSub"></p>
+    <div class="row-btns">
+      <button id="pcont" data-smoke="cont">ادامه بازی</button>
+      <button id="pnew" class="ghost" data-smoke="pnew">بازی جدید</button>
+    </div>
+  </div>
+</div>
+<p id="hint">با کلیدهای جهت، WASD یا کشیدن انگشت کاشی‌های سه‌بعدی را بلغزان؛ کاشی‌های هم‌ارزش در هر حرکت یک‌بار ادغام می‌شوند. به کاشی درخشان ۲۰۴۸ برس!</p>
+
+<script>
+(function () {
+'use strict';
+/*WOG_LOGIC_START*/
+var WOG_LOGIC = {
+  N: 4,
+  newState: function (rng) {
+    rng = rng || Math.random;
+    var s = { g: [], score: 0, won: false, over: false, seq: 0, last: null }, r;
+    for (r = 0; r < this.N; r++) s.g.push([0, 0, 0, 0]);
+    this.spawn(s, rng);
+    this.spawn(s, rng);
+    return s;
+  },
+  /* پرش ۹۰٪ دو / ۱۰٪ چهار در خانهٔ خالی تصادفی — مطابق نسخهٔ 2D */
+  spawn: function (s, rng) {
+    rng = rng || Math.random;
+    var empt = [], r, c;
+    for (r = 0; r < this.N; r++) for (c = 0; c < this.N; c++) if (!s.g[r][c]) empt.push([r, c]);
+    if (!empt.length) return null;
+    var rc = empt[Math.floor(rng() * empt.length)];
+    var v = rng() < 0.9 ? 2 : 4;
+    s.g[rc[0]][rc[1]] = v;
+    s.last = { r: rc[0], c: rc[1], v: v };
+    return s.last;
+  },
+  has2048: function (s) {
+    for (var r = 0; r < this.N; r++) for (var c = 0; c < this.N; c++) if (s.g[r][c] >= 2048) return true;
+    return false;
+  },
+  anyMoves: function (s) {
+    for (var r = 0; r < this.N; r++) for (var c = 0; c < this.N; c++) {
+      var t = s.g[r][c];
+      if (!t) return true;
+      if (c < this.N - 1 && s.g[r][c + 1] && s.g[r][c + 1] === t) return true;
+      if (r < this.N - 1 && s.g[r + 1][c] && s.g[r + 1][c] === t) return true;
+    }
+    return false;
+  },
+  /* حرکت استاندارد ۲۰۴۸: لغزش کامل + ادغام یک‌بار در هر حرکت (مهر زمانی seq) */
+  move: function (s, dr, dc) {
+    if (s.over) return null;
+    var N = this.N, seq = ++s.seq;
+    var rs = [0, 1, 2, 3], cs = [0, 1, 2, 3];
+    if (dr === 1) rs = [3, 2, 1, 0];
+    if (dc === 1) cs = [3, 2, 1, 0];
+    var stamp = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
+    var gained = 0, moved = false, slides = [], merges = [];
+    rs.forEach(function (r) {
+      cs.forEach(function (c) {
+        var v = s.g[r][c];
+        if (!v) return;
+        s.g[r][c] = 0;
+        var cr = r, cc = c, tr = -1, tc = -1;
+        for (;;) {
+          var nr = cr + dr, nc = cc + dc;
+          if (nr < 0 || nr >= N || nc < 0 || nc >= N) break;
+          var o = s.g[nr][nc];
+          if (!o) { cr = nr; cc = nc; continue; }
+          if (o === v && stamp[nr][nc] !== seq) { tr = nr; tc = nc; cr = nr; cc = nc; }
+          break;
+        }
+        if (cr !== r || cc !== c) moved = true;
+        if (tr >= 0) {
+          stamp[tr][tc] = seq;
+          s.g[tr][tc] = v * 2;
+          gained += v * 2;
+          slides.push({ fr: r, fc: c, tr: tr, tc: tc, v: v, merged: true });
+          merges.push({ r: tr, c: tc, v: v * 2 });
+        } else {
+          s.g[cr][cc] = v;
+          if (cr !== r || cc !== c) slides.push({ fr: r, fc: c, tr: cr, tc: cc, v: v, merged: false });
+        }
+      });
+    });
+    if (!moved) { s.seq--; return null; }
+    s.score += gained;
+    return { moved: true, gained: gained, slides: slides, merges: merges };
+  }
+};
+/*WOG_LOGIC_END*/
+var L = WOG_LOGIC;
+
+// ---------- UI helpers ----------
+var FA_D = '۰۱۲۳۴۵۶۷۸۹';
+function fa(n) { return String(n).replace(/\d/g, function (d) { return FA_D[+d]; }); }
+var store = {
+  get: function (k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+  set: function (k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+};
+
+var stage = document.getElementById('stage');
+var panel = document.getElementById('panel');
+var pMsg = document.getElementById('pMsg');
+var pSub = document.getElementById('pSub');
+var pCont = document.getElementById('pcont');
+var pNew = document.getElementById('pnew');
+var scEl = document.getElementById('sc');
+var bsEl = document.getElementById('bs');
+var newBtn = document.getElementById('newbtn');
+var best = parseInt(store.get('wog-2048-best') || '0', 10) || 0;
+bsEl.textContent = fa(best);
+
+var st = null, lock = false, panelOpen = false, ok3d = true;
+var dyingTiles = [];
+function updateHud() { scEl.textContent = fa(st ? st.score : 0); bsEl.textContent = fa(best); }
+
+// ---------- 3D scene ----------
+var renderer, scene, camera, clock = 0, acquire, release, setTile;
+var P = 1.14, TILE_Y = .58;
+function wx(c) { return (c - 1.5) * P; }
+function wz(r) { return (r - 1.5) * P; }
+try {
+  renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  stage.insertBefore(renderer.domElement, stage.firstChild);
+  scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x0a1024);
+  scene.fog = new THREE.Fog(0x0a1024, 13, 30);
+  camera = new THREE.PerspectiveCamera(40, 1, .1, 80);
+
+  var ground = new THREE.Mesh(
+    new THREE.PlaneGeometry(34, 34),
+    new THREE.MeshStandardMaterial({ color: 0x0b1326, roughness: .95, metalness: 0 }));
+  ground.rotation.x = -Math.PI / 2; ground.position.y = -.42; scene.add(ground);
+
+  // سکوی چوب‌لاست طلایی + صفحهٔ سرمه‌ای گردگوشه (Extrude)
+  function roundedShape(w, h, rad) {
+    var sh = new THREE.Shape(), x = -w / 2, y = -h / 2;
+    sh.moveTo(x + rad, y);
+    sh.lineTo(x + w - rad, y); sh.quadraticCurveTo(x + w, y, x + w, y + rad);
+    sh.lineTo(x + w, y + h - rad); sh.quadraticCurveTo(x + w, y + h, x + w - rad, y + h);
+    sh.lineTo(x + rad, y + h); sh.quadraticCurveTo(x, y + h, x, y + h - rad);
+    sh.lineTo(x, y + rad); sh.quadraticCurveTo(x, y, x + rad, y);
+    return sh;
+  }
+  function slab(w, h, rad, depth, mat) {
+    var g = new THREE.ExtrudeGeometry(roundedShape(w, h, rad), { depth: depth, bevelEnabled: false, curveSegments: 6 });
+    g.rotateX(-Math.PI / 2);
+    var m = new THREE.Mesh(g, mat);
+    return m;
+  }
+  var goldMat = new THREE.MeshStandardMaterial({ color: 0xd9a441, roughness: .32, metalness: .72, emissive: 0x8a6420, emissiveIntensity: .22 });
+  var navyMat = new THREE.MeshStandardMaterial({ color: 0x14203a, roughness: .6, metalness: .25 });
+  var gold = slab(5.35, 5.35, .55, .24, goldMat); gold.position.y = 0; scene.add(gold);
+  var top = slab(4.95, 4.95, .45, .3, navyMat); top.position.y = .24; scene.add(top);
+  var ped = new THREE.Mesh(new THREE.BoxGeometry(5.8, .3, 5.8), new THREE.MeshStandardMaterial({ color: 0x0d1526, roughness: .8 }));
+  ped.position.y = -.15; scene.add(ped);
+
+  // ۱۶ خانهٔ تخت (زمینهٔ کاشی‌ها)
+  var slotMat = new THREE.MeshStandardMaterial({ color: 0x1a2745, roughness: .85, metalness: .1 });
+  var slotGeo = new THREE.BoxGeometry(1.04, .07, 1.04);
+  for (var i = 0; i < 16; i++) {
+    var sl = new THREE.Mesh(slotGeo, slotMat);
+    sl.position.set(wx(i % 4), .525, wz(Math.floor(i / 4)));
+    scene.add(sl);
+  }
+
+  scene.add(new THREE.HemisphereLight(0xf6e6c2, 0x0a1024, .85));
+  var dl = new THREE.DirectionalLight(0xe8c073, .85); dl.position.set(5, 10, 4); scene.add(dl);
+  var dl2 = new THREE.DirectionalLight(0x9fd8ff, .3); dl2.position.set(-6, 8, -5); scene.add(dl2);
+
+  // رنگ کاشی‌ها: عاج → طلا، درخشش در ۱۰۲۴ و ۲۰۴۸
+  var RAMP = {
+    2: ['#efe6d0', '#554321', 0x000000, 0], 4: ['#e9d9ae', '#4b350f', 0x000000, 0],
+    8: ['#e3c684', '#3a2908', 0x000000, 0], 16: ['#dcb25c', '#2f2006', 0x000000, 0],
+    32: ['#d9a441', '#2a1c04', 0x000000, 0], 64: ['#cf9330', '#241804', 0x000000, 0],
+    128: ['#c48324', '#241804', 0x000000, 0], 256: ['#b87519', '#fff3ec', 0x000000, 0],
+    512: ['#aa6712', '#ffe9c4', 0x000000, 0], 1024: ['#d9a441', '#2a1c04', 0x8a6420, .5],
+    2048: ['#e8c073', '#2a1c04', 0xe8c073, .85]
+  };
+  function rampOf(v) {
+    if (RAMP[v]) return RAMP[v];
+    return ['#8a5a10', '#ffe9c4', 0xd9a441, .6];
+  }
+  var texCache = {};
+  function drawNum(x, v) {
+    var col = rampOf(v), w = x.canvas.width;
+    x.clearRect(0, 0, w, w);
+    x.fillStyle = col[0]; x.fillRect(0, 0, w, w);
+    x.strokeStyle = 'rgba(0,0,0,.20)'; x.lineWidth = 10;
+    x.strokeRect(9, 9, w - 18, w - 18);
+    x.fillStyle = 'rgba(255,255,255,.30)'; x.fillRect(12, 12, w - 24, 16);
+    var t = fa(v), len = t.length, sz = len <= 2 ? 148 : (len === 3 ? 118 : 94);
+    x.fillStyle = col[1];
+    x.font = 'bold ' + sz + 'px Vazirmatn, Tahoma, sans-serif';
+    x.textAlign = 'center'; x.textBaseline = 'middle';
+    x.fillText(t, w / 2, w / 2 + sz * .06);
+  }
+  function matsFor(v) {
+    if (texCache[v]) return texCache[v].mats;
+    var col = rampOf(v);
+    var canvas = document.createElement('canvas');
+    canvas.width = 256; canvas.height = 256;
+    drawNum(canvas.getContext('2d'), v);
+    var tex = new THREE.CanvasTexture(canvas);
+    tex.anisotropy = 4;
+    var side = new THREE.Color(col[0]).multiplyScalar(.82);
+    var topM = new THREE.MeshStandardMaterial({ map: tex, roughness: .42, metalness: .16, emissive: col[2], emissiveIntensity: col[3] });
+    var sideM = new THREE.MeshStandardMaterial({ color: side, roughness: .5, metalness: .22, emissive: col[2], emissiveIntensity: col[3] * .6 });
+    var mats = [sideM, sideM, topM, sideM, sideM, sideM];
+    texCache[v] = { canvas: canvas, tex: tex, mats: mats };
+    return mats;
+  }
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () {
+    for (var k in texCache) { drawNum(texCache[k].canvas.getContext('2d'), +k); texCache[k].tex.needsUpdate = true; }
+  });
+
+  var tileGeo = new THREE.BoxGeometry(.96, 1, .96);
+  var pool = [], uiG = [];
+  for (var p = 0; p < 16; p++) {
+    var m = new THREE.Mesh(tileGeo, matsFor(2));
+    m.visible = false; scene.add(m);
+    pool.push({ mesh: m, v: 0, h: .3, slide: null, pop: null, spw: null });
+  }
+  for (p = 0; p < 4; p++) uiG.push([null, null, null, null]);
+  function tileH(v) { return .26 + Math.min(.34, Math.log2(v) * .03); }
+  setTile = function (t, v) { t.v = v; t.h = tileH(v); t.mesh.material = matsFor(v); };
+  acquire = function (r, c, v) {
+    var t = null, i;
+    for (i = 0; i < pool.length; i++) if (!pool[i].mesh.visible) { t = pool[i]; break; }
+    if (!t) return null;
+    setTile(t, v);
+    t.mesh.visible = true;
+    t.mesh.position.set(wx(c), TILE_Y + t.h / 2, wz(r));
+    t.slide = null; t.pop = null; t.spw = null;
+    uiG[r][c] = t;
+    return t;
+  };
+  release = function (t) { t.mesh.visible = false; t.slide = t.pop = t.spw = null; };
+  for (var r = 0; r < 4; r++) for (var c = 0; c < 4; c++) uiG[r][c] = null;
+
+  function resize() {
+    var w = stage.clientWidth || 480;
+    renderer.setSize(w, w, false);
+    camera.aspect = 1; camera.updateProjectionMatrix();
+  }
+  window.addEventListener('resize', resize);
+  resize();
+} catch (e) { ok3d = false; }
+
+// ---------- game flow ----------
+function showPanel(title, sub, withCont) {
+  pMsg.textContent = title;
+  pSub.textContent = sub || '';
+  pCont.style.display = withCont ? '' : 'none';
+  panel.classList.remove('hidden');
+  panelOpen = true;
+}
+function hidePanel() { panel.classList.add('hidden'); panelOpen = false; }
+
+function spawnAnim(sp) {
+  if (!sp) return;
+  var t = acquire(sp.r, sp.c, sp.v);
+  if (t) t.spw = clock;
+}
+
+function newGame() {
+  for (var r = 0; r < 4; r++) for (var c = 0; c < 4; c++) {
+    if (uiG[r][c]) { release(uiG[r][c]); uiG[r][c] = null; }
+  }
+  dyingTiles.forEach(release);
+  dyingTiles = [];
+  st = L.newState();
+  lock = false;
+  hidePanel();
+  resetNewBtn();
+  updateHud();
+  var r2, c2;
+  for (r2 = 0; r2 < 4; r2++) for (c2 = 0; c2 < 4; c2++) if (st.g[r2][c2]) spawnAnim({ r: r2, c: c2, v: st.g[r2][c2] });
+}
+
+function afterSlide(res) {
+  var i, r, c;
+  dyingTiles.forEach(release);
+  dyingTiles = [];
+  res.merges.forEach(function (mg) {
+    var t2 = uiG[mg.r][mg.c];
+    if (t2) { setTile(t2, mg.v); t2.pop = clock; }
+  });
+  spawnAnim(L.spawn(st));
+  if (!st.won && L.has2048(st)) {
+    st.won = true;
+    showPanel('بردی!', 'به کاشی ۲۰۴۸ رسیدی! امتیاز: ' + fa(st.score), true);
+  } else if (!L.anyMoves(st)) {
+    st.over = true;
+    showPanel('باختی!', 'دیگر حرکتی باقی نماند — امتیاز نهایی: ' + fa(st.score), false);
+  }
+  lock = false;
+}
+
+function move(dr, dc) {
+  if (!st || lock || st.over || panelOpen) return;
+  var res = L.move(st, dr, dc);
+  if (!res) return;
+  lock = true;
+  if (st.score > best) { best = st.score; store.set('wog-2048-best', String(best)); }
+  updateHud();
+  res.slides.forEach(function (sl) {
+    var t = uiG[sl.fr][sl.fc];
+    uiG[sl.fr][sl.fc] = null;
+    if (t) {
+      t.slide = { fc: sl.fc, fr: sl.fr, tc: sl.tc, tr: sl.tr, t0: clock };
+      if (sl.merged) t.dying = true;
+      else uiG[sl.tr][sl.tc] = t;
+    }
+  });
+  setTimeout(function () { if (st) afterSlide(res); }, 120);
+}
+
+/* دکمه «بازی جدید» با تأیید درون‌خطی (بدون confirm) */
+var armT = null;
+function resetNewBtn() {
+  if (armT) { clearTimeout(armT); armT = null; }
+  newBtn.textContent = 'بازی جدید';
+  newBtn.classList.remove('warn');
+}
+newBtn.addEventListener('click', function () {
+  if (armT) { resetNewBtn(); newGame(); return; }
+  newBtn.textContent = 'مطمئنی؟ دوباره بزن';
+  newBtn.classList.add('warn');
+  armT = setTimeout(resetNewBtn, 2600);
+});
+pCont.addEventListener('click', hidePanel);
+pNew.addEventListener('click', newGame);
+
+// ---------- input ----------
+window.addEventListener('keydown', function (e) {
+  var d = null;
+  if (e.key === 'ArrowUp' || e.code === 'KeyW') d = [-1, 0];
+  else if (e.key === 'ArrowDown' || e.code === 'KeyS') d = [1, 0];
+  else if (e.key === 'ArrowLeft' || e.code === 'KeyA') d = [0, -1];
+  else if (e.key === 'ArrowRight' || e.code === 'KeyD') d = [0, 1];
+  if (d) { e.preventDefault(); move(d[0], d[1]); }
+});
+var swx = null, swy = null;
+stage.addEventListener('pointerdown', function (e) { swx = e.clientX; swy = e.clientY; }, { passive: true });
+window.addEventListener('pointerup', function (e) {
+  if (swx === null) return;
+  var dx = e.clientX - swx, dy = e.clientY - swy;
+  swx = null;
+  if (Math.max(Math.abs(dx), Math.abs(dy)) < 24) return;
+  if (Math.abs(dx) > Math.abs(dy)) move(0, dx > 0 ? 1 : -1);
+  else move(dy > 0 ? 1 : 0, 0);
+}, { passive: true });
+
+// ---------- render loop ----------
+var lastT = performance.now(), hidden = false;
+document.addEventListener('visibilitychange', function () {
+  hidden = document.hidden;
+  lastT = performance.now();
+});
+function frame(now) {
+  requestAnimationFrame(frame);
+  if (hidden || !ok3d || !renderer) return;
+  var dt = Math.min(.05, (now - lastT) / 1000);
+  lastT = now;
+  clock += dt;
+  var r, c, t;
+  for (r = 0; r < 4; r++) for (c = 0; c < 4; c++) {
+    t = uiG[r][c];
+    if (t && t.mesh.visible) updTile(t);
+  }
+  for (r = 0; r < dyingTiles.length; r++) updTile(dyingTiles[r]);
+  camera.position.set(Math.sin(clock * .45) * .32, 6.6, 5.5 + Math.cos(clock * .31) * .22);
+  camera.lookAt(0, .1, .1);
+  renderer.render(scene, camera);
+}
+function updTile(t) {
+  {
+    var sc = 1, yo = 0;
+    if (t.slide) {
+      var k = Math.min(1, (clock - t.slide.t0) / .12), e = k * (2 - k);
+      t.mesh.position.x = wx(t.slide.fc) + (wx(t.slide.tc) - wx(t.slide.fc)) * e;
+      t.mesh.position.z = wz(t.slide.fr) + (wz(t.slide.tr) - wz(t.slide.fr)) * e;
+      if (k >= 1) t.slide = null;
+    }
+    if (t.pop !== null) {
+      var k2 = Math.min(1, (clock - t.pop) / .18);
+      sc = 1 + .35 * (1 - k2);
+      yo += Math.sin(k2 * Math.PI) * .14;
+      if (k2 >= 1) t.pop = null;
+    }
+    if (t.spw !== null) {
+      var k3 = Math.min(1, (clock - t.spw) / .2), e3 = 1 - Math.pow(1 - k3, 3);
+      sc *= Math.max(.02, e3);
+      yo += (1 - e3) * .55;
+      if (k3 >= 1) t.spw = null;
+    }
+    t.mesh.scale.set(sc, t.h, sc);
+    t.mesh.position.y = TILE_Y + t.h / 2 + yo;
+  }
+}
+requestAnimationFrame(frame);
+
+if (!ok3d) {
+  pMsg.textContent = 'WebGL در دسترس نیست';
+  pSub.textContent = 'مرورگر شما از گرافیک سه‌بعدی پشتیبانی نمی‌کند.';
+  pCont.style.display = 'none';
+  pNew.textContent = 'تلاش دوباره';
+  pNew.onclick = function () { location.reload(); };
+  panel.classList.remove('hidden');
+} else {
+  newGame();
+}
+})();
+</script>
+</body>
+</html>

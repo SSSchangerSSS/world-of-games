@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>دنیای بازی‌ها — ۱۰۰ بازی ایرانی تحت وب</title>
+<meta name="description" content="مجموعه کامل ۱۰۰ بازی مرورگری ایرانی: شطرنج، نرد، حکم، پاسور، سودوکو، ۲۰۴۸ و بازی‌های کلاسیک — همه رایگان، آفلاین و بدون تبلیغات.">
+<meta property="og:title" content="دنیای بازی‌ها — ۱۰۰ بازی ایرانی تحت وب">
+<meta property="og:description" content="شطرنج، نرد، حکم، پاسور، سولیتر و ۹۵ بازی دیگر — رایگان و بدون تبلیغات.">
+<meta property="og:type" content="website">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+@font-face{font-family:Vazirmatn;src:url(fonts/Vazirmatn-Regular.woff2) format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:Vazirmatn;src:url(fonts/Vazirmatn-Medium.woff2) format('woff2');font-weight:500;font-display:swap}
+@font-face{font-family:Vazirmatn;src:url(fonts/Vazirmatn-Bold.woff2) format('woff2');font-weight:700;font-display:swap}
+@font-face{font-family:Vazirmatn;src:url(fonts/Vazirmatn-Black.woff2) format('woff2');font-weight:900;font-display:swap}
+:root{--bg:#0b1220;--bg2:#101a2e;--panel:#14203a;--gold:#d9a441;--gold2:#e8c073;--turq:#3fb8af;--txt:#f3ead8;--dim:#a8b3c9;--line:rgba(217,164,65,.3)}
+html{scroll-behavior:smooth}
+body{font-family:Vazirmatn,Tahoma,sans-serif;background:linear-gradient(160deg,var(--bg2),var(--bg));color:var(--txt);min-height:100dvh}
+a{color:inherit;text-decoration:none}
+.nav{position:sticky;top:0;z-index:50;display:flex;gap:14px;align-items:center;justify-content:space-between;padding:12px clamp(14px,4vw,42px);background:rgba(11,18,32,.88);backdrop-filter:blur(9px);border-bottom:1px solid var(--line)}
+.brand{font-weight:900;font-size:1.12rem;color:var(--gold)}
+.brand span{color:var(--turq)}
+.nav .links{display:flex;gap:16px;font-size:.9rem;color:var(--dim)}
+.nav .links a:hover{color:var(--gold2)}
+@media(max-width:700px){.nav .links{display:none}}
+.hero{max-width:1080px;margin:0 auto;padding:64px 20px 40px;text-align:center}
+.hero .kicker{display:inline-block;background:rgba(63,184,175,.12);border:1px solid rgba(63,184,175,.4);color:var(--turq);padding:6px 14px;border-radius:99px;font-size:.82rem;margin-bottom:18px}
+.hero h1{font-size:clamp(1.7rem,5vw,3rem);font-weight:900;line-height:1.5}
+.hero h1 b{color:var(--gold)}
+.hero p{color:var(--dim);max-width:640px;margin:16px auto 0;line-height:2.1;font-size:.98rem}
+.stats{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:26px}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px 22px;min-width:120px}
+.stat b{display:block;font-size:1.35rem;color:var(--gold2)}
+.stat span{font-size:.8rem;color:var(--dim)}
+.cta-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:26px}
+.btn{background:var(--gold);color:#221806;font-weight:700;border:0;border-radius:12px;padding:12px 26px;font-size:.98rem;font-family:inherit;cursor:pointer;transition:.15s}
+.btn:hover{filter:brightness(1.08)}
+.btn.ghost{background:transparent;color:var(--gold2);border:1px solid var(--line)}
+section{max-width:1180px;margin:0 auto;padding:46px 18px}
+.sec-title{text-align:center;margin-bottom:8px}
+.sec-title h2{font-size:1.5rem;color:var(--gold);font-weight:800}
+.sec-title p{color:var(--dim);font-size:.92rem;margin-top:6px}
+.tools{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;align-items:center;margin:20px 0 6px}
+.search{background:var(--panel);border:1px solid var(--line);border-radius:12px;color:var(--txt);font-family:inherit;padding:10px 16px;width:min(360px,86vw);font-size:.95rem}
+.chip{background:var(--panel);border:1px solid var(--line);color:var(--dim);border-radius:99px;padding:8px 15px;font-size:.85rem;font-family:inherit;cursor:pointer}
+.chip.on{background:rgba(217,164,65,.16);color:var(--gold2);border-color:var(--gold)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:13px;margin-top:20px}
+.tile{position:relative;background:var(--panel);border:1px solid rgba(217,164,65,.18);border-radius:16px;padding:16px 14px 14px;display:flex;flex-direction:column;gap:8px;transition:.16s;overflow:hidden}
+.tile:hover{transform:translateY(-4px);border-color:var(--gold)}
+.tile .ico{width:52px;height:52px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:1.65rem}
+.tile h3{font-size:1rem;color:var(--txt)}
+.tile p{font-size:.78rem;color:var(--dim);line-height:1.9;flex:1}
+.tile .cat{align-self:flex-start;font-size:.68rem;padding:3px 10px;border-radius:99px;border:1px solid}
+.dim3badge{background:linear-gradient(140deg,rgba(217,164,65,.18),rgba(63,184,175,.14));color:#e8c073;border-color:rgba(217,164,65,.55)!important;font-weight:700}
+.count{color:var(--dim);font-size:.8rem;text-align:center;margin-top:14px}
+.feats{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.feat{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:20px}
+.feat .fi{font-size:1.5rem;margin-bottom:8px}
+.feat h3{color:var(--gold2);font-size:1.02rem;margin-bottom:8px}
+.feat p{color:var(--dim);font-size:.85rem;line-height:2}
+.mcp-list{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:20px;max-width:640px;margin:0 auto}
+.mcp-list code{display:block;background:#0d1526;border:1px solid rgba(63,184,175,.3);color:var(--turq);border-radius:9px;padding:9px 14px;margin:7px 0;font-size:.86rem;direction:ltr;text-align:left}
+.donate{background:linear-gradient(140deg,rgba(217,164,65,.13),rgba(63,184,175,.08));border:1px solid var(--line);border-radius:20px;padding:34px 24px;text-align:center;max-width:720px;margin:0 auto}
+.donate p{color:var(--dim);line-height:2.1;margin:12px 0 20px;font-size:.94rem}
+footer{border-top:1px solid var(--line);margin-top:40px;padding:26px 18px;text-align:center;color:var(--dim);font-size:.85rem;line-height:2.2}
+footer a{color:var(--gold2)}
+.lic{max-width:860px;margin:0 auto;padding:40px 20px;line-height:2.2}
+.lic h1{color:var(--gold);font-size:1.6rem;margin-bottom:18px}
+.lic h2{color:var(--gold2);font-size:1.15rem;margin:26px 0 10px}
+.lic p,.lic li{color:var(--dim);font-size:.94rem}
+.lic ul{padding-inline-start:22px}
+.lic .ok{color:var(--turq)}
+.lic table{width:100%;border-collapse:collapse;margin-top:12px;font-size:.88rem}
+.lic td,.lic th{border:1px solid var(--line);padding:9px 12px;text-align:right}
+.lic th{color:var(--gold2)}
+</style>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "ItemList", "name": "بازی‌های دنیای بازی‌ها", "numberOfItems": 100, "itemListElement": [{"type": "ListItem", "position": 1, "name": "آب‌ریز", "url": "https://ssschangersss.github.io/world-of-games/games/water-sort/"}, {"type": "ListItem", "position": 2, "name": "اوتلو", "url": "https://ssschangersss.github.io/world-of-games/games/reversi/"}, {"type": "ListItem", "position": 3, "name": "بازی سلطنتی اور", "url": "https://ssschangersss.github.io/world-of-games/games/game-of-ur/"}, {"type": "ListItem", "position": 4, "name": "بالاتر یا پایین‌تر", "url": "https://ssschangersss.github.io/world-of-games/games/higher-lower/"}, {"type": "ListItem", "position": 5, "name": "برج هانوی", "url": "https://ssschangersss.github.io/world-of-games/games/hanoi/"}, {"type": "ListItem", "position": 6, "name": "برج‌ساز", "url": "https://ssschangersss.github.io/world-of-games/games/stacker/"}, {"type": "ListItem", "position": 7, "name": "بلوک‌دوکو", "url": "https://ssschangersss.github.io/world-of-games/games/blockudoku/"}, {"type": "ListItem", "position": 8, "name": "بلک‌جک ۲۱", "url": "https://ssschangersss.github.io/world-of-games/games/blackjack/"}, {"type": "ListItem", "position": 9, "name": "تاس پیگ", "url": "https://ssschangersss.github.io/world-of-games/games/pig/"}, {"type": "ListItem", "position": 10, "name": "ترافیک", "url": "https://ssschangersss.github.io/world-of-games/games/rush-hour/"}, {"type": "ListItem", "position": 11, "name": "تست استروپ", "url": "https://ssschangersss.github.io/world-of-games/games/stroop/"}, {"type": "ListItem", "position": 12, "name": "تهاجم فضایی", "url": "https://ssschangersss.github.io/world-of-games/games/invaders/"}, {"type": "ListItem", "position": 13, "name": "توپ‌شکن", "url": "https://ssschangersss.github.io/world-of-games/games/breakout/"}, {"type": "ListItem", "position": 14, "name": "تیرانداز هدف", "url": "https://ssschangersss.github.io/world-of-games/games/aim/"}, {"type": "ListItem", "position": 15, "name": "جنگ بادبادک", "url": "https://ssschangersss.github.io/world-of-games/games/kite/"}, {"type": "ListItem", "position": 16, "name": "جنگ کارتی", "url": "https://ssschangersss.github.io/world-of-games/games/war/"}, {"type": "ListItem", "position": 17, "name": "حافظه هخامنشی", "url": "https://ssschangersss.github.io/world-of-games/games/akhaemenid-memory/"}, {"type": "ListItem", "position": 18, "name": "حدس با ایموجی", "url": "https://ssschangersss.github.io/world-of-games/games/emoji-quiz/"}, {"type": "ListItem", "position": 19, "name": "حدس عدد", "url": "https://ssschangersss.github.io/world-of-games/games/guess-number/"}, {"type": "ListItem", "position": 20, "name": "حکم", "url": "https://ssschangersss.github.io/world-of-games/games/hokm/"}, {"type": "ListItem", "position": 21, "name": "دوری از توپ‌ها", "url": "https://ssschangersss.github.io/world-of-games/games/dodge/"}, {"type": "ListItem", "position": 22, "name": "دوز", "url": "https://ssschangersss.github.io/world-of-games/games/tic-tac-toe/"}, {"type": "ListItem", "position": 23, "name": "دومینو", "url": "https://ssschangersss.github.io/world-of-games/games/dominoes/"}, {"type": "ListItem", "position": 24, "name": "دوندهٔ کویر", "url": "https://ssschangersss.github.io/world-of-games/games/runner/"}, {"type": "ListItem", "position": 25, "name": "رقم‌های کوتاه", "url": "https://ssschangersss.github.io/world-of-games/games/digits/"}, {"type": "ListItem", "position": 26, "name": "رمزنگار", "url": "https://ssschangersss.github.io/world-of-games/games/mastermind/"}, {"type": "ListItem", "position": 27, "name": "روباه و سگ‌ها", "url": "https://ssschangersss.github.io/world-of-games/games/fox-and-hounds/"}, {"type": "ListItem", "position": 28, "name": "ریاضی برق‌آسا", "url": "https://ssschangersss.github.io/world-of-games/games/math-sprint/"}, {"type": "ListItem", "position": 29, "name": "زنجیرهٔ واژه‌ها", "url": "https://ssschangersss.github.io/world-of-games/games/word-chain/"}, {"type": "ListItem", "position": 30, "name": "ساعت آس", "url": "https://ssschangersss.github.io/world-of-games/games/clock/"}, {"type": "ListItem", "position": 31, "name": "سرعت تایپ", "url": "https://ssschangersss.github.io/world-of-games/games/typing/"}, {"type": "ListItem", "position": 32, "name": "سنگ کاغذ قیچی", "url": "https://ssschangersss.github.io/world-of-games/games/rps/"}, {"type": "ListItem", "position": 33, "name": "سنگ‌ریزه", "url": "https://ssschangersss.github.io/world-of-games/games/plinko/"}, {"type": "ListItem", "position": 34, "name": "سه تاس", "url": "https://ssschangersss.github.io/world-of-games/games/chuck-a-luck/"}, {"type": "ListItem", "position": 35, "name": "سه قله", "url": "https://ssschangersss.github.io/world-of-games/games/tripeaks/"}, {"type": "ListItem", "position": 36, "name": "سه‌کاسه", "url": "https://ssschangersss.github.io/world-of-games/games/cups/"}, {"type": "ListItem", "position": 37, "name": "سودوکو", "url": "https://ssschangersss.github.io/world-of-games/games/sudoku/"}, {"type": "ListItem", "position": 38, "name": "سولیتر", "url": "https://ssschangersss.github.io/world-of-games/games/solitaire/"}, {"type": "ListItem", "position": 39, "name": "سولیتر عنکبوتی", "url": "https://ssschangersss.github.io/world-of-games/games/spider/"}, {"type": "ListItem", "position": 40, "name": "سوکوبان", "url": "https://ssschangersss.github.io/world-of-games/games/sokoban/"}, {"type": "ListItem", "position": 41, "name": "سکه طلایی", "url": "https://ssschangersss.github.io/world-of-games/games/coin-flip/"}, {"type": "ListItem", "position": 42, "name": "سیارک‌ها", "url": "https://ssschangersss.github.io/world-of-games/games/asteroids/"}, {"type": "ListItem", "position": 43, "name": "سیمون", "url": "https://ssschangersss.github.io/world-of-games/games/simon/"}, {"type": "ListItem", "position": 44, "name": "سی‌ویک", "url": "https://ssschangersss.github.io/world-of-games/games/thirty-one/"}, {"type": "ListItem", "position": 45, "name": "شبکهٔ حافظه", "url": "https://ssschangersss.github.io/world-of-games/games/memory-grid/"}, {"type": "ListItem", "position": 46, "name": "شطرنج", "url": "https://ssschangersss.github.io/world-of-games/games/chess/"}, {"type": "ListItem", "position": 47, "name": "شهاب‌سنگ", "url": "https://ssschangersss.github.io/world-of-games/games/meteor/"}, {"type": "ListItem", "position": 48, "name": "صیاد سکه", "url": "https://ssschangersss.github.io/world-of-games/games/coin-catch/"}, {"type": "ListItem", "position": 49, "name": "ضرب‌المثل‌ها", "url": "https://ssschangersss.github.io/world-of-games/games/proverb/"}, {"type": "ListItem", "position": 50, "name": "طوفان رنگی", "url": "https://ssschangersss.github.io/world-of-games/games/flood/"}, {"type": "ListItem", "position": 51, "name": "عکس‌العمل", "url": "https://ssschangersss.github.io/world-of-games/games/reaction/"}, {"type": "ListItem", "position": 52, "name": "فری‌سل", "url": "https://ssschangersss.github.io/world-of-games/games/freecell/"}, {"type": "ListItem", "position": 53, "name": "قورباغهٔ عبوری", "url": "https://ssschangersss.github.io/world-of-games/games/frogger/"}, {"type": "ListItem", "position": 54, "name": "لوتو ۶ از ۴۹", "url": "https://ssschangersss.github.io/world-of-games/games/lotto/"}, {"type": "ListItem", "position": 55, "name": "لیدو", "url": "https://ssschangersss.github.io/world-of-games/games/ludo/"}, {"type": "ListItem", "position": 56, "name": "مار و پله", "url": "https://ssschangersss.github.io/world-of-games/games/snakes-ladders/"}, {"type": "ListItem", "position": 57, "name": "مار گرسنه", "url": "https://ssschangersss.github.io/world-of-games/games/snake/"}, {"type": "ListItem", "position": 58, "name": "مترادف و متضاد", "url": "https://ssschangersss.github.io/world-of-games/games/antonym/"}, {"type": "ListItem", "position": 59, "name": "مرد حلق‌آویز", "url": "https://ssschangersss.github.io/world-of-games/games/hangman/"}, {"type": "ListItem", "position": 60, "name": "منقله", "url": "https://ssschangersss.github.io/world-of-games/games/mancala/"}, {"type": "ListItem", "position": 61, "name": "موریس نه‌سنگ", "url": "https://ssschangersss.github.io/world-of-games/games/morris9/"}, {"type": "ListItem", "position": 62, "name": "موشکوبی", "url": "https://ssschangersss.github.io/world-of-games/games/whack/"}, {"type": "ListItem", "position": 63, "name": "مین‌یاب", "url": "https://ssschangersss.github.io/world-of-games/games/minesweeper/"}, {"type": "ListItem", "position": 64, "name": "نبرد دریایی", "url": "https://ssschangersss.github.io/world-of-games/games/battleship/"}, {"type": "ListItem", "position": 65, "name": "نرد ایرانی", "url": "https://ssschangersss.github.io/world-of-games/games/backgammon/"}, {"type": "ListItem", "position": 66, "name": "نقطه و خط", "url": "https://ssschangersss.github.io/world-of-games/games/dots-boxes/"}, {"type": "ListItem", "position": 67, "name": "نونوگرام", "url": "https://ssschangersss.github.io/world-of-games/games/nonogram/"}, {"type": "ListItem", "position": 68, "name": "نیم", "url": "https://ssschangersss.github.io/world-of-games/games/nim/"}, {"type": "ListItem", "position": 69, "name": "هرم", "url": "https://ssschangersss.github.io/world-of-games/games/pyramid/"}, {"type": "ListItem", "position": 70, "name": "هزارتو", "url": "https://ssschangersss.github.io/world-of-games/games/maze/"}, {"type": "ListItem", "position": 71, "name": "هشت دیوانه", "url": "https://ssschangersss.github.io/world-of-games/games/crazy-eights/"}, {"type": "ListItem", "position": 72, "name": "هشت وزیر", "url": "https://ssschangersss.github.io/world-of-games/games/8queens/"}, {"type": "ListItem", "position": 73, "name": "هکس", "url": "https://ssschangersss.github.io/world-of-games/games/hex/"}, {"type": "ListItem", "position": 74, "name": "واژه‌سازی", "url": "https://ssschangersss.github.io/world-of-games/games/anagram/"}, {"type": "ListItem", "position": 75, "name": "واژه‌یاب", "url": "https://ssschangersss.github.io/world-of-games/games/wordle/"}, {"type": "ListItem", "position": 76, "name": "واژه‌یاب شبکه‌ای", "url": "https://ssschangersss.github.io/world-of-games/games/word-search/"}, {"type": "ListItem", "position": 77, "name": "ویدیو پوکر", "url": "https://ssschangersss.github.io/world-of-games/games/video-poker/"}, {"type": "ListItem", "position": 78, "name": "پازل ۱۵", "url": "https://ssschangersss.github.io/world-of-games/games/p15/"}, {"type": "ListItem", "position": 79, "name": "پاسور", "url": "https://ssschangersss.github.io/world-of-games/games/pasoor/"}, {"type": "ListItem", "position": 80, "name": "پایتخت‌ها", "url": "https://ssschangersss.github.io/world-of-games/games/capitals/"}, {"type": "ListItem", "position": 81, "name": "پرش از البرز", "url": "https://ssschangersss.github.io/world-of-games/games/alborz-jump/"}, {"type": "ListItem", "position": 82, "name": "پرواز پرنده", "url": "https://ssschangersss.github.io/world-of-games/games/flappy/"}, {"type": "ListItem", "position": 83, "name": "پرچم‌ها", "url": "https://ssschangersss.github.io/world-of-games/games/flags/"}, {"type": "ListItem", "position": 84, "name": "پنتاگو", "url": "https://ssschangersss.github.io/world-of-games/games/pentago/"}, {"type": "ListItem", "position": 85, "name": "پنج‌درردیف", "url": "https://ssschangersss.github.io/world-of-games/games/gomoku/"}, {"type": "ListItem", "position": 86, "name": "پگ سولیتر", "url": "https://ssschangersss.github.io/world-of-games/games/peg/"}, {"type": "ListItem", "position": 87, "name": "پینگ‌پنگ", "url": "https://ssschangersss.github.io/world-of-games/games/pong/"}, {"type": "ListItem", "position": 88, "name": "چامپ", "url": "https://ssschangersss.github.io/world-of-games/games/chomp/"}, {"type": "ListItem", "position": 89, "name": "چراغ‌ها را خاموش کن", "url": "https://ssschangersss.github.io/world-of-games/games/lights-out/"}, {"type": "ListItem", "position": 90, "name": "چرخ میوه", "url": "https://ssschangersss.github.io/world-of-games/games/slots/"}, {"type": "ListItem", "position": 91, "name": "چهار در یک خط", "url": "https://ssschangersss.github.io/world-of-games/games/connect4/"}, {"type": "ListItem", "position": 92, "name": "چپ وسط راست", "url": "https://ssschangersss.github.io/world-of-games/games/lcr/"}, {"type": "ListItem", "position": 93, "name": "چکرز", "url": "https://ssschangersss.github.io/world-of-games/games/checkers/"}, {"type": "ListItem", "position": 94, "name": "کاکورو", "url": "https://ssschangersss.github.io/world-of-games/games/kakuro/"}, {"type": "ListItem", "position": 95, "name": "کواترو مینی", "url": "https://ssschangersss.github.io/world-of-games/games/quarto-mini/"}, {"type": "ListItem", "position": 96, "name": "گردونه شانس", "url": "https://ssschangersss.github.io/world-of-games/games/wheel/"}, {"type": "ListItem", "position": 97, "name": "گلف", "url": "https://ssschangersss.github.io/world-of-games/games/golf/"}, {"type": "ListItem", "position": 98, "name": "یاتزی", "url": "https://ssschangersss.github.io/world-of-games/games/yahtzee/"}, {"type": "ListItem", "position": 99, "name": "۲۰۴۸", "url": "https://ssschangersss.github.io/world-of-games/games/g2048/"}, {"type": "ListItem", "position": 100, "name": "۲۴ با اعداد", "url": "https://ssschangersss.github.io/world-of-games/games/calc24/"}]}</script>
+</head>
+<body>
+<nav class="nav">
+  <div class="brand">دنیای <span>بازی‌ها</span> ❋</div>
+  <div class="links">
+    <a href="#games">بازی‌ها</a><a href="#features">ویژگی‌ها</a><a href="#developers">توسعه‌دهندگان</a><a href="#mcp">MCP</a><a href="#donate">حمایت</a><a href="licenses.html">مجوزها</a>
+  </div>
+  <a class="btn ghost" style="padding:8px 18px;font-size:.85rem" href="#games">شروع بازی</a>
+</nav>
+
+<header class="hero">
+  <span class="kicker">نسخهٔ پیش‌نمایش عمومی — میزبانی GitHub Pages</span>
+  <h1>۱۰۰ بازی کلاسیک و ایرانی،<br><b>همین‌جا توی مرورگرت</b></h1>
+  <p>از شطرنج و نرد و حکم تا سودوکو، ۲۰۴۸، مار و سولیتر — همه با رابط فارسی و راست‌به‌چپ، طراحی الهام‌گرفته از هنر ایران‌باستان، بدون تبلیغات، بدون ثبت‌نام و کاملاً رایگان. روی گوشی و کامپیوتر بازی کن؛ همه‌چیز آفلاین اجرا می‌شود.</p>
+  <div class="stats">
+    <div class="stat"><b>۱۰۰</b><span>بازی قابل اجرا</span></div>
+    <div class="stat"><b>۶</b><span>دستهٔ موضوعی</span></div>
+    <div class="stat"><b>۰ تومان</b><span>هزینه، برای همیشه</span></div>
+    <div class="stat"><b>۱۰۰٪</b><span>فارسی و RTL</span></div>
+  </div>
+  <div class="cta-row">
+    <a class="btn" href="#games">ورود به گالری بازی‌ها</a>
+    <a class="btn ghost" href="https://github.com/SSSchangerSSS/world-of-games" rel="noopener">سورس در گیت‌هاب</a>
+  </div>
+</header>
+
+<section id="games">
+  <div class="sec-title"><h2>گالری بازی‌ها</h2><p>جست‌وجو کن یا دسته‌ات را انتخاب کن — ۱۰۰ بازی منتظر تو هستند</p></div>
+  <div class="tools">
+    <input class="search" id="q" type="search" placeholder="جست‌وجوی بازی… (مثلاً شطرنج)">
+    <button class="chip on" data-cat="all">همه (۱۰۰)</button>
+    <button class="chip" data-cat="dim3">سه‌بعدی Three.js (۱۳)</button>
+    <button class="chip" data-cat="board">تخته و استراتژی (۲۱)</button>
+    <button class="chip" data-cat="cards">بازی‌های کارتی (۱۶)</button>
+    <button class="chip" data-cat="puzzle">پازل و فکری (۲۰)</button>
+    <button class="chip" data-cat="arcade">اکشن و مهارتی (۲۲)</button>
+    <button class="chip" data-cat="word">واژه و دانش (۱۰)</button>
+    <button class="chip" data-cat="luck">شانس و سرگرمی (۱۱)</button>
+  </div>
+  <div class="grid" id="grid">
+    <a class="tile" id="tile-water-sort" href="games/water-sort/" data-cat="puzzle">
+  <div class="ico" style="background:linear-gradient(140deg,#a78bfa,#22304f)">💧</div>
+  <h3>آب‌ریز</h3>
+  <p>بطری‌های رنگی را با ریختنِ هوشمندانه از هم جدا کن؛ هر بطری در پایان فقط یک رنگ.</p>
+  <span class="cat dim3badge" style="display:none">سه‌بعدی Three.js</span><span class="cat" style="color:#a78bfa;border-color:#a78bfa">پازل و فکری</span>
+</a>
+    <a class="tile" id="tile-reversi" href="games/reversi/" data-cat="board">
+  <div class="ico" style="background:linear-gradient(140deg,#d9a441,#22304f)">◐</div>
+  <h3>اوتلو</h3>
+  <p>ریورسی ۸×۸ با وزن‌دهی موقعیتی</p>
+  <span class="cat dim3badge" style="display:none">سه‌بعدی Three.js</span><span class="cat" style="color:#d9a441;border-color:#d9a441">تخته و استراتژی</span>
+</a>
+    <a class="tile" id="tile-game-of-ur" href="games/game-of-ur/" data-cat="board">
+  <div class="ico" style="background:linear-gradient(140deg,#d9a441,#22304f)">⚄</div>
+  <h3>بازی سلطنتی اور</h3>
+  <p>نژاد کهن سلطنتی اور بین تو و ربات: با تاس‌های چهارگانه مهره‌ها را از مسیر ۲۰ خانه‌ای عبور بده و زودتر از حریف هر ۷ مهره را بیرون بفرست.</p>
+  <span class="cat dim3badge" style="display:none">سه‌بعدی Three.js</span><span class="cat" style="color:#d9a441;border-color:#d9a441">تخته و استراتژی</span>
+</a>
+    <a class="tile" id="tile-higher-lower" href="games/higher-lower/" data-cat="cards">
+  <div class="ico" style="background:linear-gradient(140deg,#3fb8af,#22304f)">🃏</div>
+  <h3>بالاتر یا پایین‌تر</h3>
+  <p>کارت فعلی را ببین و حدس بزن: کارت بعدی بالاتر است یا پایین‌تر؟ هر حدس درست زنجیره و امتیازت را بلندتر می‌کند.</p>
+  <span class="cat dim3badge" style="display:none">سه‌بعدی Three.js</span><span class="cat" style="color:#3fb8af;border-color:#3fb8af">بازی‌های کارتی</span>
+</a>
+    <a class="tile" id="tile-hanoi" href="games/hanoi/" data-cat="puzzle">
+  <div class="ico" style="background:linear-gradient(140deg,#a78bfa,#22304f)">🗼</div>
+  <h3>برج هانوی</h3>
+  <p>برج هانوی با ۳ تا ۷ دیسک: همهٔ دیسک‌ها را از برج اول به برج سوم ببر؛ دیسک بزرگ‌تر هرگز روی کوچک‌تر نمی‌نشیند.</p>
+  <span class="cat dim3badge" style="display:none">سه‌بعدی Three.js</span><span class="cat" style="color:#a78bfa;border-color:#a78bfa">پازل و فکری</span>
+</a>
+    <a class="tile" id="tile-stacker" href="games/stacker/" data-cat="arcade">
+  <div class="ico" style="background:linear-gradient(140deg,#e26d5c,#22304f)">🧱</div>
+  <h3>برج‌ساز</h3>
+  <p>بلوک را در لحظهٔ درست رها کن تا برج بلندتر شود؛ چیدمان کامل عرض از دست رفته را برمی‌گرداند.</p>
+  <span class="cat dim3badge" style="display:none">سه‌بعدی Three.js</span><span class="cat" style="color:#e26d5c;border-color:#e26d5c">اکشن و مهارتی</span>
+</a>
+    <a class="tile" id="tile-blockudoku" href="games/blockudoku/" data-cat="puzzle">
+  <div class="ico" style="background:linear-gradient(140deg,#a78bfa,#22304f)">🧩</div>
+  <h3>بلوک‌دوکو</h3>
+  <p>قطعه‌ها را روی شبکهٔ ۹×۹ بچین؛ سطر، ستون یا بلوک ۳×۳ کامل پاک می‌شود و زنجیرهٔ پاک‌سازی امتیاز اضافه می‌دهد.</p>
+  <span class="cat dim3badge" style="display:none">سه‌بعدی Three.js</span><span class="cat" style="color:#a78bfa;border-color:#a78bfa">پازل و فکری</span>
+</a>
+    <a class="tile" id="tile-blackjack" href="games/blackjack/" data-cat="cards">
+  <div class="ico" style="background:linear-gradient(140deg,#3fb8af,#22304f)">🂡</div>
+  <h3>بلک‌جک ۲۱</h3>
+  <p>بلک‌جک با کفش ۴ دسته، دوبرابر و پرداخت ۳ به ۲</p>
+  <span class="cat dim3badge" style="display:none">سه‌بعدی Three.js</span><span class="cat" style="color:#3fb8af;border-color:#3fb8af">بازی‌های کارتی</span>
+</a>
+    <a class="tile" id="tile-pig" href="games/pig/" data-cat="luck">
+  <div class="ico" style="background:linear-gradient(140deg,#e8c073,#22304f)">🐷</div>
+  <h3>تاس پیگ</h3>
+  <p>تاس بیندازید و شمارش نوبت را جمع کنید؛ با آمدن ۱ همهٔ شمارش می‌سوزد. ربات محتاط را در رسیدن به ۱۰۰ امتیاز شکست دهید.</p>
+  <span class="cat dim3badge" style="display:none">سه‌بعدی Three.js</span><span class="cat" style="color:#e8c073;border-color:#e8c073">شانس و سرگرمی</span>
+</a>
+    <a class="tile" id="tile-rush-hour" href="games/rush-hour/" data-cat="puzzle">
+  <div class="ico" style="background:linear-gradient(140deg,#a78bfa,#22304f)">🚗</div>
+  <h3>ترافیک</h3>
+  <p>ترافیک ۶×۶ با ۸ نقشهٔ دست‌ساز: خودروها را روی محور خودشان لغزش بده تا ماشین قرمز از لبهٔ راست ردیف سوم خارج شود. حداقل حرکت هر نقشه با BFS محاسبه شده است.</p>
+  <span class="cat dim3badge" style="display:none">سه‌بعدی Three.js</span><span class="cat" style="color:#a78bfa;border-color:#a78bfa">پازل و فکری</span>
+</a>
+    <a class="tile" id="tile-stroop" href="games/stroop/" data-cat="arcade">
+  <div class="ico" style="background:linear-gradient(140deg,#e26d5c,#22304f)">🎨</div>
+  <h3>تست استروپ</h3>
+  <p>کلمهٔ رنگی می‌بینی و باید رنگِ جوهر را انتخاب کنی، نه معنی کلمه را. ۴۵ ثانیه فرصت داری!</p>
+  <span class="cat dim3badge" style="display:none">سه‌بعدی Three.js</span><span class="cat" style="color:#e26d5c;border-color:#e26d5c">اکشن و مهارتی</span>
+</a>
+    <a class="tile" id="tile-invaders" href="games/invaders/" data-cat="arcade">
+  <div class="ico" style="background:linear-gradient(140deg,#e26d5c,#22304f)">👾</div>
+  <h3>تهاجم فضایی</h3>
+  <p>صف ۵×۸ بیگانگان چپ و راست می‌رود و هر بار در لبه پایین‌تر می‌آید؛ هرچه کمتر بمانند تندتر می‌شوند.</p>
+  <span class="cat dim3badge" style="display:none">سه‌بعدی Three.js</span><span class="cat" style="color:#e26d5c;border-color:#e26d5c">اکشن و مهارتی</span>
+</a>
+    <a class="tile" id="tile-breakout" href="games/breakout/" data-cat="arcade">
+  <div class="ico" style="background:linear-gradient(140deg,#e26d5c,#22304f)">🧱</div>
+  <h3>توپ‌شکن</h3>
+  <p>شکستن آجرها با فیزیک دقیق و لِوِل‌های بی‌پایان</p>
+  <span class="cat dim3badge" style="display:inline-flex">سه‌بعدی Three.js</span><span class="cat" style="color:#e26d5c;border-color:#e26d5c">اکشن و مهارتی</span>
+</a>
+    <a class="tile" id="tile-aim" href="games/aim/" data-cat="arcade">
+  <div class="ico" style="background:linear-gradient(140deg,#e26d5c,#22304f)">target</div>
+  <h3>تیرانداز هدف</h3>
+  <p>در ۳۰ ثانیه به هدف‌هایی که یکی‌یکی ظاهر می‌شوند شلیک کن؛ سرعت عمل جایزه دارد و هر خطا ۵ امتیاز کم می‌کند.</p>
+  <span class="cat dim3badge" style="display:none">سه‌بعدی Three.js</span><span class="cat" style="color:#e26d5c;border-color:#e26d5c">اکشن و مهارتی</span>
+</a>
+    <a class="tile" id="tile-kite" href="games/kite/" data-cat="arcade">
+  <div class="ico" style="background:linear-gradient(140deg,#e26d5c,#22304f)">🪁</div>
+  <h3>جنگ بادبادک</h3>
+  <p>نبرد بادبادک‌ها: با عبور بادبادکت رشتهٔ حریف را پاره کن و نگذار رشتهٔ خودت بریده شود.</p>
+  <span class="cat dim3badge" style="display:none">سه‌بعدی Three.js</span><span class="cat" style="color:#e26d5c;border-color:#e26d5c">اکشن و مهارتی</span>
+</a>
+    <a class="tile" id="tile-war" href="games/war/" data-cat="cards">
+  <div class="ico" style="background:linear-gradient(140deg,#3fb8af,#22304f)">⚔️</div>
+  <h3>جنگ کارتی</h3>
+  <p>جنگ کارتی کلاسیک با ۲۶ کارت هر طرف؛ برابری یعنی جنگ با سه کارت بسته و یک کارت رو.</p>
+  <span class="cat dim3badge" style="display:none">سه‌بعدی Three.js</span><span class="cat" style="color:#3fb8af;border-color:#3fb8af">بازی‌های کارتی</span>
+</a>
+    <a class="tile" id="tile-akhaemenid-memory" href="games/akhaemenid-memory/" data-cat="cards">
+  <div class="ico" style="background:linear-gradient(140deg,#3fb8af,#22304f)">🏛</div>
+  <h3>حافظه هخامنشی</h3>
+  <p>بازی حافظه با نمادهای ایران‌باستان</p>
+  <span class="cat dim3badge" style="display:inline-flex">سه‌بعدی Three.js</span><span class="cat" style="color:#3fb8af;border-color:#3fb8af">بازی‌های کارتی</span>
+</a>
+    <a class="tile" id="tile-emoji-quiz" href="games/emoji-quiz/" data-cat="word">
+  <div class="ico" style="background:linear-gradient(140deg,#67b98a,#22304f)">🎯</div>
+  <h3>حدس با ایموجی</h3>
+  <p>از روی رشتهٔ ایموجی‌ها حدس بزنید چه فیلم، شغل یا چیز مشهوری در ذهن ماست.</p>
+  <span class="cat dim3badge" style="display:none">سه‌بعدی Three.js</span><span class="cat" style="color:#67b98a;border-color:#67b98a">واژه و دانش</span>
+</a>
+    <a class="tile" id="tile-guess-number" href="games/guess-number/" data-cat="luck">
+  <div class="ico" style="background:linear-gradient(140deg,#e8c073,#22304f)">🔢</div>
+  <h3>حدس عدد</h3>
+  <p>عدد مخفی بین ۱ تا ۱۰۰ را با کمترین تلاش پیدا کن؛ راهنمای گرم/سرد و بازهٔ هوشمند همراهی‌ات می‌کند.</p>
+  <span class="cat dim3badge" style="display:none">سه‌بعدی Three.js</span><span class="cat" style="color:#e8c073;border-color:#e8c073">شانس و سرگرمی</span>
+</a>
+    <a class="tile" id="tile-hokm" href="games/hokm/" data-cat="cards">
+  <div class="ico" style="background:linear-gradient(140deg,#3fb8af,#22304f)">🎴</div>
+  <h3>حکم</h3>
+  <p>حکم چهارنفره تیمی؛ تعیین حاکم با آک، تبعیت از خال و گرفتن ترفندها.</p>
+  <span class="cat dim3badge" style="display:none">سه‌بعدی Three.js</span><span class="cat" style="color:#3fb8af;border-color:#3fb8af">بازی‌های کارتی</span>
+</a>
+    <a class="tile" id="tile-dodge" href="games/dodge/" data-cat="arcade">
+  <div class="ico" style="background:linear-gradient(140deg,#e26d5c,#22304f)">⚪</div>
+  <h3>دوری از توپ‌ها</h3>
+  <p>توپ‌ها در میدان جهش می‌کنند و شمارشان پیوسته بیشتر می‌شود؛ تا می‌توانی زنده بمان و امتیاز بگیر.</p>
+  <span class="cat dim3badge" style="display:none">سه‌بعدی Three.js</span><span class="cat" style="color:#e26d5c;border-color:#e26d5c">اکشن و مهارتی</span>
+</a>
+    <a class="tile" id="tile-tic-tac-toe" href="games/tic-tac-toe/" data-cat="board">
+  <div class="ico" style="background:linear-gradient(140deg,#d9a441,#22304f)">✕</div>
+  <h3>دوز</h3>
+  <p>دوز با مینی‌مکس شکست‌ناپذیر</p>
+  <span class="cat dim3badge" style="display:none">سه‌بعدی Three.js</span><span class="cat" style="color:#d9a441;border-color:#d9a441">تخته و استراتژی</span>
+</a>
+    <a class="tile" id="tile-dominoes" href="games/dominoes/" data-cat="board">
+  <div class="ico" style="background:linear-gradient(140deg,#d9a441,#22304f)">⬛</div>
+  <h3>دومینو</h3>
+  <p>دومینوی شش‌دوبله در برابر ربات: تخته‌هایت را به دو سرِ خط بزن، از بونیارد بکش و در بن‌بست دستِ سبک‌تر برنده است.</p>
+  <span class="cat dim3badge" style="display:inline-flex">سه‌بعدی Three.js</span><span class="cat" style="color:#d9a441;border-color:#d9a441">تخته و استراتژی</span>
+</a>
+    <a class="tile" id="tile-runner" href="games/runner/" data-cat="arcade">
+  <div class="ico" style="background:linear-gradient(140deg,#e26d5c,#22304f)">🏃</div>
+  <h3>دوندهٔ کویر</h3>
+  <p>دوندهٔ کویر از روی سنگ‌ها می‌پرد؛ مسافت بیشتر، امتیاز بیشتر و سرعت فزاینده.</p>
+  <span class="cat dim3badge" style="display:none">سه‌بعدی Three.js</span><span class="cat" style="color:#e26d5c;border-color:#e26d5c">اکشن و مهارتی</span>
+</a>
+    <a class="tile" id="tile-digits" href="games/digits/" data-cat="arcade">
+  <div class="ico" style="background:linear-gradient(140deg,#e26d5c,#22304f)">grid</div>
+  <h3>رقم‌های کوتاه</h3>
+  <p>رشتهٔ اعداد را به حافظه بسپار و به همان ترتیب تایپ کن؛ از طول ۳ تا ۱۲ پیش می‌روی و ۳ جان داری.</p>
+  <span class="cat dim3badge" style="display:none">سه‌بعدی Three.js</span><span class="cat" style="color:#e26d5c;border-color:#e26d5c">اکشن و مهارتی</span>
+</a>
+    <a class="tile" id="tile-mastermind" href="games/mastermind/" data-cat="puzzle">
+  <div class="ico" style="background:linear-gradient(140deg,#a78bfa,#22304f)">●</div>
+  <h3>رمزنگار</h3>
+  <p>رمز ۴ رنگی از میان ۶ رنگ را در حدس ۱۰گانه کشف کن؛ راهنمای سیاه و سفید مسیر را نشان می‌دهد.</p>
+  <span class="cat dim3badge" style="display:none">سه‌بعدی Three.js</span><span class="cat" style="color:#a78bfa;border-color:#a78bfa">پازل و فکری</span>
+</a>
+    <a class="tile" id="tile-fox-and-hounds" href="games/fox-and-hounds/" data-cat="board">
+  <div class="ico" style="background:linear-gradient(140deg,#d9a441,#22304f)">◉</div>
+  <h3>روباه و سگ‌ها</h3>
+  <p>روباه و سگ‌ها روی خانه‌های تیرهٔ صفحهٔ شطرنجی: شما روباه هستید و چهار سگ فقط رو به جلو حرکت می‌کنند. خود را به ردیف نخست برسانید و از محاصره بگریزید.</p>
+  <span class="cat dim3badge" style="display:none">سه‌بعدی Three.js</span><span class="cat" style="color:#d9a441;border-color:#d9a441">تخته و استراتژی</span>
+</a>
+    <a class="tile" id="tile-math-sprint" href="games/math-sprint/" data-cat="arcade">
+  <div class="ico" style="background:linear-gradient(140deg,#e26d5c,#22304f)">🧮</div>
+  <h3>ریاضی برق‌آسا</h3>
+  <p>۶۰ ثانیه محاسبهٔ برق‌آسا؛ سؤال‌ها هر ۱۵ ثانیه سخت‌تر می‌شوند و هر اشتباه دو ثانیه از وقتت کم می‌کند.</p>
+  <span class="cat dim3badge" style="display:none">سه‌بعدی Three.js</span><span class="cat" style="color:#e26d5c;border-color:#e26d5c">اکشن و مهارتی</span>
+</a>
+    <a class="tile" id="tile-word-chain" href="games/word-chain/" data-cat="word">
+  <div class="ico" style="background:linear-gradient(140deg,#67b98a,#22304f)">🔗</div>
+  <h3>زنجیرهٔ واژه‌ها</h3>
+  <p>با ربات زنجیرهٔ واژه بساز: هر واژه باید با حرف آخر واژهٔ قبلی شروع شود و در هر دور تکراری نباشد. ۱۵ ثانیه وقت داری؛ اولین ۵ امتیاز برنده است.</p>
+  <span class="cat dim3badge" style="display:none">سه‌بعدی Three.js</span><span class="cat" style="color:#67b98a;border-color:#67b98a">واژه و دانش</span>
+</a>
+    <a class="tile" id="tile-clock" href="games/clock/" data-cat="cards">
+  <div class="ico" style="background:linear-gradient(140deg,#3fb8af,#22304f)">🕐</div>
+  <h3>ساعت آس</h3>
+  <p>پاسور ساعت: ۱۳ پشتهٔ چهارکارته؛ هر کارت رو شده به پشتهٔ رتبهٔ خودش میرود؛ قبل از شاه چهارم همه را رو کن.</p>
+  <span class="cat dim3badge" style="display:none">سه‌بعدی Three.js</span><span class="cat" style="color:#3fb8af;border-color:#3fb8af">بازی‌های کارتی</span>
+</a>
+    <a class="tile" id="tile-typing" href="games/typing/" data-cat="arcade">
+  <div class="ico" style="background:linear-gradient(140deg,#e26d5c,#22304f)">⌨</div>
+  <h3>سرعت تایپ</h3>
+  <p>جمله‌های فارسی را سریع و دقیق تایپ کن؛ حروف درست سبز و غلط قرمز می‌شوند و سرعت و دقتت زنده نمایش داده می‌شود.</p>
+  <span class="cat dim3badge" style="display:none">سه‌بعدی Three.js</span><span class="cat" style="color:#e26d5c;border-color:#e26d5c">اکشن و مهارتی</span>
+</a>
+    <a class="tile" id="tile-rps" href="games/rps/" data-cat="luck">
+  <div class="ico" style="background:linear-gradient(140deg,#e8c073,#22304f)">✊</div>
+  <h3>سنگ کاغذ قیچی</h3>
+  <p>سنگ‌کاغذ‌قیچی بهترین از ۵ مقابل رباتِ تطبیقی که حرکت‌های پرتکرار تو را می‌شمارد و علیه رایج‌ترین حرکتت می‌ایستد.</p>
+  <span class="cat dim3badge" style="display:none">سه‌بعدی Three.js</span><span class="cat" style="color:#e8c073;border-color:#e8c073">شانس و سرگرمی</span>
+</a>
+    <a class="tile" id="tile-plinko" href="games/plinko/" data-cat="luck">
+  <div class="ico" style="background:linear-gradient(140deg,#e8c073,#22304f)">🎯</div>
+  <h3>سنگ‌ریزه</h3>
+  <p>سنگ‌ریزه را بین میخ‌ها رها کن و جوایز خانه‌های پایین را بگیر.</p>
+  <span class="cat dim3badge" style="display:none">سه‌بعدی Three.js</span><span class="cat" style="color:#e8c073;border-color:#e8c073">شانس و سرگرمی</span>
+</a>
+    <a class="tile" id="tile-chuck-a-luck" href="games/chuck-a-luck/" data-cat="luck">
+  <div class="ico" style="background:linear-gradient(140deg,#e8c073,#22304f)">🎰</div>
+  <h3>سه تاس</h3>
+  <p>سه تاس می‌چرخند؛ روی عدد دلخواه شرط ببندید — هر تطبیق به‌اندازهٔ شرط شما جایزه دارد (۱تا۳ برابر).</p>
+  <span class="cat dim3badge" style="display:none">سه‌بعدی Three.js</span><span class="cat" style="color:#e8c073;border-color:#e8c073">شانس و سرگرمی</span>
+</a>
+    <a class="tile" id="tile-tripeaks" href="games/tripeaks/" data-cat="cards">
+  <div class="ico" style="background:linear-gradient(140deg,#3fb8af,#22304f)">⛰️</div>
+  <h3>سه قله</h3>
+  <p>سولیتیر سه‌قله با ۲۸ کارت روی تپه‌ها و ۲۳ کارت دانته؛ هر بردار کمبو را بالا میبرد و امتیاز میسازد.</p>
+  <span class="cat dim3badge" style="display:none">سه‌بعدی Three.js</span><span class="cat" style="color:#3fb8af;border-color:#3fb8af">بازی‌های کارتی</span>
+</a>
+    <a class="tile" id="tile-cups" href="games/cups/" data-cat="arcade">
+  <div class="ico" style="background:linear-gradient(140deg,#e26d5c,#22304f)">🥤</div>
+  <h3>سه‌کاسه</h3>
+  <p>توپ زیر یکی از سه کاسه نشان داده می‌شود؛ جابه‌جایی‌ها را دنبال کن و حدس بزن. هر مرحله سریع‌تر و شلوغ‌تر است.</p>
+  <span class="cat dim3badge" style="display:none">سه‌بعدی Three.js</span><span class="cat" style="color:#e26d5c;border-color:#e26d5c">اکشن و مهارتی</span>
+</a>
+    <a class="tile" id="tile-sudoku" href="games/sudoku/" data-cat="puzzle">
+  <div class="ico" style="background:linear-gradient(140deg,#a78bfa,#22304f)">🔢</div>
+  <h3>سودوکو</h3>
+  <p>سودوکو با تولید راه‌حل‌یکتا و سه سطح</p>
+  <span class="cat dim3badge" style="display:none">سه‌بعدی Three.js</span><span class="cat" style="color:#a78bfa;border-color:#a78bfa">پازل و فکری</span>
+</a>
+    <a class="tile" id="tile-solitaire" href="games/solitaire/" data-cat="cards">
+  <div class="ico" style="background:linear-gradient(140deg,#3fb8af,#22304f)">♠</div>
+  <h3>سولیتر</h3>
+  <p>سولیتر کلاسیک کلایک با undo و برداشتن خودکار</p>
+  <span class="cat dim3badge" style="display:none">سه‌بعدی Three.js</span><span class="cat" style="color:#3fb8af;border-color:#3fb8af">بازی‌های کارتی</span>
+</a>
+    <a class="tile" id="tile-spider" href="games/spider/" data-cat="cards">
+  <div class="ico" style="background:linear-gradient(140deg,#3fb8af,#22304f)">🕷️</div>
+  <h3>سولیتر عنکبوتی</h3>
+  <p>سولیتر عنکبوتی تک‌خال با ۱۰ ستون و ۵ بار پخش از دسته</p>
+  <span class="cat dim3badge" style="display:none">سه‌بعدی Three.js</span><span class="cat" style="color:#3fb8af;border-color:#3fb8af">بازی‌های کارتی</span>
+</a>
+    <a class="tile" id="tile-sokoban" href="games/sokoban/" data-cat="puzzle">
+  <div class="ico" style="background:linear-gradient(140deg,#a78bfa,#22304f)">📦</div>
+  <h3>سوکوبان</h3>
+  <p>۶ مرحلهٔ دست‌ساز سوکوبان: جعبه‌ها را فقط هل بده (هیچ کشیدنی در کار نیست) و همه را روی اهداف بگذار. حل‌پذیری همهٔ مرحله‌ها با جست‌وجوی BFS اثبات شده است.</p>
+  <span class="cat dim3badge" style="display:none">سه‌بعدی Three.js</span><span class="cat" style="color:#a78bfa;border-color:#a78bfa">پازل و فکری</span>
+</a>
+    <a class="tile" id="tile-coin-flip" href="games/coin-flip/" data-cat="luck">
+  <div class="ico" style="background:linear-gradient(140deg,#e8c073,#22304f)">🪙</div>
+  <h3>سکه طلایی</h3>
+  <p>روی یا خط؟ زنجیره‌ی بردهای پشت‌سرهم بساز و رکورد بزن.</p>
+  <span class="cat dim3badge" style="display:none">سه‌بعدی Three.js</span><span class="cat" style="color:#e8c073;border-color:#e8c073">شانس و سرگرمی</span>
+</a>
+    <a class="tile" id="tile-asteroids" href="games/asteroids/" data-cat="arcade">
+  <div class="ico" style="background:linear-gradient(140deg,#e26d5c,#22304f)">🚀</div>
+  <h3>سیارک‌ها</h3>
+  <p>کشتی را بچرخان، پیشران بگیر و سیارک‌ها را بشکن؛ هر سیارک به دو تکه کوچک‌تر شکافته می‌شود.</p>
+  <span class="cat dim3badge" style="display:none">سه‌بعدی Three.js</span><span class="cat" style="color:#e26d5c;border-color:#e26d5c">اکشن و مهارتی</span>
+</a>
+    <a class="tile" id="tile-simon" href="games/simon/" data-cat="puzzle">
+  <div class="ico" style="background:linear-gradient(140deg,#a78bfa,#22304f)">♪</div>
+  <h3>سیمون</h3>
+  <p>دنبالهٔ نور و صدا را به خاطر بسپار و تکرار کن؛ هر سطح یک گام بلندتر و سریع‌تر می‌شود.</p>
+  <span class="cat dim3badge" style="display:none">سه‌بعدی Three.js</span><span class="cat" style="color:#a78bfa;border-color:#a78bfa">پازل و فکری</span>
+</a>
+    <a class="tile" id="tile-thirty-one" href="games/thirty-one/" data-cat="cards">
+  <div class="ico" style="background:linear-gradient(140deg,#3fb8af,#22304f)">♣</div>
+  <h3>سی‌ویک</h3>
+  <p>سی‌ویک با دو حریف: دستت را به بهترین تک‌خال برسان؛ در ۲۷ یا بالاتر بکوب تا رقیب‌ها فقط یک نوبت داشته باشند.</p>
+  <span class="cat dim3badge" style="display:none">سه‌بعدی Three.js</span><span class="cat" style="color:#3fb8af;border-color:#3fb8af">بازی‌های کارتی</span>
+</a>
+    <a class="tile" id="tile-memory-grid" href="games/memory-grid/" data-cat="puzzle">
+  <div class="ico" style="background:linear-gradient(140deg,#a78bfa,#22304f)">🧠</div>
+  <h3>شبکهٔ حافظه</h3>
+  <p>خانه‌های روشن را لحظه‌ای ببین و بعد پیدا کن؛ هر مرحله خانه‌های بیشتری دارد.</p>
+  <span class="cat dim3badge" style="display:inline-flex">سه‌بعدی Three.js</span><span class="cat" style="color:#a78bfa;border-color:#a78bfa">پازل و فکری</span>
+</a>
+    <a class="tile" id="tile-chess" href="games/chess/" data-cat="board">
+  <div class="ico" style="background:linear-gradient(140deg,#d9a441,#22304f)">♞</div>
+  <h3>شطرنج</h3>
+  <p>شطرنج کامل با قوانین رسمی و هوش مصنوعی</p>
+  <span class="cat dim3badge" style="display:inline-flex">سه‌بعدی Three.js</span><span class="cat" style="color:#d9a441;border-color:#d9a441">تخته و استراتژی</span>
+</a>
+    <a class="tile" id="tile-meteor" href="games/meteor/" data-cat="arcade">
+  <div class="ico" style="background:linear-gradient(140deg,#e26d5c,#22304f)">☄</div>
+  <h3>شهاب‌سنگ</h3>
+  <p>کشتی تو در پایین صفحه است؛ از ریزش شهاب‌ها فرار کن، بلور بگیر و با سپر زنده بمان.</p>
+  <span class="cat dim3badge" style="display:none">سه‌بعدی Three.js</span><span class="cat" style="color:#e26d5c;border-color:#e26d5c">اکشن و مهارتی</span>
+</a>
+    <a class="tile" id="tile-coin-catch" href="games/coin-catch/" data-cat="arcade">
+  <div class="ico" style="background:linear-gradient(140deg,#e26d5c,#22304f)">🪙</div>
+  <h3>صیاد سکه</h3>
+  <p>با پارو سکه‌های طلایی را بگیر، زنجیه بساز و از بمب‌ها دوری کن؛ سرعت مدام بیشتر می‌شود.</p>
+  <span class="cat dim3badge" style="display:none">سه‌بعدی Three.js</span><span class="cat" style="color:#e26d5c;border-color:#e26d5c">اکشن و مهارتی</span>
+</a>
+    <a class="tile" id="tile-proverb" href="games/proverb/" data-cat="word">
+  <div class="ico" style="background:linear-gradient(140deg,#67b98a,#22304f)">📜</div>
+  <h3>ضرب‌المثل‌ها</h3>
+  <p>نیمهٔ نخست یک ضرب‌المثل معروف را می‌بینید؛ ادامهٔ درستش را از میان چهار گزینه پیدا کنید.</p>
+  <span class="cat dim3badge" style="display:none">سه‌بعدی Three.js</span><span class="cat" style="color:#67b98a;border-color:#67b98a">واژه و دانش</span>
+</a>
+    <a class="tile" id="tile-flood" href="games/flood/" data-cat="puzzle">
+  <div class="ico" style="background:linear-gradient(140deg,#a78bfa,#22304f)">🌊</div>
+  <h3>طوفان رنگی</h3>
+  <p>صفحهٔ ۱۴×۱۴ با شش رنگ؛ ناحیهٔ گوشهٔ بالا-چپ را با انتخاب رنگ‌ها بزرگ کن و در حداکثر ۲۵ حرکت کل صفحه را یک‌رنگ کن.</p>
+  <span class="cat dim3badge" style="display:none">سه‌بعدی Three.js</span><span class="cat" style="color:#a78bfa;border-color:#a78bfa">پازل و فکری</span>
+</a>
+    <a class="tile" id="tile-reaction" href="games/reaction/" data-cat="arcade">
+  <div class="ico" style="background:linear-gradient(140deg,#e26d5c,#22304f)">bolt</div>
+  <h3>عکس‌العمل</h3>
+  <p>پنج دور آزمون عکس‌العمل: منتظر علامت بمان و فوری ضربه بزن. زود زدن جریمهٔ نیم‌ثانیه دارد و رتبهٔ نهایی می‌گیری.</p>
+  <span class="cat dim3badge" style="display:none">سه‌بعدی Three.js</span><span class="cat" style="color:#e26d5c;border-color:#e26d5c">اکشن و مهارتی</span>
+</a>
+    <a class="tile" id="tile-freecell" href="games/freecell/" data-cat="cards">
+  <div class="ico" style="background:linear-gradient(140deg,#3fb8af,#22304f)">🃏</div>
+  <h3>فری‌سل</h3>
+  <p>فری‌سل با ۸ ستون، ۴ خانه آزاد و ۴ بنیاد</p>
+  <span class="cat dim3badge" style="display:none">سه‌بعدی Three.js</span><span class="cat" style="color:#3fb8af;border-color:#3fb8af">بازی‌های کارتی</span>
+</a>
+    <a class="tile" id="tile-frogger" href="games/frogger/" data-cat="arcade">
+  <div class="ico" style="background:linear-gradient(140deg,#e26d5c,#22304f)">🐸</div>
+  <h3>قورباغهٔ عبوری</h3>
+  <p>قورباغه را از جادهٔ پرماشین و رودخانه عبور بده؛ روی کنده‌ها سوار شو و به ردیف بالا برس.</p>
+  <span class="cat dim3badge" style="display:none">سه‌بعدی Three.js</span><span class="cat" style="color:#e26d5c;border-color:#e26d5c">اکشن و مهارتی</span>
+</a>
+    <a class="tile" id="tile-lotto" href="games/lotto/" data-cat="luck">
+  <div class="ico" style="background:linear-gradient(140deg,#e8c073,#22304f)">🎟</div>
+  <h3>لوتو ۶ از ۴۹</h3>
+  <p>شانست را امتحان کن: ۶ عدد را انتخاب کن و با قرعه رسمی مقایسه کن.</p>
+  <span class="cat dim3badge" style="display:none">سه‌بعدی Three.js</span><span class="cat" style="color:#e8c073;border-color:#e8c073">شانس و سرگرمی</span>
+</a>
+    <a class="tile" id="tile-ludo" href="games/ludo/" data-cat="board">
+  <div class="ico" style="background:linear-gradient(140deg,#d9a441,#22304f)">🎯</div>
+  <h3>لیدو</h3>
+  <p>لیدوی ساده‌شدهٔ دونفره در برابر ربات: چهار مهره، مسیر ۵۲ خانه‌ای مشترک و ستون خانه؛ با ۶ از پایگاه بیرون بیا و اولین نفر همه را به خانه برسان.</p>
+  <span class="cat dim3badge" style="display:none">سه‌بعدی Three.js</span><span class="cat" style="color:#d9a441;border-color:#d9a441">تخته و استراتژی</span>
+</a>
+    <a class="tile" id="tile-snakes-ladders" href="games/snakes-ladders/" data-cat="board">
+  <div class="ico" style="background:linear-gradient(140deg,#d9a441,#22304f)">🪜</div>
+  <h3>مار و پله</h3>
+  <p>مسابقه تا خانهٔ ۱۰۰ با ۸ پله و ۸ مار؛ باید دقیقاً روی ۱۰۰ بایستی و ربات هم با همین قوانین بازی می‌کند.</p>
+  <span class="cat dim3badge" style="display:none">سه‌بعدی Three.js</span><span class="cat" style="color:#d9a441;border-color:#d9a441">تخته و استراتژی</span>
+</a>
+    <a class="tile" id="tile-snake" href="games/snake/" data-cat="arcade">
+  <div class="ico" style="background:linear-gradient(140deg,#e26d5c,#22304f)">🐍</div>
+  <h3>مار گرسنه</h3>
+  <p>مار کلاسیک با کنترل لمسی و کیبورد</p>
+  <span class="cat dim3badge" style="display:inline-flex">سه‌بعدی Three.js</span><span class="cat" style="color:#e26d5c;border-color:#e26d5c">اکشن و مهارتی</span>
+</a>
+    <a class="tile" id="tile-antonym" href="games/antonym/" data-cat="word">
+  <div class="ico" style="background:linear-gradient(140deg,#67b98a,#22304f)">↔️</div>
+  <h3>مترادف و متضاد</h3>
+  <p>به نوع هر سؤال دقت کنید و مترادف یا متضادِ واژهٔ داده‌شده را از میان چهار گزینه انتخاب کنید.</p>
+  <span class="cat dim3badge" style="display:none">سه‌بعدی Three.js</span><span class="cat" style="color:#67b98a;border-color:#67b98a">واژه و دانش</span>
+</a>
+    <a class="tile" id="tile-hangman" href="games/hangman/" data-cat="word">
+  <div class="ico" style="background:linear-gradient(140deg,#67b98a,#22304f)">☉</div>
+  <h3>مرد حلق‌آویز</h3>
+  <p>واژهٔ پنهان را با حدس حرف‌ها پیدا کن؛ هر پاسخ اشتباه یک اندام به مرد اضافه می‌کند.</p>
+  <span class="cat dim3badge" style="display:none">سه‌بعدی Three.js</span><span class="cat" style="color:#67b98a;border-color:#67b98a">واژه و دانش</span>
+</a>
+    <a class="tile" id="tile-mancala" href="games/mancala/" data-cat="board">
+  <div class="ico" style="background:linear-gradient(140deg,#d9a441,#22304f)">🐚</div>
+  <h3>منقله</h3>
+  <p>منقلهٔ کلاسیک با ۱۲ گودال و ۴۸ دانه؛ دانه‌ها را در جهت پادساعتگرد بپاش، با افتادن آخرین دانه در انبارت نوبت اضافه بگیر و دانه‌های حریف را بگیر. بیشترین دانه برنده است.</p>
+  <span class="cat dim3badge" style="display:none">سه‌بعدی Three.js</span><span class="cat" style="color:#d9a441;border-color:#d9a441">تخته و استراتژی</span>
+</a>
+    <a class="tile" id="tile-morris9" href="games/morris9/" data-cat="board">
+  <div class="ico" style="background:linear-gradient(140deg,#d9a441,#22304f)">◉</div>
+  <h3>موریس نه‌سنگ</h3>
+  <p>موریس نه‌سنگ کلاسیک روی صفحهٔ ۲۴ نقطه‌ای: ابتدا ۹ سنگ می‌چینی، بعد جابه‌جا می‌کنی و با ساختن خط سه‌تایی سنگ حریف را بردار.</p>
+  <span class="cat dim3badge" style="display:none">سه‌بعدی Three.js</span><span class="cat" style="color:#d9a441;border-color:#d9a441">تخته و استراتژی</span>
+</a>
+    <a class="tile" id="tile-whack" href="games/whack/" data-cat="arcade">
+  <div class="ico" style="background:linear-gradient(140deg,#e26d5c,#22304f)">hammer</div>
+  <h3>موشکوبی</h3>
+  <p>۳۰ ثانیه وقت داری؛ موش‌ها از ۹ سوراخ بیرون می‌آیند و باید سریع روی آن‌ها بزنی. ضربه‌های پیوسته امتیاز دوبرابر می‌دهند.</p>
+  <span class="cat dim3badge" style="display:none">سه‌بعدی Three.js</span><span class="cat" style="color:#e26d5c;border-color:#e26d5c">اکشن و مهارتی</span>
+</a>
+    <a class="tile" id="tile-minesweeper" href="games/minesweeper/" data-cat="puzzle">
+  <div class="ico" style="background:linear-gradient(140deg,#a78bfa,#22304f)">💣</div>
+  <h3>مین‌یاب</h3>
+  <p>مین‌یاب با اولین کلیک امن و دو سطح</p>
+  <span class="cat dim3badge" style="display:inline-flex">سه‌بعدی Three.js</span><span class="cat" style="color:#a78bfa;border-color:#a78bfa">پازل و فکری</span>
+</a>
+    <a class="tile" id="tile-battleship" href="games/battleship/" data-cat="board">
+  <div class="ico" style="background:linear-gradient(140deg,#d9a441,#22304f)">⚑</div>
+  <h3>نبرد دریایی</h3>
+  <p>ناوگان پنج‌ناوی‌ات را روی شبکهٔ ۱۰×۱۰ بچین (دستی یا خودکار) و با شلیک خانه‌به‌خانه ناوگان پنهان ربات را یکی‌یکی غرق کن.</p>
+  <span class="cat dim3badge" style="display:none">سه‌بعدی Three.js</span><span class="cat" style="color:#d9a441;border-color:#d9a441">تخته و استراتژی</span>
+</a>
+    <a class="tile" id="tile-backgammon" href="games/backgammon/" data-cat="board">
+  <div class="ico" style="background:linear-gradient(140deg,#d9a441,#22304f)">⚅</div>
+  <h3>نرد ایرانی</h3>
+  <p>نرد کامل با قوانین رسمی: تاس دوبل، میله، زدن بلوت، بیرون‌آوردن و هوش مصنوعی حریص — بدون مکعب دوبرابر.</p>
+  <span class="cat dim3badge" style="display:inline-flex">سه‌بعدی Three.js</span><span class="cat" style="color:#d9a441;border-color:#d9a441">تخته و استراتژی</span>
+</a>
+    <a class="tile" id="tile-dots-boxes" href="games/dots-boxes/" data-cat="board">
+  <div class="ico" style="background:linear-gradient(140deg,#d9a441,#22304f)">✒️</div>
+  <h3>نقطه و خط</h3>
+  <p>نقطه و خط روی شبکهٔ ۴×۴؛ خط بکش و کادر بساز — هر کادرِ کامل یک امتیاز و یک نوبت اضافه دارد. در پایان بیشترین کادر برنده است.</p>
+  <span class="cat dim3badge" style="display:none">سه‌بعدی Three.js</span><span class="cat" style="color:#d9a441;border-color:#d9a441">تخته و استراتژی</span>
+</a>
+    <a class="tile" id="tile-nonogram" href="games/nonogram/" data-cat="puzzle">
+  <div class="ico" style="background:linear-gradient(140deg,#a78bfa,#22304f)">▦</div>
+  <h3>نونوگرام</h3>
+  <p>نونوگرام ۵×۵ و ۸×۸ با الگوهای تصادفی؛ سرنخ هر سطر و ستون را بخوان و خانه‌های درست را پر کن.</p>
+  <span class="cat dim3badge" style="display:none">سه‌بعدی Three.js</span><span class="cat" style="color:#a78bfa;border-color:#a78bfa">پازل و فکری</span>
+</a>
+    <a class="tile" id="tile-nim" href="games/nim/" data-cat="board">
+  <div class="ico" style="background:linear-gradient(140deg,#d9a441,#22304f)">🪨</div>
+  <h3>نیم</h3>
+  <p>نیمِ مِسره با سه تودهٔ ۳، ۵ و ۷ مهره‌ای؛ هر بار از یک توده چند مهره (یا همه) بردار — ولی مواظب باش: هر کس آخرین مهره را بردارد می‌بازد! رایانه بی‌نقص بازی می‌کند.</p>
+  <span class="cat dim3badge" style="display:none">سه‌بعدی Three.js</span><span class="cat" style="color:#d9a441;border-color:#d9a441">تخته و استراتژی</span>
+</a>
+    <a class="tile" id="tile-pyramid" href="games/pyramid/" data-cat="cards">
+  <div class="ico" style="background:linear-gradient(140deg,#3fb8af,#22304f)">🔺</div>
+  <h3>هرم</h3>
+  <p>سولیتر هرم: ۲۸ کارت به شکل هرم چیده شده‌اند؛ هر بار دو کارتِ باز که جمعشان ۱۳ می‌شود را بردار و کل هرم را فرو بریز.</p>
+  <span class="cat dim3badge" style="display:none">سه‌بعدی Three.js</span><span class="cat" style="color:#3fb8af;border-color:#3fb8af">بازی‌های کارتی</span>
+</a>
+    <a class="tile" id="tile-maze" href="games/maze/" data-cat="puzzle">
+  <div class="ico" style="background:linear-gradient(140deg,#a78bfa,#22304f)">🧭</div>
+  <h3>هزارتو</h3>
+  <p>هزارتوی کامل (بدون حلقه) در سه اندازه: از خانهٔ شروع تا خروجیِ فیروزه‌ای با کمترین حرکت برس.</p>
+  <span class="cat dim3badge" style="display:none">سه‌بعدی Three.js</span><span class="cat" style="color:#a78bfa;border-color:#a78bfa">پازل و فکری</span>
+</a>
+    <a class="tile" id="tile-crazy-eights" href="games/crazy-eights/" data-cat="cards">
+  <div class="ico" style="background:linear-gradient(140deg,#3fb8af,#22304f)">🎱</div>
+  <h3>هشت دیوانه</h3>
+  <p>هشت دیوانه در برابر حریف هوشمند؛ هشت جانشین هر خالی است و مسابقه تا ۲۰۰ امتیاز ادامه دارد.</p>
+  <span class="cat dim3badge" style="display:none">سه‌بعدی Three.js</span><span class="cat" style="color:#3fb8af;border-color:#3fb8af">بازی‌های کارتی</span>
+</a>
+    <a class="tile" id="tile-8queens" href="games/8queens/" data-cat="puzzle">
+  <div class="ico" style="background:linear-gradient(140deg,#a78bfa,#22304f)">👑</div>
+  <h3>هشت وزیر</h3>
+  <p>هشت وزیر روی تختهٔ شطرنج بچین طوری که هیچ دو وزیری همدیگر را تهدید نکنند؛ ۹۲ راه‌حل وجود دارد.</p>
+  <span class="cat dim3badge" style="display:none">سه‌بعدی Three.js</span><span class="cat" style="color:#a78bfa;border-color:#a78bfa">پازل و فکری</span>
+</a>
+    <a class="tile" id="tile-hex" href="games/hex/" data-cat="board">
+  <div class="ico" style="background:linear-gradient(140deg,#d9a441,#22304f)">⬡</div>
+  <h3>هکس</h3>
+  <p>هکس ۱۱×۱۱: شما با سیاه دو ضلع بالا و پایین را وصل می‌کنید و ربات با سفید چپ و راست را. تساوی در هکس وجود ندارد.</p>
+  <span class="cat dim3badge" style="display:none">سه‌بعدی Three.js</span><span class="cat" style="color:#d9a441;border-color:#d9a441">تخته و استراتژی</span>
+</a>
+    <a class="tile" id="tile-anagram" href="games/anagram/" data-cat="word">
+  <div class="ico" style="background:linear-gradient(140deg,#67b98a,#22304f)">🔤</div>
+  <h3>واژه‌سازی</h3>
+  <p>با حروف داده‌شده واژه‌سازی کن؛ هر واژهٔ درست به اندازهٔ مجذور طولش امتیاز دارد. ۱۲۰ ثانیه وقت داری و در پایان همهٔ واژه‌های ممکن فاش می‌شود.</p>
+  <span class="cat dim3badge" style="display:none">سه‌بعدی Three.js</span><span class="cat" style="color:#67b98a;border-color:#67b98a">واژه و دانش</span>
+</a>
+    <a class="tile" id="tile-wordle" href="games/wordle/" data-cat="word">
+  <div class="ico" style="background:linear-gradient(140deg,#67b98a,#22304f)">▦</div>
+  <h3>واژه‌یاب</h3>
+  <p>واژهٔ پنج‌حرفی فارسی را در شش تلاش حدس بزن؛ رنگ هر خانه پس از هر حدس راهنمای توست.</p>
+  <span class="cat dim3badge" style="display:none">سه‌بعدی Three.js</span><span class="cat" style="color:#67b98a;border-color:#67b98a">واژه و دانش</span>
+</a>
+    <a class="tile" id="tile-word-search" href="games/word-search/" data-cat="word">
+  <div class="ico" style="background:linear-gradient(140deg,#67b98a,#22304f)">🔍</div>
+  <h3>واژه‌یاب شبکه‌ای</h3>
+  <p>هشت واژهٔ پنج تا هفت‌حرفی در شبکهٔ ۱۰×۱۰ پنهان شده‌اند. خانهٔ آغاز و پایان هر واژه را لمس کن تا خط آن روشن شود.</p>
+  <span class="cat dim3badge" style="display:none">سه‌بعدی Three.js</span><span class="cat" style="color:#67b98a;border-color:#67b98a">واژه و دانش</span>
+</a>
+    <a class="tile" id="tile-video-poker" href="games/video-poker/" data-cat="cards">
+  <div class="ico" style="background:linear-gradient(140deg,#3fb8af,#22304f)">🎴</div>
+  <h3>ویدیو پوکر</h3>
+  <p>ویدیو پوکر جک-یا-بهتر با اعتبار ۱۰۰: پنج کارت بگیر، کارت‌های خوب را نگه دار و بقیه را عوض کن تا دست ارزنده بسازی.</p>
+  <span class="cat dim3badge" style="display:none">سه‌بعدی Three.js</span><span class="cat" style="color:#3fb8af;border-color:#3fb8af">بازی‌های کارتی</span>
+</a>
+    <a class="tile" id="tile-p15" href="games/p15/" data-cat="puzzle">
+  <div class="ico" style="background:linear-gradient(140deg,#a78bfa,#22304f)">🧩</div>
+  <h3>پازل ۱۵</h3>
+  <p>پازل کلاسیک ۱۵ روی شبکهٔ ۴×۴: کاشی‌ها را هل بده تا اعداد ۱ تا ۱۵ مرتب شوند. هر شافل با ۲۵۰ حرکت معتبر از حالت حل‌شده ساخته می‌شود و تضمیناً حل‌پذیر است.</p>
+  <span class="cat dim3badge" style="display:none">سه‌بعدی Three.js</span><span class="cat" style="color:#a78bfa;border-color:#a78bfa">پازل و فکری</span>
+</a>
+    <a class="tile" id="tile-pasoor" href="games/pasoor/" data-cat="cards">
+  <div class="ico" style="background:linear-gradient(140deg,#3fb8af,#22304f)">🃏</div>
+  <h3>پاسور</h3>
+  <p>پاسور ایرانی سبک کازینو؛ گرفتن کارت‌های میز با برابری، مجموع یا تک خشت.</p>
+  <span class="cat dim3badge" style="display:none">سه‌بعدی Three.js</span><span class="cat" style="color:#3fb8af;border-color:#3fb8af">بازی‌های کارتی</span>
+</a>
+    <a class="tile" id="tile-capitals" href="games/capitals/" data-cat="word">
+  <div class="ico" style="background:linear-gradient(140deg,#67b98a,#22304f)">🏛️</div>
+  <h3>پایتخت‌ها</h3>
+  <p>پایتخت هر کشور را از میان چهار گزینه حدس بزنید؛ حواستان باشد پایتخت همیشه مشهورترین شهر نیست!</p>
+  <span class="cat dim3badge" style="display:none">سه‌بعدی Three.js</span><span class="cat" style="color:#67b98a;border-color:#67b98a">واژه و دانش</span>
+</a>
+    <a class="tile" id="tile-alborz-jump" href="games/alborz-jump/" data-cat="arcade">
+  <div class="ico" style="background:linear-gradient(140deg,#e26d5c,#22304f)">⛰</div>
+  <h3>پرش از البرز</h3>
+  <p>پرش پلتفرمی عمودی روی قله البرز</p>
+  <span class="cat dim3badge" style="display:inline-flex">سه‌بعدی Three.js</span><span class="cat" style="color:#e26d5c;border-color:#e26d5c">اکشن و مهارتی</span>
+</a>
+    <a class="tile" id="tile-flappy" href="games/flappy/" data-cat="arcade">
+  <div class="ico" style="background:linear-gradient(140deg,#e26d5c,#22304f)">🐦</div>
+  <h3>پرواز پرنده</h3>
+  <p>پرندهٔ طلایی را بین لوله‌های فیروزه‌ای هدایت کن؛ با عبور از هر لوله یک امتیاز بگیر.</p>
+  <span class="cat dim3badge" style="display:none">سه‌بعدی Three.js</span><span class="cat" style="color:#e26d5c;border-color:#e26d5c">اکشن و مهارتی</span>
+</a>
+    <a class="tile" id="tile-flags" href="games/flags/" data-cat="word">
+  <div class="ico" style="background:linear-gradient(140deg,#67b98a,#22304f)">🚩</div>
+  <h3>پرچم‌ها</h3>
+  <p>پرچم یک کشور را می‌بینید؛ نام آن کشور را از میان چهار گزینه حدس بزنید.</p>
+  <span class="cat dim3badge" style="display:none">سه‌بعدی Three.js</span><span class="cat" style="color:#67b98a;border-color:#67b98a">واژه و دانش</span>
+</a>
+    <a class="tile" id="tile-pentago" href="games/pentago/" data-cat="board">
+  <div class="ico" style="background:linear-gradient(140deg,#d9a441,#22304f)">❖</div>
+  <h3>پنتاگو</h3>
+  <p>پنتاگو روی صفحهٔ ۶×۶ با چهار ربع چرخان: سنگ بگذار، یک ربع را بچرخان؛ اولین پنج‌تاییِ پشت‌سرهم در هر جهت برنده است.</p>
+  <span class="cat dim3badge" style="display:none">سه‌بعدی Three.js</span><span class="cat" style="color:#d9a441;border-color:#d9a441">تخته و استراتژی</span>
+</a>
+    <a class="tile" id="tile-gomoku" href="games/gomoku/" data-cat="board">
+  <div class="ico" style="background:linear-gradient(140deg,#d9a441,#22304f)">⚫</div>
+  <h3>پنج‌درردیف</h3>
+  <p>پنج‌درردیف روی صفحهٔ ۱۵×۱۵؛ شما سیاه هستید و شروع می‌کنید. نخستین پنج مهرهٔ پیاپی در چهار جهت برنده است و ربات خط‌های تهدید را می‌بندد.</p>
+  <span class="cat dim3badge" style="display:none">سه‌بعدی Three.js</span><span class="cat" style="color:#d9a441;border-color:#d9a441">تخته و استراتژی</span>
+</a>
+    <a class="tile" id="tile-peg" href="games/peg/" data-cat="puzzle">
+  <div class="ico" style="background:linear-gradient(140deg,#a78bfa,#22304f)">🔴</div>
+  <h3>پگ سولیتر</h3>
+  <p>پگ سولیتر کلاسیک روی صفحهٔ صلیبی ۳۳ خانه‌ای؛ با پرش از روی یک پگ آن را حذف کن تا در پایان فقط یک پگ — ترجیحاً در مرکز — بماند.</p>
+  <span class="cat dim3badge" style="display:none">سه‌بعدی Three.js</span><span class="cat" style="color:#a78bfa;border-color:#a78bfa">پازل و فکری</span>
+</a>
+    <a class="tile" id="tile-pong" href="games/pong/" data-cat="arcade">
+  <div class="ico" style="background:linear-gradient(140deg,#e26d5c,#22304f)">🏓</div>
+  <h3>پینگ‌پنگ</h3>
+  <p>پینگ‌پنگ دو نفره مقابل هوش مصنوعی</p>
+  <span class="cat dim3badge" style="display:inline-flex">سه‌بعدی Three.js</span><span class="cat" style="color:#e26d5c;border-color:#e26d5c">اکشن و مهارتی</span>
+</a>
+    <a class="tile" id="tile-chomp" href="games/chomp/" data-cat="board">
+  <div class="ico" style="background:linear-gradient(140deg,#d9a441,#22304f)">◕</div>
+  <h3>چامپ</h3>
+  <p>چامپ روی تختهٔ شکلاتی ۵×۶ با خانهٔ سم در گوشه: هر حرکت خانهٔ انتخابی و همهٔ پایین‌راست آن را می‌خورد؛ خورندهٔ سم می‌بازد.</p>
+  <span class="cat dim3badge" style="display:none">سه‌بعدی Three.js</span><span class="cat" style="color:#d9a441;border-color:#d9a441">تخته و استراتژی</span>
+</a>
+    <a class="tile" id="tile-lights-out" href="games/lights-out/" data-cat="puzzle">
+  <div class="ico" style="background:linear-gradient(140deg,#a78bfa,#22304f)">💡</div>
+  <h3>چراغ‌ها را خاموش کن</h3>
+  <p>هر لمس یک خانه و چهار همسایه‌اش را تغییر می‌دهد؛ همهٔ چراغ‌ها را خاموش کن. حالت سریع ۳×۳ هم دارد.</p>
+  <span class="cat dim3badge" style="display:none">سه‌بعدی Three.js</span><span class="cat" style="color:#a78bfa;border-color:#a78bfa">پازل و فکری</span>
+</a>
+    <a class="tile" id="tile-slots" href="games/slots/" data-cat="luck">
+  <div class="ico" style="background:linear-gradient(140deg,#e8c073,#22304f)">🎰</div>
+  <h3>چرخ میوه</h3>
+  <p>چرخ میوهٔ سه‌قرقره با نمادهای وزن‌دار؛ هر چرخش ۵ اعتبار دارد و سه نماد یکسان روی خط برد جایزه می‌دهد.</p>
+  <span class="cat dim3badge" style="display:none">سه‌بعدی Three.js</span><span class="cat" style="color:#e8c073;border-color:#e8c073">شانس و سرگرمی</span>
+</a>
+    <a class="tile" id="tile-connect4" href="games/connect4/" data-cat="board">
+  <div class="ico" style="background:linear-gradient(140deg,#d9a441,#22304f)">🔴</div>
+  <h3>چهار در یک خط</h3>
+  <p>چهار در یک خط با جاذبه روی ستون‌های هفت‌گانه؛ ربات با جست‌وجوی عمق ۴ و هرس آلفا-بتا و ارزیابی مرکزگرا بازی می‌کند.</p>
+  <span class="cat dim3badge" style="display:inline-flex">سه‌بعدی Three.js</span><span class="cat" style="color:#d9a441;border-color:#d9a441">تخته و استراتژی</span>
+</a>
+    <a class="tile" id="tile-lcr" href="games/lcr/" data-cat="luck">
+  <div class="ico" style="background:linear-gradient(140deg,#e8c073,#22304f)">🎯</div>
+  <h3>چپ وسط راست</h3>
+  <p>تاس چپ‌وسط‌راست با دو ربات: هر تاس چ یک چیپ به چپ، ر به راست و و به دیگ وسط می‌دهد؛ آخرین بازیکنِ دارای چیپ صاحب کل دیگ می‌شود.</p>
+  <span class="cat dim3badge" style="display:none">سه‌بعدی Three.js</span><span class="cat" style="color:#e8c073;border-color:#e8c073">شانس و سرگرمی</span>
+</a>
+    <a class="tile" id="tile-checkers" href="games/checkers/" data-cat="board">
+  <div class="ico" style="background:linear-gradient(140deg,#d9a441,#22304f)">♟</div>
+  <h3>چکرز</h3>
+  <p>چکرز آمریکایی روی صفحهٔ ۸×۸ در برابر ربات؛ گرفتن با پرش اجباری است، پرش چندگانه باید ادامه یابد و مهره‌ای که به ردیف آخر برسد شاه می‌شود.</p>
+  <span class="cat dim3badge" style="display:inline-flex">سه‌بعدی Three.js</span><span class="cat" style="color:#d9a441;border-color:#d9a441">تخته و استراتژی</span>
+</a>
+    <a class="tile" id="tile-kakuro" href="games/kakuro/" data-cat="puzzle">
+  <div class="ico" style="background:linear-gradient(140deg,#a78bfa,#22304f)">🔢</div>
+  <h3>کاکورو</h3>
+  <p>جدولی از جمع‌ها؛ در هر اجرا ارقام غیرتکراری باید دقیقاً برابر سرنخ شوند.</p>
+  <span class="cat dim3badge" style="display:none">سه‌بعدی Three.js</span><span class="cat" style="color:#a78bfa;border-color:#a78bfa">پازل و فکری</span>
+</a>
+    <a class="tile" id="tile-quarto-mini" href="games/quarto-mini/" data-cat="board">
+  <div class="ico" style="background:linear-gradient(140deg,#d9a441,#22304f)">◈</div>
+  <h3>کواترو مینی</h3>
+  <p>کواتروی مینی روی صفحهٔ ۴×۴ با ۸ قطعه در دو اندازه (کوچک/بزرگ) و دو رنگ (نقره‌ای/طلایی). قطعه‌ای را که حریف دست می‌دهد بگذارید و بعد قطعهٔ بعدی را خودتان به او بدهید.</p>
+  <span class="cat dim3badge" style="display:none">سه‌بعدی Three.js</span><span class="cat" style="color:#d9a441;border-color:#d9a441">تخته و استراتژی</span>
+</a>
+    <a class="tile" id="tile-wheel" href="games/wheel/" data-cat="luck">
+  <div class="ico" style="background:linear-gradient(140deg,#e8c073,#22304f)">🎡</div>
+  <h3>گردونه شانس</h3>
+  <p>گردونهٔ شانس ۱۲ خانه‌ای با جوایز ۱۰۰/۲۵۰/۵۰۰ و خانه‌های ویژهٔ ضربدر۲، نصف و ورشکست؛ امتیاز را جمع کن و به ۲۰۰۰ برس.</p>
+  <span class="cat dim3badge" style="display:none">سه‌بعدی Three.js</span><span class="cat" style="color:#e8c073;border-color:#e8c073">شانس و سرگرمی</span>
+</a>
+    <a class="tile" id="tile-golf" href="games/golf/" data-cat="cards">
+  <div class="ico" style="background:linear-gradient(140deg,#3fb8af,#22304f)">⛳</div>
+  <h3>گلف</h3>
+  <p>سولیتر گلف: ۵ ستون ۷ کارتی؛ کارت‌های پایین ستون‌ها را با اختلاف یک رتبه روی زباله بگذار و هر ۳۵ کارت را تمام کن.</p>
+  <span class="cat dim3badge" style="display:none">سه‌بعدی Three.js</span><span class="cat" style="color:#3fb8af;border-color:#3fb8af">بازی‌های کارتی</span>
+</a>
+    <a class="tile" id="tile-yahtzee" href="games/yahtzee/" data-cat="luck">
+  <div class="ico" style="background:linear-gradient(140deg,#e8c073,#22304f)">🎲</div>
+  <h3>یاتزی</h3>
+  <p>یاتزی تک‌نفره با ۵ تاس و ۳ پرتاب در هر نوبت؛ ۱۳ خانهٔ امتیاز را هوشمندانه پر کنید و جایزهٔ ۳۵ امتیازیِ بالایی را از دست ندهید.</p>
+  <span class="cat dim3badge" style="display:none">سه‌بعدی Three.js</span><span class="cat" style="color:#e8c073;border-color:#e8c073">شانس و سرگرمی</span>
+</a>
+    <a class="tile" id="tile-g2048" href="games/g2048/" data-cat="puzzle">
+  <div class="ico" style="background:linear-gradient(140deg,#a78bfa,#22304f)">🟨</div>
+  <h3>۲۰۴۸</h3>
+  <p>پازل عددی ۲۰۴۸ با انیمیشن لغزش</p>
+  <span class="cat dim3badge" style="display:inline-flex">سه‌بعدی Three.js</span><span class="cat" style="color:#a78bfa;border-color:#a78bfa">پازل و فکری</span>
+</a>
+    <a class="tile" id="tile-calc24" href="games/calc24/" data-cat="puzzle">
+  <div class="ico" style="background:linear-gradient(140deg,#a78bfa,#22304f)">🧮</div>
+  <h3>۲۴ با اعداد</h3>
+  <p>با چهار عدد و چهار عمل به ۲۴ برس؛ بازی هوش و حساب با راه‌نمای راه‌حل.</p>
+  <span class="cat dim3badge" style="display:none">سه‌بعدی Three.js</span><span class="cat" style="color:#a78bfa;border-color:#a78bfa">پازل و فکری</span>
+</a>
+  </div>
+  <p class="count" id="count"></p>
+</section>
+
+<section id="features">
+  <div class="sec-title"><h2>چرا دنیای بازی‌ها؟</h2></div>
+  <div class="feats">
+    <div class="feat"><div class="fi">🏛</div><h3>هویت ایرانی</h3><p>رابط کاربری راست‌به‌چپ با فونت وزیرمتن و پالت رنگی الهام‌گرفته از طلایی هخامنشی و فیروزهٔ اصفهان؛ حکم، پاسور، نرد و منقله کنار کلاسیک‌های جهانی.</p></div>
+    <div class="feat"><div class="fi">📴</div><h3>کاملاً آفلاین</h3><p>هر بازی یک فایل مستقل است؛ بعد از اولین بازدید، بدون اینترنت هم اجرا می‌شود. هیچ CDN، تبلیغ یا ردیابی وجود ندارد.</p></div>
+    <div class="feat"><div class="fi">📱</div><h3>لمسی + کیبورد + ماوس</h3><p>همهٔ بازی‌ها برای هر سه حالت کنترل طراحی شده‌اند؛ روی موبایل دکمه‌های لمسی و سوایپ، روی دسکتاپ کیبورد.</p></div>
+    <div class="feat"><div class="fi">🧪</div><h3>منطقِ تست‌شده</h3><p>منطق هر بازی به‌صورت ماژول خالص نوشته شده و با صدها تست واحد (قوانین، لبه‌ها و شبیه‌سازی کامل بازی) اعتبارسنجی شده است.</p></div>
+  </div>
+</section>
+
+<section id="developers">
+  <div class="sec-title"><h2>توسعه‌دهندگان</h2><p>بازی خودت را به پلتفرم اضافه کن</p></div>
+  <div class="feats">
+    <div class="feat"><div class="fi">📦</div><h3>استاندارد آپلود بازی</h3><p>یک فایل index.html مستقل در ریشهٔ ZIP، مسیرهای نسبی، حداکثر ۵۰ مگابایت فشرده — بدون exe/dll و منابع خارجی. سازگار با sandbox امن.</p></div>
+    <div class="feat"><div class="fi">✅</div><h3>بازبینی ادمین</h3><p>بازی آپلودشده پس از تأیید مدیر (از طریق پنل Razor یا ابزارهای MCP) برای عموم فعال می‌شود؛ تضمین کیفیت و امنیت.</p></div>
+  </div>
+</section>
+
+<section id="mcp">
+  <div class="sec-title"><h2>کنترل با MCP</h2><p>پنل مدیریت با پروتکل Model Context Protocol (JSON-RPC 2.0) قابل اتوماسیون است</p></div>
+  <div class="mcp-list">
+    <code>list_pending_games</code>
+    <code>get_game_status</code>
+    <code>approve_game</code>
+    <code>reject_game</code>
+    <code>set_game_enabled</code>
+  </div>
+</section>
+
+<section id="donate">
+  <div class="donate">
+    <h2 style="color:var(--gold)">☕ فقط با تشویقت زنده می‌مانیم</h2>
+    <p>هیچ تبلیغ و فروشی در کار نیست — تنها درآمد پروژه، حمایت داوطلبانهٔ شماست. درگاه زرین‌پال برای نسخهٔ سرور فعال می‌شود؛ در نسخهٔ Pages می‌توانید پروژه را در گیت‌هاب ستاره بدهید و در گسترشش سهیم شوید.</p>
+    <div class="cta-row">
+      <a class="btn" href="https://github.com/SSSchangerSSS/world-of-games" rel="noopener">⭐ ستاره در گیت‌هاب</a>
+      <a class="btn ghost" href="#games">ادامهٔ بازی</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  دنیای بازی‌ها — ساخته‌شده با ♥ برای گیمرهای فارسی‌زبان ·
+  <a href="licenses.html">مجوزها و اعتبارها</a> ·
+  <a href="https://github.com/SSSchangerSSS/world-of-games" rel="noopener">گیت‌هاب</a> ·
+  <a href="sitemap.xml">نقشهٔ سایت</a>
+</footer>
+
+<script>
+(function(){
+  var TILES = [{"slug": "water-sort", "title": "آب‌ریز", "cat": "puzzle", "icon": "💧", "desc": "بطری‌های رنگی را با ریختنِ هوشمندانه از هم جدا کن؛ هر بطری در پایان فقط یک رنگ.", "dim3": false}, {"slug": "reversi", "title": "اوتلو", "cat": "board", "icon": "◐", "desc": "ریورسی ۸×۸ با وزن‌دهی موقعیتی", "dim3": false}, {"slug": "game-of-ur", "title": "بازی سلطنتی اور", "cat": "board", "icon": "⚄", "desc": "نژاد کهن سلطنتی اور بین تو و ربات: با تاس‌های چهارگانه مهره‌ها را از مسیر ۲۰ خانه‌ای عبور بده و زودتر از حریف هر ۷ مهره را بیرون بفرست.", "dim3": false}, {"slug": "higher-lower", "title": "بالاتر یا پایین‌تر", "cat": "cards", "icon": "🃏", "desc": "کارت فعلی را ببین و حدس بزن: کارت بعدی بالاتر است یا پایین‌تر؟ هر حدس درست زنجیره و امتیازت را بلندتر می‌کند.", "dim3": false}, {"slug": "hanoi", "title": "برج هانوی", "cat": "puzzle", "icon": "🗼", "desc": "برج هانوی با ۳ تا ۷ دیسک: همهٔ دیسک‌ها را از برج اول به برج سوم ببر؛ دیسک بزرگ‌تر هرگز روی کوچک‌تر نمی‌نشیند.", "dim3": false}, {"slug": "stacker", "title": "برج‌ساز", "cat": "arcade", "icon": "🧱", "desc": "بلوک را در لحظهٔ درست رها کن تا برج بلندتر شود؛ چیدمان کامل عرض از دست رفته را برمی‌گرداند.", "dim3": false}, {"slug": "blockudoku", "title": "بلوک‌دوکو", "cat": "puzzle", "icon": "🧩", "desc": "قطعه‌ها را روی شبکهٔ ۹×۹ بچین؛ سطر، ستون یا بلوک ۳×۳ کامل پاک می‌شود و زنجیرهٔ پاک‌سازی امتیاز اضافه می‌دهد.", "dim3": false}, {"slug": "blackjack", "title": "بلک‌جک ۲۱", "cat": "cards", "icon": "🂡", "desc": "بلک‌جک با کفش ۴ دسته، دوبرابر و پرداخت ۳ به ۲", "dim3": false}, {"slug": "pig", "title": "تاس پیگ", "cat": "luck", "icon": "🐷", "desc": "تاس بیندازید و شمارش نوبت را جمع کنید؛ با آمدن ۱ همهٔ شمارش می‌سوزد. ربات محتاط را در رسیدن به ۱۰۰ امتیاز شکست دهید.", "dim3": false}, {"slug": "rush-hour", "title": "ترافیک", "cat": "puzzle", "icon": "🚗", "desc": "ترافیک ۶×۶ با ۸ نقشهٔ دست‌ساز: خودروها را روی محور خودشان لغزش بده تا ماشین قرمز از لبهٔ راست ردیف سوم خارج شود. حداقل حرکت هر نقشه با BFS محاسبه شده است.", "dim3": false}, {"slug": "stroop", "title": "تست استروپ", "cat": "arcade", "icon": "🎨", "desc": "کلمهٔ رنگی می‌بینی و باید رنگِ جوهر را انتخاب کنی، نه معنی کلمه را. ۴۵ ثانیه فرصت داری!", "dim3": false}, {"slug": "invaders", "title": "تهاجم فضایی", "cat": "arcade", "icon": "👾", "desc": "صف ۵×۸ بیگانگان چپ و راست می‌رود و هر بار در لبه پایین‌تر می‌آید؛ هرچه کمتر بمانند تندتر می‌شوند.", "dim3": false}, {"slug": "breakout", "title": "توپ‌شکن", "cat": "arcade", "icon": "🧱", "desc": "شکستن آجرها با فیزیک دقیق و لِوِل‌های بی‌پایان", "dim3": true}, {"slug": "aim", "title": "تیرانداز هدف", "cat": "arcade", "icon": "target", "desc": "در ۳۰ ثانیه به هدف‌هایی که یکی‌یکی ظاهر می‌شوند شلیک کن؛ سرعت عمل جایزه دارد و هر خطا ۵ امتیاز کم می‌کند.", "dim3": false}, {"slug": "kite", "title": "جنگ بادبادک", "cat": "arcade", "icon": "🪁", "desc": "نبرد بادبادک‌ها: با عبور بادبادکت رشتهٔ حریف را پاره کن و نگذار رشتهٔ خودت بریده شود.", "dim3": false}, {"slug": "war", "title": "جنگ کارتی", "cat": "cards", "icon": "⚔️", "desc": "جنگ کارتی کلاسیک با ۲۶ کارت هر طرف؛ برابری یعنی جنگ با سه کارت بسته و یک کارت رو.", "dim3": false}, {"slug": "akhaemenid-memory", "title": "حافظه هخامنشی", "cat": "cards", "icon": "🏛", "desc": "بازی حافظه با نمادهای ایران‌باستان", "dim3": true}, {"slug": "emoji-quiz", "title": "حدس با ایموجی", "cat": "word", "icon": "🎯", "desc": "از روی رشتهٔ ایموجی‌ها حدس بزنید چه فیلم، شغل یا چیز مشهوری در ذهن ماست.", "dim3": false}, {"slug": "guess-number", "title": "حدس عدد", "cat": "luck", "icon": "🔢", "desc": "عدد مخفی بین ۱ تا ۱۰۰ را با کمترین تلاش پیدا کن؛ راهنمای گرم/سرد و بازهٔ هوشمند همراهی‌ات می‌کند.", "dim3": false}, {"slug": "hokm", "title": "حکم", "cat": "cards", "icon": "🎴", "desc": "حکم چهارنفره تیمی؛ تعیین حاکم با آک، تبعیت از خال و گرفتن ترفندها.", "dim3": false}, {"slug": "dodge", "title": "دوری از توپ‌ها", "cat": "arcade", "icon": "⚪", "desc": "توپ‌ها در میدان جهش می‌کنند و شمارشان پیوسته بیشتر می‌شود؛ تا می‌توانی زنده بمان و امتیاز بگیر.", "dim3": false}, {"slug": "tic-tac-toe", "title": "دوز", "cat": "board", "icon": "✕", "desc": "دوز با مینی‌مکس شکست‌ناپذیر", "dim3": false}, {"slug": "dominoes", "title": "دومینو", "cat": "board", "icon": "⬛", "desc": "دومینوی شش‌دوبله در برابر ربات: تخته‌هایت را به دو سرِ خط بزن، از بونیارد بکش و در بن‌بست دستِ سبک‌تر برنده است.", "dim3": true}, {"slug": "runner", "title": "دوندهٔ کویر", "cat": "arcade", "icon": "🏃", "desc": "دوندهٔ کویر از روی سنگ‌ها می‌پرد؛ مسافت بیشتر، امتیاز بیشتر و سرعت فزاینده.", "dim3": false}, {"slug": "digits", "title": "رقم‌های کوتاه", "cat": "arcade", "icon": "grid", "desc": "رشتهٔ اعداد را به حافظه بسپار و به همان ترتیب تایپ کن؛ از طول ۳ تا ۱۲ پیش می‌روی و ۳ جان داری.", "dim3": false}, {"slug": "mastermind", "title": "رمزنگار", "cat": "puzzle", "icon": "●", "desc": "رمز ۴ رنگی از میان ۶ رنگ را در حدس ۱۰گانه کشف کن؛ راهنمای سیاه و سفید مسیر را نشان می‌دهد.", "dim3": false}, {"slug": "fox-and-hounds", "title": "روباه و سگ‌ها", "cat": "board", "icon": "◉", "desc": "روباه و سگ‌ها روی خانه‌های تیرهٔ صفحهٔ شطرنجی: شما روباه هستید و چهار سگ فقط رو به جلو حرکت می‌کنند. خود را به ردیف نخست برسانید و از محاصره بگریزید.", "dim3": false}, {"slug": "math-sprint", "title": "ریاضی برق‌آسا", "cat": "arcade", "icon": "🧮", "desc": "۶۰ ثانیه محاسبهٔ برق‌آسا؛ سؤال‌ها هر ۱۵ ثانیه سخت‌تر می‌شوند و هر اشتباه دو ثانیه از وقتت کم می‌کند.", "dim3": false}, {"slug": "word-chain", "title": "زنجیرهٔ واژه‌ها", "cat": "word", "icon": "🔗", "desc": "با ربات زنجیرهٔ واژه بساز: هر واژه باید با حرف آخر واژهٔ قبلی شروع شود و در هر دور تکراری نباشد. ۱۵ ثانیه وقت داری؛ اولین ۵ امتیاز برنده است.", "dim3": false}, {"slug": "clock", "title": "ساعت آس", "cat": "cards", "icon": "🕐", "desc": "پاسور ساعت: ۱۳ پشتهٔ چهارکارته؛ هر کارت رو شده به پشتهٔ رتبهٔ خودش میرود؛ قبل از شاه چهارم همه را رو کن.", "dim3": false}, {"slug": "typing", "title": "سرعت تایپ", "cat": "arcade", "icon": "⌨", "desc": "جمله‌های فارسی را سریع و دقیق تایپ کن؛ حروف درست سبز و غلط قرمز می‌شوند و سرعت و دقتت زنده نمایش داده می‌شود.", "dim3": false}, {"slug": "rps", "title": "سنگ کاغذ قیچی", "cat": "luck", "icon": "✊", "desc": "سنگ‌کاغذ‌قیچی بهترین از ۵ مقابل رباتِ تطبیقی که حرکت‌های پرتکرار تو را می‌شمارد و علیه رایج‌ترین حرکتت می‌ایستد.", "dim3": false}, {"slug": "plinko", "title": "سنگ‌ریزه", "cat": "luck", "icon": "🎯", "desc": "سنگ‌ریزه را بین میخ‌ها رها کن و جوایز خانه‌های پایین را بگیر.", "dim3": false}, {"slug": "chuck-a-luck", "title": "سه تاس", "cat": "luck", "icon": "🎰", "desc": "سه تاس می‌چرخند؛ روی عدد دلخواه شرط ببندید — هر تطبیق به‌اندازهٔ شرط شما جایزه دارد (۱تا۳ برابر).", "dim3": false}, {"slug": "tripeaks", "title": "سه قله", "cat": "cards", "icon": "⛰️", "desc": "سولیتیر سه‌قله با ۲۸ کارت روی تپه‌ها و ۲۳ کارت دانته؛ هر بردار کمبو را بالا میبرد و امتیاز میسازد.", "dim3": false}, {"slug": "cups", "title": "سه‌کاسه", "cat": "arcade", "icon": "🥤", "desc": "توپ زیر یکی از سه کاسه نشان داده می‌شود؛ جابه‌جایی‌ها را دنبال کن و حدس بزن. هر مرحله سریع‌تر و شلوغ‌تر است.", "dim3": false}, {"slug": "sudoku", "title": "سودوکو", "cat": "puzzle", "icon": "🔢", "desc": "سودوکو با تولید راه‌حل‌یکتا و سه سطح", "dim3": false}, {"slug": "solitaire", "title": "سولیتر", "cat": "cards", "icon": "♠", "desc": "سولیتر کلاسیک کلایک با undo و برداشتن خودکار", "dim3": false}, {"slug": "spider", "title": "سولیتر عنکبوتی", "cat": "cards", "icon": "🕷️", "desc": "سولیتر عنکبوتی تک‌خال با ۱۰ ستون و ۵ بار پخش از دسته", "dim3": false}, {"slug": "sokoban", "title": "سوکوبان", "cat": "puzzle", "icon": "📦", "desc": "۶ مرحلهٔ دست‌ساز سوکوبان: جعبه‌ها را فقط هل بده (هیچ کشیدنی در کار نیست) و همه را روی اهداف بگذار. حل‌پذیری همهٔ مرحله‌ها با جست‌وجوی BFS اثبات شده است.", "dim3": false}, {"slug": "coin-flip", "title": "سکه طلایی", "cat": "luck", "icon": "🪙", "desc": "روی یا خط؟ زنجیره‌ی بردهای پشت‌سرهم بساز و رکورد بزن.", "dim3": false}, {"slug": "asteroids", "title": "سیارک‌ها", "cat": "arcade", "icon": "🚀", "desc": "کشتی را بچرخان، پیشران بگیر و سیارک‌ها را بشکن؛ هر سیارک به دو تکه کوچک‌تر شکافته می‌شود.", "dim3": false}, {"slug": "simon", "title": "سیمون", "cat": "puzzle", "icon": "♪", "desc": "دنبالهٔ نور و صدا را به خاطر بسپار و تکرار کن؛ هر سطح یک گام بلندتر و سریع‌تر می‌شود.", "dim3": false}, {"slug": "thirty-one", "title": "سی‌ویک", "cat": "cards", "icon": "♣", "desc": "سی‌ویک با دو حریف: دستت را به بهترین تک‌خال برسان؛ در ۲۷ یا بالاتر بکوب تا رقیب‌ها فقط یک نوبت داشته باشند.", "dim3": false}, {"slug": "memory-grid", "title": "شبکهٔ حافظه", "cat": "puzzle", "icon": "🧠", "desc": "خانه‌های روشن را لحظه‌ای ببین و بعد پیدا کن؛ هر مرحله خانه‌های بیشتری دارد.", "dim3": true}, {"slug": "chess", "title": "شطرنج", "cat": "board", "icon": "♞", "desc": "شطرنج کامل با قوانین رسمی و هوش مصنوعی", "dim3": true}, {"slug": "meteor", "title": "شهاب‌سنگ", "cat": "arcade", "icon": "☄", "desc": "کشتی تو در پایین صفحه است؛ از ریزش شهاب‌ها فرار کن، بلور بگیر و با سپر زنده بمان.", "dim3": false}, {"slug": "coin-catch", "title": "صیاد سکه", "cat": "arcade", "icon": "🪙", "desc": "با پارو سکه‌های طلایی را بگیر، زنجیه بساز و از بمب‌ها دوری کن؛ سرعت مدام بیشتر می‌شود.", "dim3": false}, {"slug": "proverb", "title": "ضرب‌المثل‌ها", "cat": "word", "icon": "📜", "desc": "نیمهٔ نخست یک ضرب‌المثل معروف را می‌بینید؛ ادامهٔ درستش را از میان چهار گزینه پیدا کنید.", "dim3": false}, {"slug": "flood", "title": "طوفان رنگی", "cat": "puzzle", "icon": "🌊", "desc": "صفحهٔ ۱۴×۱۴ با شش رنگ؛ ناحیهٔ گوشهٔ بالا-چپ را با انتخاب رنگ‌ها بزرگ کن و در حداکثر ۲۵ حرکت کل صفحه را یک‌رنگ کن.", "dim3": false}, {"slug": "reaction", "title": "عکس‌العمل", "cat": "arcade", "icon": "bolt", "desc": "پنج دور آزمون عکس‌العمل: منتظر علامت بمان و فوری ضربه بزن. زود زدن جریمهٔ نیم‌ثانیه دارد و رتبهٔ نهایی می‌گیری.", "dim3": false}, {"slug": "freecell", "title": "فری‌سل", "cat": "cards", "icon": "🃏", "desc": "فری‌سل با ۸ ستون، ۴ خانه آزاد و ۴ بنیاد", "dim3": false}, {"slug": "frogger", "title": "قورباغهٔ عبوری", "cat": "arcade", "icon": "🐸", "desc": "قورباغه را از جادهٔ پرماشین و رودخانه عبور بده؛ روی کنده‌ها سوار شو و به ردیف بالا برس.", "dim3": false}, {"slug": "lotto", "title": "لوتو ۶ از ۴۹", "cat": "luck", "icon": "🎟", "desc": "شانست را امتحان کن: ۶ عدد را انتخاب کن و با قرعه رسمی مقایسه کن.", "dim3": false}, {"slug": "ludo", "title": "لیدو", "cat": "board", "icon": "🎯", "desc": "لیدوی ساده‌شدهٔ دونفره در برابر ربات: چهار مهره، مسیر ۵۲ خانه‌ای مشترک و ستون خانه؛ با ۶ از پایگاه بیرون بیا و اولین نفر همه را به خانه برسان.", "dim3": false}, {"slug": "snakes-ladders", "title": "مار و پله", "cat": "board", "icon": "🪜", "desc": "مسابقه تا خانهٔ ۱۰۰ با ۸ پله و ۸ مار؛ باید دقیقاً روی ۱۰۰ بایستی و ربات هم با همین قوانین بازی می‌کند.", "dim3": false}, {"slug": "snake", "title": "مار گرسنه", "cat": "arcade", "icon": "🐍", "desc": "مار کلاسیک با کنترل لمسی و کیبورد", "dim3": true}, {"slug": "antonym", "title": "مترادف و متضاد", "cat": "word", "icon": "↔️", "desc": "به نوع هر سؤال دقت کنید و مترادف یا متضادِ واژهٔ داده‌شده را از میان چهار گزینه انتخاب کنید.", "dim3": false}, {"slug": "hangman", "title": "مرد حلق‌آویز", "cat": "word", "icon": "☉", "desc": "واژهٔ پنهان را با حدس حرف‌ها پیدا کن؛ هر پاسخ اشتباه یک اندام به مرد اضافه می‌کند.", "dim3": false}, {"slug": "mancala", "title": "منقله", "cat": "board", "icon": "🐚", "desc": "منقلهٔ کلاسیک با ۱۲ گودال و ۴۸ دانه؛ دانه‌ها را در جهت پادساعتگرد بپاش، با افتادن آخرین دانه در انبارت نوبت اضافه بگیر و دانه‌های حریف را بگیر. بیشترین دانه برنده است.", "dim3": false}, {"slug": "morris9", "title": "موریس نه‌سنگ", "cat": "board", "icon": "◉", "desc": "موریس نه‌سنگ کلاسیک روی صفحهٔ ۲۴ نقطه‌ای: ابتدا ۹ سنگ می‌چینی، بعد جابه‌جا می‌کنی و با ساختن خط سه‌تایی سنگ حریف را بردار.", "dim3": false}, {"slug": "whack", "title": "موشکوبی", "cat": "arcade", "icon": "hammer", "desc": "۳۰ ثانیه وقت داری؛ موش‌ها از ۹ سوراخ بیرون می‌آیند و باید سریع روی آن‌ها بزنی. ضربه‌های پیوسته امتیاز دوبرابر می‌دهند.", "dim3": false}, {"slug": "minesweeper", "title": "مین‌یاب", "cat": "puzzle", "icon": "💣", "desc": "مین‌یاب با اولین کلیک امن و دو سطح", "dim3": true}, {"slug": "battleship", "title": "نبرد دریایی", "cat": "board", "icon": "⚑", "desc": "ناوگان پنج‌ناوی‌ات را روی شبکهٔ ۱۰×۱۰ بچین (دستی یا خودکار) و با شلیک خانه‌به‌خانه ناوگان پنهان ربات را یکی‌یکی غرق کن.", "dim3": false}, {"slug": "backgammon", "title": "نرد ایرانی", "cat": "board", "icon": "⚅", "desc": "نرد کامل با قوانین رسمی: تاس دوبل، میله، زدن بلوت، بیرون‌آوردن و هوش مصنوعی حریص — بدون مکعب دوبرابر.", "dim3": true}, {"slug": "dots-boxes", "title": "نقطه و خط", "cat": "board", "icon": "✒️", "desc": "نقطه و خط روی شبکهٔ ۴×۴؛ خط بکش و کادر بساز — هر کادرِ کامل یک امتیاز و یک نوبت اضافه دارد. در پایان بیشترین کادر برنده است.", "dim3": false}, {"slug": "nonogram", "title": "نونوگرام", "cat": "puzzle", "icon": "▦", "desc": "نونوگرام ۵×۵ و ۸×۸ با الگوهای تصادفی؛ سرنخ هر سطر و ستون را بخوان و خانه‌های درست را پر کن.", "dim3": false}, {"slug": "nim", "title": "نیم", "cat": "board", "icon": "🪨", "desc": "نیمِ مِسره با سه تودهٔ ۳، ۵ و ۷ مهره‌ای؛ هر بار از یک توده چند مهره (یا همه) بردار — ولی مواظب باش: هر کس آخرین مهره را بردارد می‌بازد! رایانه بی‌نقص بازی می‌کند.", "dim3": false}, {"slug": "pyramid", "title": "هرم", "cat": "cards", "icon": "🔺", "desc": "سولیتر هرم: ۲۸ کارت به شکل هرم چیده شده‌اند؛ هر بار دو کارتِ باز که جمعشان ۱۳ می‌شود را بردار و کل هرم را فرو بریز.", "dim3": false}, {"slug": "maze", "title": "هزارتو", "cat": "puzzle", "icon": "🧭", "desc": "هزارتوی کامل (بدون حلقه) در سه اندازه: از خانهٔ شروع تا خروجیِ فیروزه‌ای با کمترین حرکت برس.", "dim3": false}, {"slug": "crazy-eights", "title": "هشت دیوانه", "cat": "cards", "icon": "🎱", "desc": "هشت دیوانه در برابر حریف هوشمند؛ هشت جانشین هر خالی است و مسابقه تا ۲۰۰ امتیاز ادامه دارد.", "dim3": false}, {"slug": "8queens", "title": "هشت وزیر", "cat": "puzzle", "icon": "👑", "desc": "هشت وزیر روی تختهٔ شطرنج بچین طوری که هیچ دو وزیری همدیگر را تهدید نکنند؛ ۹۲ راه‌حل وجود دارد.", "dim3": false}, {"slug": "hex", "title": "هکس", "cat": "board", "icon": "⬡", "desc": "هکس ۱۱×۱۱: شما با سیاه دو ضلع بالا و پایین را وصل می‌کنید و ربات با سفید چپ و راست را. تساوی در هکس وجود ندارد.", "dim3": false}, {"slug": "anagram", "title": "واژه‌سازی", "cat": "word", "icon": "🔤", "desc": "با حروف داده‌شده واژه‌سازی کن؛ هر واژهٔ درست به اندازهٔ مجذور طولش امتیاز دارد. ۱۲۰ ثانیه وقت داری و در پایان همهٔ واژه‌های ممکن فاش می‌شود.", "dim3": false}, {"slug": "wordle", "title": "واژه‌یاب", "cat": "word", "icon": "▦", "desc": "واژهٔ پنج‌حرفی فارسی را در شش تلاش حدس بزن؛ رنگ هر خانه پس از هر حدس راهنمای توست.", "dim3": false}, {"slug": "word-search", "title": "واژه‌یاب شبکه‌ای", "cat": "word", "icon": "🔍", "desc": "هشت واژهٔ پنج تا هفت‌حرفی در شبکهٔ ۱۰×۱۰ پنهان شده‌اند. خانهٔ آغاز و پایان هر واژه را لمس کن تا خط آن روشن شود.", "dim3": false}, {"slug": "video-poker", "title": "ویدیو پوکر", "cat": "cards", "icon": "🎴", "desc": "ویدیو پوکر جک-یا-بهتر با اعتبار ۱۰۰: پنج کارت بگیر، کارت‌های خوب را نگه دار و بقیه را عوض کن تا دست ارزنده بسازی.", "dim3": false}, {"slug": "p15", "title": "پازل ۱۵", "cat": "puzzle", "icon": "🧩", "desc": "پازل کلاسیک ۱۵ روی شبکهٔ ۴×۴: کاشی‌ها را هل بده تا اعداد ۱ تا ۱۵ مرتب شوند. هر شافل با ۲۵۰ حرکت معتبر از حالت حل‌شده ساخته می‌شود و تضمیناً حل‌پذیر است.", "dim3": false}, {"slug": "pasoor", "title": "پاسور", "cat": "cards", "icon": "🃏", "desc": "پاسور ایرانی سبک کازینو؛ گرفتن کارت‌های میز با برابری، مجموع یا تک خشت.", "dim3": false}, {"slug": "capitals", "title": "پایتخت‌ها", "cat": "word", "icon": "🏛️", "desc": "پایتخت هر کشور را از میان چهار گزینه حدس بزنید؛ حواستان باشد پایتخت همیشه مشهورترین شهر نیست!", "dim3": false}, {"slug": "alborz-jump", "title": "پرش از البرز", "cat": "arcade", "icon": "⛰", "desc": "پرش پلتفرمی عمودی روی قله البرز", "dim3": true}, {"slug": "flappy", "title": "پرواز پرنده", "cat": "arcade", "icon": "🐦", "desc": "پرندهٔ طلایی را بین لوله‌های فیروزه‌ای هدایت کن؛ با عبور از هر لوله یک امتیاز بگیر.", "dim3": false}, {"slug": "flags", "title": "پرچم‌ها", "cat": "word", "icon": "🚩", "desc": "پرچم یک کشور را می‌بینید؛ نام آن کشور را از میان چهار گزینه حدس بزنید.", "dim3": false}, {"slug": "pentago", "title": "پنتاگو", "cat": "board", "icon": "❖", "desc": "پنتاگو روی صفحهٔ ۶×۶ با چهار ربع چرخان: سنگ بگذار، یک ربع را بچرخان؛ اولین پنج‌تاییِ پشت‌سرهم در هر جهت برنده است.", "dim3": false}, {"slug": "gomoku", "title": "پنج‌درردیف", "cat": "board", "icon": "⚫", "desc": "پنج‌درردیف روی صفحهٔ ۱۵×۱۵؛ شما سیاه هستید و شروع می‌کنید. نخستین پنج مهرهٔ پیاپی در چهار جهت برنده است و ربات خط‌های تهدید را می‌بندد.", "dim3": false}, {"slug": "peg", "title": "پگ سولیتر", "cat": "puzzle", "icon": "🔴", "desc": "پگ سولیتر کلاسیک روی صفحهٔ صلیبی ۳۳ خانه‌ای؛ با پرش از روی یک پگ آن را حذف کن تا در پایان فقط یک پگ — ترجیحاً در مرکز — بماند.", "dim3": false}, {"slug": "pong", "title": "پینگ‌پنگ", "cat": "arcade", "icon": "🏓", "desc": "پینگ‌پنگ دو نفره مقابل هوش مصنوعی", "dim3": true}, {"slug": "chomp", "title": "چامپ", "cat": "board", "icon": "◕", "desc": "چامپ روی تختهٔ شکلاتی ۵×۶ با خانهٔ سم در گوشه: هر حرکت خانهٔ انتخابی و همهٔ پایین‌راست آن را می‌خورد؛ خورندهٔ سم می‌بازد.", "dim3": false}, {"slug": "lights-out", "title": "چراغ‌ها را خاموش کن", "cat": "puzzle", "icon": "💡", "desc": "هر لمس یک خانه و چهار همسایه‌اش را تغییر می‌دهد؛ همهٔ چراغ‌ها را خاموش کن. حالت سریع ۳×۳ هم دارد.", "dim3": false}, {"slug": "slots", "title": "چرخ میوه", "cat": "luck", "icon": "🎰", "desc": "چرخ میوهٔ سه‌قرقره با نمادهای وزن‌دار؛ هر چرخش ۵ اعتبار دارد و سه نماد یکسان روی خط برد جایزه می‌دهد.", "dim3": false}, {"slug": "connect4", "title": "چهار در یک خط", "cat": "board", "icon": "🔴", "desc": "چهار در یک خط با جاذبه روی ستون‌های هفت‌گانه؛ ربات با جست‌وجوی عمق ۴ و هرس آلفا-بتا و ارزیابی مرکزگرا بازی می‌کند.", "dim3": true}, {"slug": "lcr", "title": "چپ وسط راست", "cat": "luck", "icon": "🎯", "desc": "تاس چپ‌وسط‌راست با دو ربات: هر تاس چ یک چیپ به چپ، ر به راست و و به دیگ وسط می‌دهد؛ آخرین بازیکنِ دارای چیپ صاحب کل دیگ می‌شود.", "dim3": false}, {"slug": "checkers", "title": "چکرز", "cat": "board", "icon": "♟", "desc": "چکرز آمریکایی روی صفحهٔ ۸×۸ در برابر ربات؛ گرفتن با پرش اجباری است، پرش چندگانه باید ادامه یابد و مهره‌ای که به ردیف آخر برسد شاه می‌شود.", "dim3": true}, {"slug": "kakuro", "title": "کاکورو", "cat": "puzzle", "icon": "🔢", "desc": "جدولی از جمع‌ها؛ در هر اجرا ارقام غیرتکراری باید دقیقاً برابر سرنخ شوند.", "dim3": false}, {"slug": "quarto-mini", "title": "کواترو مینی", "cat": "board", "icon": "◈", "desc": "کواتروی مینی روی صفحهٔ ۴×۴ با ۸ قطعه در دو اندازه (کوچک/بزرگ) و دو رنگ (نقره‌ای/طلایی). قطعه‌ای را که حریف دست می‌دهد بگذارید و بعد قطعهٔ بعدی را خودتان به او بدهید.", "dim3": false}, {"slug": "wheel", "title": "گردونه شانس", "cat": "luck", "icon": "🎡", "desc": "گردونهٔ شانس ۱۲ خانه‌ای با جوایز ۱۰۰/۲۵۰/۵۰۰ و خانه‌های ویژهٔ ضربدر۲، نصف و ورشکست؛ امتیاز را جمع کن و به ۲۰۰۰ برس.", "dim3": false}, {"slug": "golf", "title": "گلف", "cat": "cards", "icon": "⛳", "desc": "سولیتر گلف: ۵ ستون ۷ کارتی؛ کارت‌های پایین ستون‌ها را با اختلاف یک رتبه روی زباله بگذار و هر ۳۵ کارت را تمام کن.", "dim3": false}, {"slug": "yahtzee", "title": "یاتزی", "cat": "luck", "icon": "🎲", "desc": "یاتزی تک‌نفره با ۵ تاس و ۳ پرتاب در هر نوبت؛ ۱۳ خانهٔ امتیاز را هوشمندانه پر کنید و جایزهٔ ۳۵ امتیازیِ بالایی را از دست ندهید.", "dim3": false}, {"slug": "g2048", "title": "۲۰۴۸", "cat": "puzzle", "icon": "🟨", "desc": "پازل عددی ۲۰۴۸ با انیمیشن لغزش", "dim3": true}, {"slug": "calc24", "title": "۲۴ با اعداد", "cat": "puzzle", "icon": "🧮", "desc": "با چهار عدد و چهار عمل به ۲۴ برس؛ بازی هوش و حساب با راه‌نمای راه‌حل.", "dim3": false}];
+  var q = document.getElementById('q'), grid = document.getElementById('grid'), count = document.getElementById('count');
+  var cat = 'all';
+  var chips = document.querySelectorAll('.chip');
+  chips.forEach(function(c){c.addEventListener('click',function(){
+    chips.forEach(function(x){x.classList.remove('on')});c.classList.add('on');cat=c.getAttribute('data-cat');apply();
+  });});
+  q.addEventListener('input',apply);
+  function apply(){
+    var s=q.value.trim(), shown=0;
+    TILES.forEach(function(t){
+      var ok=(cat==='all'||cat==='dim3'&&t.dim3||t.cat===cat)&&(!s||t.title.indexOf(s)>=0||t.desc.indexOf(s)>=0);
+      var el=document.getElementById('tile-'+t.slug);
+      if(el){el.style.display=ok?'':'none';if(ok)shown++;}
+    });
+    count.textContent='نمایش '+shown.toLocaleString('fa-IR')+' بازی از ۱۰۰';
+  }
+  apply();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+<title>مین‌یاب سه‌بعدی | دنیای بازی‌ها</title>
+<meta name="description" content="مین‌یاب کلاسیک در صحنه سه‌بعدی: سنگ‌های برجسته را بشکاف، پرچم طلا بکار و از مین‌ها بگذر؛ اولین کلیک همیشه امن است." />
+<link rel="icon" href="data:," />
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  @font-face{font-family:Vazirmatn;src:url(../../fonts/Vazirmatn-Regular.woff2) format('woff2');font-weight:400;font-display:swap}
+  @font-face{font-family:Vazirmatn;src:url(../../fonts/Vazirmatn-Bold.woff2) format('woff2');font-weight:700;font-display:swap}
+  body {
+    font-family: Vazirmatn, Tahoma, sans-serif;
+    background:
+      radial-gradient(900px 420px at 50% -80px, rgba(168,179,201,.28), transparent 68%),
+      radial-gradient(720px 480px at 108% 112%, rgba(68,80,106,.42), transparent 60%),
+      linear-gradient(168deg, #111c33 0%, #0b1220 58%, #0a0f1d 100%);
+    color: #f3ead8; min-height: 100dvh;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 14px; padding-top: 64px; user-select: none; touch-action: manipulation; position: relative; overflow-x: hidden;
+  }
+  a.wog-home{position:fixed;top:12px;inset-inline-start:14px;z-index:99;display:inline-flex;align-items:center;gap:6px;background:linear-gradient(140deg,rgba(217,164,65,.16),rgba(217,164,65,.06));border:1px solid rgba(217,164,65,.5);color:#e8c073;text-decoration:none;padding:7px 14px;border-radius:12px;font-size:.85rem;font-weight:700;box-shadow:0 2px 10px rgba(0,0,0,.35);transition:.18s}
+  a.wog-home:hover{background:rgba(217,164,65,.3);transform:translateY(-1px)}
+  header { text-align: center; margin-bottom: 10px; position: relative; z-index: 1; }
+  h1 { font-size: 1.3rem; font-weight: 800; display: inline-flex; align-items: center; gap: 10px;
+       background: linear-gradient(180deg, #f6d996, #a8b3c9 55%, #d9a441); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  h1:before, h1:after { content: '❋'; font-size: .85em; color: #d9a441; -webkit-text-fill-color: #d9a441; }
+  .hud { color: #a8b3c9; margin-top: 6px; font-size: .95rem; display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+  .hud b { color: #e8c073; }
+  .bar { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; justify-content: center; position: relative; z-index: 1; }
+  button { font-family: inherit; font-weight: 800; border: 0; cursor: pointer; touch-action: manipulation;
+    background: linear-gradient(180deg, #e9bd68, #c8922f); color: #251905; border-radius: 12px; padding: 9px 16px; font-size: .9rem;
+    box-shadow: 0 3px 10px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.35); transition: transform .12s, filter .15s; }
+  button:active { transform: translateY(1px); }
+  button.ghost { background: #1c2a47; color: #e8c073; border: 1px solid rgba(217,164,65,.35); box-shadow: 0 2px 8px rgba(0,0,0,.35); }
+  button.on { background: linear-gradient(180deg, #e9bd68, #c8922f); color: #251905; }
+  .stage3d { position: relative; width: min(92vw, 500px); aspect-ratio: 1 / 1; border-radius: 18px; overflow: hidden; margin-top: 12px;
+    box-shadow: 0 14px 36px rgba(0,0,0,.55), 0 0 0 2px rgba(217,164,65,.45), 0 0 0 6px rgba(10,14,26,.95), 0 0 30px rgba(217,164,65,.10);
+    z-index: 1; }
+  .stage3d canvas { display: block; width: 100%; height: 100%; touch-action: none; }
+  .flash { position: absolute; inset: 0; background: radial-gradient(60% 60% at 50% 50%, rgba(226,109,92,.5), transparent 75%); opacity: 0; transition: opacity .5s; pointer-events: none; }
+  .flash.on { opacity: 1; transition: none; }
+  .panel { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 12px; padding: 20px; text-align: center; background: rgba(8,12,24,.84); backdrop-filter: blur(4px); z-index: 5; }
+  .panel.hidden { display: none; }
+  .panel p { font-size: 1.12rem; font-weight: 700; line-height: 1.9; }
+  .panel .sub { font-size: .88rem; color: #a8b3c9; font-weight: 400; }
+  #hint { color: #a8b3c9; font-size: .84rem; margin-top: 12px; text-align: center; max-width: 520px; line-height: 2; position: relative; z-index: 1; }
+</style>
+<script src="../../js/vendor/three.min.js"></script>
+</head>
+<body data-cat="puzzle" data-slug="minesweeper" data-flag3d="1" style="--g1:#a8b3c9;--g2:#44506a">
+<a class="wog-home" href="../../index.html">⌂ خانه</a>
+<header>
+  <h1>❋ مین‌یاب ❋</h1>
+  <div class="hud">مین <b id="mc">۰ / ۰</b> · زمان <b id="tm">۰</b> · رکورد <b id="bs">—</b></div>
+</header>
+<div class="bar">
+  <button class="lv on" data-lv="easy" data-smoke="easy">آسان ۹×۹</button>
+  <button class="ghost lv" data-lv="med" data-smoke="med">متوسط ۱۲×۱۰</button>
+  <button class="ghost" id="flagmode" aria-pressed="false" data-smoke="flag">حالت پرچم: خاموش</button>
+  <button class="ghost" id="again" data-smoke="again">شروع دوباره</button>
+</div>
+<div class="stage3d" id="stage">
+  <div class="flash" id="flash"></div>
+  <div class="panel hidden" id="panel">
+    <p id="pMsg" aria-live="polite"></p>
+    <p class="sub" id="pSub"></p>
+    <button id="pagain" data-smoke="pagain">شروع دوباره</button>
+  </div>
+</div>
+<p id="hint">اولین کلیک همیشه امن است. ضربه روی سنگ، خانه را می‌شکافد؛ عدد هر خانه یعنی چند مین اطراف است. با «حالت پرچم» یا راست‌کلیک پرچم طلا بکار و مین‌ها را نشانه بگیر. با بازکردن همه خانه‌های امن می‌بری.</p>
+
+<script>
+(function () {
+'use strict';
+/*WOG_LOGIC_START*/
+var WOG_LOGIC = {
+  LV: {
+    easy: { name: 'آسان', rows: 9, cols: 9, mines: 10, key: 'wog-mines-best-easy' },
+    med: { name: 'متوسط', rows: 10, cols: 12, mines: 22, key: 'wog-mines-best-med' }
+  },
+  newState: function (lv) {
+    var s = { rows: lv.rows, cols: lv.cols, mines: lv.mines, g: [], started: false, over: false, won: false, flags: 0, opened: 0 };
+    for (var i = 0; i < lv.rows * lv.cols; i++) s.g.push({ m: false, o: false, f: false, n: 0 });
+    return s;
+  },
+  nb: function (s, i) {
+    var r = Math.floor(i / s.cols), c = i % s.cols, out = [], dr, dc;
+    for (dr = -1; dr <= 1; dr++) for (dc = -1; dc <= 1; dc++) {
+      if (!dr && !dc) continue;
+      var nr = r + dr, nc = c + dc;
+      if (nr >= 0 && nr < s.rows && nc >= 0 && nc < s.cols) out.push(nr * s.cols + nc);
+    }
+    return out;
+  },
+  /* مین‌ها پس از اولین کلیک چیده می‌شوند — نه در خانه اول و نه در همسایه‌هایش (مطابق نسخهٔ 2D) */
+  plant: function (s, first, rng) {
+    rng = rng || Math.random;
+    var banned = {};
+    banned[first] = true;
+    this.nb(s, first).forEach(function (n) { banned[n] = true; });
+    var pool = [], k, m, j, t;
+    for (k = 0; k < s.g.length; k++) if (!banned[k]) pool.push(k);
+    for (m = 0; m < s.mines; m++) {
+      j = m + Math.floor(rng() * (pool.length - m));
+      t = pool[m]; pool[m] = pool[j]; pool[j] = t;
+      s.g[pool[m]].m = true;
+    }
+    for (k = 0; k < s.g.length; k++) {
+      if (!s.g[k].m) {
+        var sum = 0;
+        this.nb(s, k).forEach(function (n) { if (s.g[n].m) sum++; });
+        s.g[k].n = sum;
+      }
+    }
+    s.started = true;
+  },
+  /* بازکردن آبشاری خانه‌های خالی با پشته (بدون بازگشتی) + عمق برای آبشار پلکانی */
+  openFrom: function (s, start) {
+    var st = [{ i: start, d: 0 }], out = [];
+    while (st.length) {
+      var it = st.pop(), k = it.i, c = s.g[k];
+      if (c.o || c.f || c.m) continue;
+      c.o = true;
+      s.opened++;
+      out.push({ i: k, n: c.n, d: it.d });
+      if (c.n === 0) {
+        var self = this;
+        this.nb(s, k).forEach(function (n) { if (!s.g[n].o && !s.g[n].f && !s.g[n].m) st.push({ i: n, d: it.d + 1 }); });
+      }
+    }
+    return out;
+  },
+  boom: function (s, hitIdx) {
+    s.over = true;
+    var mines = [], wrong = [], k, c;
+    for (k = 0; k < s.g.length; k++) {
+      c = s.g[k];
+      if (c.m) { if (!c.f) mines.push(k); }
+      else if (c.f) wrong.push(k);
+    }
+    return { kind: 'boom', hit: hitIdx, mines: mines, wrong: wrong };
+  },
+  toggleFlag: function (s, i) {
+    if (s.over) return 'noop';
+    var c = s.g[i];
+    if (c.o) return 'noop';
+    if (!c.f && s.flags >= s.mines) return 'noop';
+    c.f = !c.f;
+    s.flags += c.f ? 1 : -1;
+    return c.f ? 'on' : 'off';
+  },
+  /* شوت = پرچم‌گذاری/بازکردن کامل منطق نسخهٔ 2D */
+  reveal: function (s, i, rng) {
+    if (s.over) return { kind: 'noop' };
+    var c = s.g[i];
+    if (c.f || c.o) return { kind: 'noop' };
+    if (!s.started) this.plant(s, i, rng);
+    if (c.m) return this.boom(s, i);
+    var opened = this.openFrom(s, i), flagged = null, k;
+    if (s.opened === s.g.length - s.mines) {
+      s.won = true; s.over = true;
+      flagged = [];
+      for (k = 0; k < s.g.length; k++) {
+        if (s.g[k].m && !s.g[k].f) { s.g[k].f = true; s.flags++; flagged.push(k); }
+      }
+    }
+    return { kind: 'ok', opened: opened, won: !!s.won, flagged: flagged };
+  }
+};
+/*WOG_LOGIC_END*/
+var L = WOG_LOGIC;
+
+// ---------- UI helpers ----------
+var FA_D = '۰۱۲۳۴۵۶۷۸۹';
+function fa(n) { return String(n).replace(/\d/g, function (d) { return FA_D[+d]; }); }
+var store = {
+  get: function (k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+  set: function (k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+};
+
+var stage = document.getElementById('stage');
+var flash = document.getElementById('flash');
+var panel = document.getElementById('panel');
+var pMsg = document.getElementById('pMsg');
+var pSub = document.getElementById('pSub');
+var mcEl = document.getElementById('mc');
+var tmEl = document.getElementById('tm');
+var bsEl = document.getElementById('bs');
+var flagBtn = document.getElementById('flagmode');
+
+var lvId = 'easy', cfg = L.LV.easy;
+var st = null, ok3d = true, flagMode = false;
+var timer = null, t0 = 0, elapsed = 0, hiddenAt = 0;
+
+function updateMines() { mcEl.textContent = fa(st ? st.flags : 0) + ' / ' + fa(cfg.mines); }
+function showBest() {
+  var b = parseInt(store.get(cfg.key) || '', 10);
+  bsEl.textContent = isNaN(b) ? '—' : fa(b) + ' ثانیه';
+}
+function tick() { elapsed = Math.floor((Date.now() - t0) / 1000); tmEl.textContent = fa(elapsed); }
+function startTimer() { t0 = Date.now(); elapsed = 0; timer = setInterval(tick, 250); tick(); }
+function stopTimer() { if (timer) { clearInterval(timer); timer = null; tick(); } }
+document.addEventListener('visibilitychange', function () {
+  if (document.hidden) { hiddenAt = Date.now(); if (timer) stopTimer(); }
+  else if (st && st.started && !st.over) { t0 += Date.now() - hiddenAt; timer = setInterval(tick, 250); }
+});
+
+// ---------- 3D scene ----------
+var renderer, scene, camera, clock = 0, camDist = 10;
+var boardGroup = null, cells = [], tileMeshes = [];
+var buildBoard, resize, slabMatsFor;
+var buildBoard, resize, slabMatsFor;
+var P = 1.04;
+function wx(c, cols) { return (c - (cols - 1) / 2) * P; }
+function wz(r, rows) { return (r - (rows - 1) / 2) * P; }
+var NCOLORS = ['', '#8fb7e8', '#8fe0b0', '#ff9a86', '#bfa8ff', '#e8c073', '#5ee8d8', '#f3ead8', '#a8b3c9'];
+var matCache = {};
+try {
+  renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  stage.insertBefore(renderer.domElement, stage.firstChild);
+  scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x0a1024);
+  scene.fog = new THREE.Fog(0x0a1024, 16, 40);
+  camera = new THREE.PerspectiveCamera(40, 1, .1, 90);
+
+  var ground = new THREE.Mesh(
+    new THREE.PlaneGeometry(40, 40),
+    new THREE.MeshStandardMaterial({ color: 0x0b1326, roughness: .95 }));
+  ground.rotation.x = -Math.PI / 2; ground.position.y = -.45; scene.add(ground);
+
+  function roundedShape(w, h, rad) {
+    var sh = new THREE.Shape(), x = -w / 2, y = -h / 2;
+    sh.moveTo(x + rad, y);
+    sh.lineTo(x + w - rad, y); sh.quadraticCurveTo(x + w, y, x + w, y + rad);
+    sh.lineTo(x + w, y + h - rad); sh.quadraticCurveTo(x + w, y + h, x + w - rad, y + h);
+    sh.lineTo(x + rad, y + h); sh.quadraticCurveTo(x, y + h, x, y + h - rad);
+    sh.lineTo(x, y + rad); sh.quadraticCurveTo(x, y, x + rad, y);
+    return sh;
+  }
+  var goldMat = new THREE.MeshStandardMaterial({ color: 0xd9a441, roughness: .32, metalness: .72, emissive: 0x8a6420, emissiveIntensity: .22 });
+  var navyMat = new THREE.MeshStandardMaterial({ color: 0x14203a, roughness: .62, metalness: .22 });
+
+  scene.add(new THREE.HemisphereLight(0xe9eef8, 0x0a1024, .85));
+  var dl = new THREE.DirectionalLight(0xe8c073, .7); dl.position.set(6, 11, 4); scene.add(dl);
+  var dl2 = new THREE.DirectionalLight(0x9fd8ff, .32); dl2.position.set(-6, 8, -5); scene.add(dl2);
+
+  // سنگ‌های برجسته: اکسترود گردگوشه + بول (هندسهٔ مشترک)
+  var tileGeo = new THREE.ExtrudeGeometry(roundedShape(.92, .92, .16), { depth: .2, bevelEnabled: true, bevelThickness: .05, bevelSize: .05, bevelSegments: 2, curveSegments: 3 });
+  tileGeo.rotateX(-Math.PI / 2);
+  var slabGeo = new THREE.BoxGeometry(.9, .1, .9);
+  var stoneMats = [0x3d4e77, 0x364769, 0x44557e, 0x394a70, 0x41517a].map(function (c) {
+    return new THREE.MeshStandardMaterial({ color: c, roughness: .78, metalness: .12 });
+  });
+  var slabMat = new THREE.MeshStandardMaterial({ color: 0x101828, roughness: .9, metalness: .05 });
+  var slabSide = new THREE.MeshStandardMaterial({ color: 0x0b1220, roughness: .95 });
+
+  function drawDigit(x, n) {
+    var w = x.canvas.width;
+    x.clearRect(0, 0, w, w);
+    x.fillStyle = '#101828'; x.fillRect(0, 0, w, w);
+    x.fillStyle = 'rgba(0,0,0,.5)'; x.fillRect(6, 6, w - 12, w - 12);
+    if (n > 0) {
+      x.fillStyle = NCOLORS[n];
+      x.font = 'bold 84px Vazirmatn, Tahoma, sans-serif';
+      x.textAlign = 'center'; x.textBaseline = 'middle';
+      x.fillText(fa(n), w / 2, w / 2 + 4);
+    }
+  }
+  function slabTopMat(n) {
+    if (matCache[n]) return matCache[n].mat;
+    var canvas = document.createElement('canvas');
+    canvas.width = 128; canvas.height = 128;
+    drawDigit(canvas.getContext('2d'), n);
+    var tex = new THREE.CanvasTexture(canvas);
+    tex.anisotropy = 4;
+    var m = new THREE.MeshStandardMaterial({ map: tex, roughness: .85, metalness: .05 });
+    matCache[n] = { canvas: canvas, tex: tex, mat: m };
+    return m;
+  }
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () {
+    for (var n = 0; n <= 8; n++) {
+      var e = matCache[n];
+      if (e) { drawDigit(e.canvas.getContext('2d'), n); e.tex.needsUpdate = true; }
+    }
+  });
+  slabMatsFor = function (n) {
+    var top = slabTopMat(n);
+    return [slabSide, slabSide, top, slabSide, slabSide, slabSide];
+  };
+
+  // پرچم طلا: میله + بیرق
+  var poleGeo = new THREE.CylinderGeometry(.028, .028, .55, 8);
+  var poleMat = new THREE.MeshStandardMaterial({ color: 0xe8e0cf, roughness: .4, metalness: .3 });
+  var penGeo = new THREE.ConeGeometry(.15, .34, 4);
+  var penMat = new THREE.MeshStandardMaterial({ color: 0xd9a441, roughness: .3, metalness: .65, emissive: 0x8a6420, emissiveIntensity: .3 });
+  function makeFlag() {
+    var g = new THREE.Group();
+    var pole = new THREE.Mesh(poleGeo, poleMat); pole.position.y = .275; g.add(pole);
+    var pen = new THREE.Mesh(penGeo, penMat);
+    pen.rotation.z = -Math.PI / 2; pen.rotation.y = Math.PI / 4;
+    pen.position.set(.2, .48, 0);
+    g.add(pen);
+    return g;
+  }
+
+  // مین: کرهٔ تیرهٔ خاردار
+  var spikeGeo = new THREE.ConeGeometry(.055, .2, 6);
+  var mineMat = new THREE.MeshStandardMaterial({ color: 0x1d2946, roughness: .3, metalness: .55, emissive: 0x0a0f1e, emissiveIntensity: .5 });
+  var boomMat = new THREE.MeshStandardMaterial({ color: 0xc8402a, roughness: .3, metalness: .4, emissive: 0xff5a3c, emissiveIntensity: .95 });
+  var mineProto = new THREE.Group();
+  (function () {
+    var ball = new THREE.Mesh(new THREE.SphereGeometry(.3, 14, 10), mineMat);
+    mineProto.add(ball);
+    var dirs = [[1, 0, 0], [-1, 0, 0], [0, 1, 0], [0, -1, 0], [0, 0, 1], [0, 0, -1],
+      [.7, .7, 0], [-.7, .7, 0], [.7, -.7, 0], [-.7, -.7, 0], [0, .7, .7], [0, -.7, .7]];
+    dirs.forEach(function (d) {
+      var v = new THREE.Vector3(d[0], d[1], d[2]).normalize();
+      var sp = new THREE.Mesh(spikeGeo, mineMat);
+      sp.position.copy(v).multiplyScalar(.32);
+      sp.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), v);
+      mineProto.add(sp);
+    });
+  })();
+  // علامت ✕ روی پرچم‌های اشتباه
+  var xTex = (function () {
+    var c = document.createElement('canvas'); c.width = 128; c.height = 128;
+    var x = c.getContext('2d');
+    x.strokeStyle = '#e26d5c'; x.lineWidth = 16; x.lineCap = 'round';
+    x.beginPath(); x.moveTo(24, 24); x.lineTo(104, 104); x.moveTo(104, 24); x.lineTo(24, 104); x.stroke();
+    var t = new THREE.CanvasTexture(c); return t;
+  })();
+  var xMat = new THREE.MeshBasicMaterial({ map: xTex, transparent: true, depthWrite: false });
+  var xGeo = new THREE.PlaneGeometry(.55, .55);
+
+  buildBoard = function () {
+    if (boardGroup) {
+      scene.remove(boardGroup);
+      boardGroup.traverse(function (o) { if (o.isMesh && o.userData.own) o.geometry.dispose(); });
+    }
+    boardGroup = new THREE.Group();
+    cells = []; tileMeshes = [];
+    var cols = cfg.cols, rows = cfg.rows;
+    var W = cols * P + .6, D = rows * P + .6;
+    var g1 = new THREE.ExtrudeGeometry(roundedShape(W, D, .5), { depth: .22, bevelEnabled: false, curveSegments: 5 });
+    g1.rotateX(-Math.PI / 2);
+    var gold = new THREE.Mesh(g1, goldMat); gold.position.y = .22; gold.userData.own = 1; boardGroup.add(gold);
+    var g2 = new THREE.ExtrudeGeometry(roundedShape(W + .35, D + .35, .55), { depth: .22, bevelEnabled: false, curveSegments: 5 });
+    g2.rotateX(-Math.PI / 2);
+    var ped = new THREE.Mesh(g2, navyMat); ped.position.y = 0; ped.userData.own = 1; boardGroup.add(ped);
+
+    for (var i = 0; i < rows * cols; i++) {
+      (function (idx) {
+        var r = Math.floor(idx / cols), c = idx % cols;
+        var root = new THREE.Group();
+        root.position.set(wx(c, cols), 0, wz(r, rows));
+        var slab = new THREE.Mesh(slabGeo, slabMatsFor(0));
+        slab.position.y = .5; root.add(slab);
+        var tile = new THREE.Mesh(tileGeo, stoneMats[idx % stoneMats.length]);
+        tile.position.y = .5 + .15;
+        tile.userData.i = idx;
+        root.add(tile);
+        var flag = makeFlag(); flag.visible = false; flag.position.y = .8; root.add(flag);
+        var mine = mineProto.clone(); mine.visible = false; mine.position.y = .58; root.add(mine);
+        var xm = new THREE.Mesh(xGeo, xMat);
+        xm.rotation.x = -Math.PI / 2; xm.position.y = 1.05; xm.visible = false; root.add(xm);
+        boardGroup.add(root);
+        var cell = { i: idx, r: r, c: c, root: root, tile: tile, slab: slab, flag: flag, mine: mine, xm: xm, state: 'hidden', sinkT0: 0, spin: Math.random() * 6 };
+        cells.push(cell); tileMeshes.push(tile);
+      })(i);
+    }
+    scene.add(boardGroup);
+    fitCamera();
+  };
+
+  function fitCamera() {
+    var W = cfg.cols * P + .6, D = cfg.rows * P + .6;
+    var a = camera.aspect || 1, tan = Math.tan(camera.fov * Math.PI / 360);
+    camDist = Math.max((W / 2 + 1.4) / (tan * a), (D / 2 * .85 + 1.8) / tan);
+    scene.fog.near = camDist + 7;
+    scene.fog.far = camDist + 30;
+  }
+
+  resize = function () {
+    var w = stage.clientWidth || 480, h = stage.clientHeight || 480;
+    renderer.setSize(w, h, false);
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+    fitCamera();
+  };
+  window.addEventListener('resize', resize);
+  resize();
+} catch (e) { ok3d = false; }
+
+// ---------- game flow ----------
+function showPanel(title, sub) {
+  pMsg.textContent = title;
+  pSub.textContent = sub || '';
+  panel.classList.remove('hidden');
+}
+
+function newGame() {
+  cfg = L.LV[lvId];
+  st = L.newState(cfg);
+  stopTimer();
+  elapsed = 0; tmEl.textContent = '۰';
+  updateMines();
+  showBest();
+  panel.classList.add('hidden');
+  flagMode = false;
+  flagBtn.textContent = 'حالت پرچم: خاموش';
+  flagBtn.classList.remove('on');
+  flagBtn.setAttribute('aria-pressed', 'false');
+  stage.style.aspectRatio = cfg.cols + ' / ' + cfg.rows;
+  if (ok3d) { buildBoard(); resize(); }
+}
+
+function sinkCell(cell) {
+  if (cell.state !== 'hidden') return;
+  cell.state = 'sinking';
+  cell.sinkT0 = clock;
+  var c = st.g[cell.i];
+  cell.slab.material = slabMatsFor(c.n);
+}
+
+function revealAnim(res) {
+  res.opened.forEach(function (o) {
+    var cell = cells[o.i];
+    var delay = Math.min(650, o.d * 45);
+    setTimeout(function () { if (cell.state === 'hidden') sinkCell(cell); }, delay);
+  });
+}
+
+function boomAnim(res) {
+  flash.classList.add('on');
+  setTimeout(function () { flash.classList.remove('on'); }, 60);
+  res.mines.forEach(function (i) {
+    var cell = cells[i];
+    sinkCell(cell);
+    cell.mine.visible = true;
+  });
+  var hitCell = cells[res.hit];
+  if (hitCell) hitCell.mine.traverse(function (o) { if (o.isMesh) o.material = boomMat; });
+  res.wrong.forEach(function (i) {
+    var cell = cells[i];
+    cell.xm.visible = true;
+  });
+}
+
+function winAnim(res) {
+  (res.flagged || []).forEach(function (i) {
+    var cell = cells[i];
+    sinkCell(cell);
+    cell.flag.visible = true;
+  });
+}
+
+function doReveal(i) {
+  if (!st || st.over) return;
+  var res = L.reveal(st, i);
+  if (res.kind === 'noop') return;
+  if (res.kind === 'boom') {
+    stopTimer();
+    boomAnim(res);
+    showPanel('بووم! باختی', 'به مین برخوردی! زمان: ' + fa(elapsed) + ' ثانیه');
+    return;
+  }
+  if (!timer) startTimer();
+  revealAnim(res);
+  updateMines();
+  if (res.won) {
+    stopTimer();
+    winAnim(res);
+    var prev = parseInt(store.get(cfg.key) || '', 10);
+    var isRec = isNaN(prev) || elapsed < prev;
+    if (isRec) store.set(cfg.key, String(elapsed));
+    showBest();
+    setTimeout(function () {
+      showPanel('بردی!', 'همه خانه‌های امن را باز کردی — زمان: ' + fa(elapsed) + ' ثانیه' + (isRec ? ' (رکورد جدید!)' : ''));
+    }, 500);
+  }
+}
+
+function doFlag(i) {
+  if (!st || st.over) return;
+  var r = L.toggleFlag(st, i);
+  if (r === 'noop') return;
+  var cell = cells[i];
+  cell.flag.visible = (r === 'on');
+  updateMines();
+}
+
+// ---------- input ----------
+var ray = ok3d ? new THREE.Raycaster() : null;
+function pickCell(e) {
+  if (!ok3d) return -1;
+  var rect = renderer.domElement.getBoundingClientRect();
+  var v = new THREE.Vector2(
+    ((e.clientX - rect.left) / rect.width) * 2 - 1,
+    -((e.clientY - rect.top) / rect.height) * 2 + 1);
+  ray.setFromCamera(v, camera);
+  var hits = ray.intersectObjects(tileMeshes.filter(function (t) {
+    return cells[t.userData.i] && cells[t.userData.i].state === 'hidden';
+  }));
+  for (var h = 0; h < hits.length; h++) {
+    var cell = cells[hits[h].object.userData.i];
+    if (cell && cell.state === 'hidden') return cell.i;
+  }
+  return -1;
+}
+var pdx = 0, pdy = 0, pdT = 0;
+stage.addEventListener('pointerdown', function (e) { pdx = e.clientX; pdy = e.clientY; pdT = Date.now(); }, { passive: true });
+stage.addEventListener('pointerup', function (e) {
+  if (Math.abs(e.clientX - pdx) > 9 || Math.abs(e.clientY - pdy) > 9 || Date.now() - pdT > 800) return;
+  var i = pickCell(e);
+  if (i < 0) return;
+  if (flagMode) doFlag(i); else doReveal(i);
+}, { passive: true });
+stage.addEventListener('contextmenu', function (e) {
+  e.preventDefault();
+  var i = pickCell(e);
+  if (i >= 0) doFlag(i);
+});
+
+flagBtn.addEventListener('click', function () {
+  flagMode = !flagMode;
+  flagBtn.textContent = 'حالت پرچم: ' + (flagMode ? 'روشن' : 'خاموش');
+  flagBtn.classList.toggle('on', flagMode);
+  flagBtn.setAttribute('aria-pressed', String(flagMode));
+});
+document.getElementById('again').addEventListener('click', newGame);
+document.getElementById('pagain').addEventListener('click', newGame);
+[].forEach.call(document.querySelectorAll('.lv'), function (btn) {
+  btn.addEventListener('click', function () {
+    var id = btn.getAttribute('data-lv');
+    if (id === lvId) return;
+    lvId = id;
+    [].forEach.call(document.querySelectorAll('.lv'), function (b2) {
+      b2.classList.toggle('on', b2 === btn);
+      b2.classList.toggle('ghost', b2 !== btn);
+    });
+    newGame();
+  });
+});
+
+// ---------- render loop ----------
+var lastT = performance.now(), hidden = false;
+document.addEventListener('visibilitychange', function () { hidden = document.hidden; lastT = performance.now(); });
+function frame(now) {
+  requestAnimationFrame(frame);
+  if (hidden || !ok3d || !renderer) return;
+  var dt = Math.min(.05, (now - lastT) / 1000);
+  lastT = now;
+  clock += dt;
+  var el = 0.86, az = 0.42 + Math.sin(clock * .3) * .07;
+  for (var i = 0; i < cells.length; i++) {
+    var cell = cells[i];
+    if (cell.state === 'sinking') {
+      var k = Math.min(1, (clock - cell.sinkT0) / .3), e = 1 - Math.pow(1 - k, 3);
+      cell.tile.position.y = .65 - e * .62;
+      cell.tile.scale.setScalar(1 - e * .25);
+      cell.tile.rotation.y = e * .5;
+      if (k >= 1) { cell.state = 'open'; cell.tile.visible = false; }
+    }
+    if (cell.flag.visible) cell.flag.rotation.y = Math.sin(clock * 2.6 + cell.spin) * .18;
+    if (cell.mine.visible && cell.state === 'open') cell.mine.rotation.y += dt * 1.4;
+  }
+  var cx = Math.sin(az) * Math.cos(el), cy = Math.sin(el), cz = Math.cos(az) * Math.cos(el);
+  camera.position.set(cx * camDist, cy * camDist, cz * camDist);
+  camera.lookAt(0, 0, 0);
+  renderer.render(scene, camera);
+}
+requestAnimationFrame(frame);
+
+if (!ok3d) {
+  pMsg.textContent = 'WebGL در دسترس نیست';
+  pSub.textContent = 'مرورگر شما از گرافیک سه‌بعدی پشتیبانی نمی‌کند.';
+  document.getElementById('pagain').textContent = 'تلاش دوباره';
+  document.getElementById('pagain').onclick = function () { location.reload(); };
+  panel.classList.remove('hidden');
+} else {
+  newGame();
+}
+})();
+</script>
+</body>
+</html>

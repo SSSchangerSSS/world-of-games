@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+<title>پینگ‌پنگ</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  body {
+    font-family: Vazirmatn, Tahoma, sans-serif;
+    background:
+      radial-gradient(900px 420px at 50% -80px, var(--g1a), transparent 68%),
+      radial-gradient(720px 480px at 108% 112%, var(--g2a), transparent 60%),
+      linear-gradient(168deg, #111c33 0%, #0b1220 58%, #0a0f1d 100%);
+    color: #f3ead8; min-height: 100dvh;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 14px; padding-top: 64px; user-select: none; touch-action: manipulation; position: relative; overflow-x: hidden;
+  }
+  a.wog-home{position:fixed;top:12px;inset-inline-start:14px;z-index:99;display:inline-flex;align-items:center;gap:6px;background:linear-gradient(140deg,rgba(217,164,65,.16),rgba(217,164,65,.06));border:1px solid rgba(217,164,65,.5);color:#e8c073;text-decoration:none;padding:7px 14px;border-radius:12px;font-size:.85rem;font-weight:700;box-shadow:0 2px 10px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.06);transition:.18s}
+  a.wog-home:hover{background:rgba(217,164,65,.3);transform:translateY(-1px)}
+  header { text-align: center; margin-bottom: 12px; position: relative; z-index: 1; }
+  h1 { font-size: 1.3rem; font-weight: 800; display: inline-flex; align-items: center; gap: 10px;
+       background: linear-gradient(180deg, #f6d996, var(--g1b) 55%, var(--g1)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  h1:before, h1:after { content: '❋'; font-size: .85em; color: var(--g2); -webkit-text-fill-color: var(--g2); }
+  .hud { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; color: #a8b3c9; font-size: .9rem; margin-top: 6px; }
+  .hud b { color: #e8c073; }
+  .stage3d { position: relative; width: min(92vw, 480px); aspect-ratio: 3 / 4; border-radius: 14px; overflow: hidden;
+    box-shadow: 0 14px 36px rgba(0,0,0,.55), 0 0 0 2px rgba(63,184,175,.5), 0 0 0 6px rgba(8,16,16,.95), 0 0 26px rgba(63,184,175,.15);
+    z-index: 1; }
+  .stage3d canvas { display: block; width: 100%; height: 100%; touch-action: none; }
+  .panel { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 12px; padding: 20px; text-align: center; background: rgba(11,18,32,.86); backdrop-filter: blur(4px); z-index: 5;
+    border: 1px solid rgba(217,164,65,.4); border-radius: 18px; }
+  .panel.hidden { display: none; }
+  .panel p { font-size: 1.12rem; font-weight: 700; line-height: 1.9; }
+  .panel .sub { font-size: .9rem; color: #a8b3c9; font-weight: 400; }
+  button { font-family: inherit; font-weight: 800; border: 0; cursor: pointer; touch-action: manipulation;
+    background: linear-gradient(180deg, #e9bd68, #c8922f); color: #251905; border-radius: 12px; padding: 10px 22px; font-size: .98rem;
+    box-shadow: 0 3px 10px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.35); }
+  button:active { transform: translateY(1px); }
+  #hint { color: #96a2ba; font-size: .84rem; margin-top: 12px; text-align: center; max-width: 660px; line-height: 2; position: relative; z-index: 1; }
+</style>
+<script src="../../js/vendor/three.min.js"></script>
+</head>
+<body data-cat="arcade" data-slug="pong" data-flag3d="1" style="--g1:#3fb8af;--g2:#164a46;--g1a:rgba(63,184,175,0.30);--g2a:rgba(22,74,70,0.42);--g1b:#164a46">
+<a class="wog-home" href="../../index.html">⌂ خانه</a>
+<header>
+  <h1>❋ پینگ‌پنگ ❋</h1>
+  <div class="hud">
+    <span>شما <b id="ps">۰</b> — <b id="cs">۰</b> حریف</span>
+    <span>بردها: <b id="wins">۰</b></span>
+  </div>
+</header>
+<div class="stage3d" id="stage">
+  <div class="panel" id="panel">
+    <p id="pMsg" aria-live="polite"></p>
+    <p class="sub" id="pSub"></p>
+    <button id="pBtn" data-smoke="start">شروع بازی</button>
+  </div>
+</div>
+<p id="hint">راهنما: راکت تو پایین است؛ با ماوس، لمس یا کلیدهای چپ/راست حرکت کن. اولین نفر به ۷ امتیاز برنده است.</p>
+
+<script>
+(function () {
+'use strict';
+/*WOG_LOGIC_START*/
+var WOG_LOGIC = {
+  // ابعاد و ثابت‌ها عیناً برابر نسخهٔ 2D (احساس فیزیک دست‌نخورده)
+  W: 420, H: 560,
+  PW: 76, PH: 12, PY: 530, AY: 18, BR: 6, WIN_SCORE: 7,
+  BASE_SPEED: 300, SPEED_UP: 1.045, MAX_SPEED: 640,
+  AI_TRACK: 235, AI_IDLE: 110, PADDLE_SPEED: 400, PAD_MARGIN: 8, SUBSTEP: .008,
+  clampP: function (x) { return Math.max(this.PAD_MARGIN, Math.min(this.W - this.PAD_MARGIN - this.PW, x)); },
+  newState: function () {
+    return {
+      state: 'menu',
+      px: (this.W - this.PW) / 2, ax: (this.W - this.PW) / 2,
+      ball: { x: this.W / 2, y: this.H / 2, vx: 0, vy: 0 },
+      ps: 0, cs: 0, speed: this.BASE_SPEED, serveT: 0, wins: 0,
+      events: []
+    };
+  },
+  serve: function (s, down, rng) {
+    var b = s.ball;
+    b.x = this.W / 2;
+    b.y = this.H / 2;
+    s.speed = this.BASE_SPEED;
+    var ang = rng() * .9 - .45;
+    b.vx = s.speed * Math.sin(ang);
+    b.vy = s.speed * Math.cos(ang) * (down ? 1 : -1);
+    s.serveT = .8;
+  },
+  begin: function (s, rng) {
+    s.ps = 0; s.cs = 0;
+    s.px = (this.W - this.PW) / 2;
+    s.ax = (this.W - this.PW) / 2;
+    s.events.push({ k: 'start' });
+    this.serve(s, rng() < .5, rng);
+    s.state = 'run';
+  },
+  hitPaddle: function (s, x0, up) {
+    var b = s.ball;
+    var rel = Math.max(-1, Math.min(1, (b.x - (x0 + this.PW / 2)) / (this.PW / 2)));
+    var ang = rel;
+    s.speed = Math.min(this.MAX_SPEED, s.speed * this.SPEED_UP);
+    b.vx = s.speed * Math.sin(ang);
+    // انحراف آگاهانه از نسخهٔ 2D: علامت vy در 2D معکوس بود (توپ به راکت می‌چسبید و
+    // روی سرویس‌های رو به بالا در راکت حریف گیر می‌کرد → بازی هنگ می‌کرد و
+    // «شبیه‌سازی تا ۷» ممکن نبود. اینجا جهت‌ها درست شدند؛ بقیه عین 2D است.)
+    b.vy = s.speed * Math.cos(ang) * (up ? 1 : -1);
+    s.events.push({ k: 'hit', up: up, ang: ang, speed: s.speed });
+  },
+  end: function (s, won) {
+    s.state = 'over';
+    if (won) { s.wins++; s.events.push({ k: 'win', wins: s.wins }); }
+    s.events.push({ k: 'over', won: won, ps: s.ps, cs: s.cs });
+  },
+  point: function (s, who, rng) {
+    rng = rng || this._rng || Math.random;
+    if (who === 'player') s.ps++; else s.cs++;
+    s.events.push({ k: 'point', who: who, ps: s.ps, cs: s.cs });
+    if (s.ps >= this.WIN_SCORE) return this.end(s, true);
+    if (s.cs >= this.WIN_SCORE) return this.end(s, false);
+    // سرویس به سمت بازندهٔ امتیاز
+    this.serve(s, who === 'ai', rng);
+  },
+  sub: function (s, dt) {
+    var b = s.ball;
+    b.x += b.vx * dt;
+    b.y += b.vy * dt;
+    if (b.x < this.BR) { b.x = this.BR; b.vx = Math.abs(b.vx); }
+    if (b.x > this.W - this.BR) { b.x = this.W - this.BR; b.vx = -Math.abs(b.vx); }
+    if (b.vy < 0 && b.y >= this.AY && b.y - this.BR <= this.AY + this.PH &&
+        b.x >= s.ax - this.BR && b.x <= s.ax + this.PW + this.BR) {
+      this.hitPaddle(s, s.ax, true);
+      b.y = this.AY + this.PH + this.BR;
+      return;
+    }
+    if (b.vy > 0 && b.y <= this.PY + this.PH && b.y + this.BR >= this.PY &&
+        b.x >= s.px - this.BR && b.x <= s.px + this.PW + this.BR) {
+      this.hitPaddle(s, s.px, false);
+      b.y = this.PY - this.BR;
+      return;
+    }
+    if (b.y - this.BR > this.H) this.point(s, 'ai');
+    else if (b.y + this.BR < 0) this.point(s, 'player');
+  },
+  update: function (s, dt, inp, rng) {
+    if (s.state !== 'run') return;
+    s.events.length = 0;
+    rng = rng || Math.random;
+    this._rng = rng;
+    inp = inp || {};
+    if (inp.px != null) s.px = this.clampP(inp.px);
+    if (inp.left) s.px = this.clampP(s.px - this.PADDLE_SPEED * dt);
+    if (inp.right) s.px = this.clampP(s.px + this.PADDLE_SPEED * dt);
+    // هوش مصنوعی: فقط وقتی توپ نزدیک می‌شود دنبال آن می‌رود، وگرنه به مرکز برمی‌گردد
+    var target = s.ball.vy < 0 ? s.ball.x : this.W / 2;
+    var c = s.ax + this.PW / 2;
+    var d = target - c;
+    if (Math.abs(d) > 4) {
+      var sp = s.ball.vy < 0 ? this.AI_TRACK : this.AI_IDLE;
+      s.ax = this.clampP(s.ax + Math.max(-sp * dt, Math.min(sp * dt, d)));
+    }
+    if (s.serveT > 0) { s.serveT -= dt; return; }
+    var steps = Math.max(1, Math.ceil(dt / this.SUBSTEP));
+    var sd = dt / steps, i;
+    for (i = 0; i < steps; i++) {
+      this.sub(s, sd);
+      if (s.serveT > 0 || s.state !== 'run') break;
+    }
+  }
+};
+/*WOG_LOGIC_END*/
+var L = WOG_LOGIC;
+
+// ---------- UI helpers ----------
+var FA_D = '۰۱۲۳۴۵۶۷۸۹';
+function fa(n) { return String(n).replace(/\d/g, function (d) { return FA_D[+d]; }); }
+var store = {
+  get: function (k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+  set: function (k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+};
+
+var stage = document.getElementById('stage');
+var panel = document.getElementById('panel');
+var pMsg = document.getElementById('pMsg');
+var pSub = document.getElementById('pSub');
+var pBtn = document.getElementById('pBtn');
+var psEl = document.getElementById('ps');
+var csEl = document.getElementById('cs');
+var winsEl = document.getElementById('wins');
+var wins = Number(store.get('wog-pong-wins')) || 0;
+winsEl.textContent = fa(wins);
+
+// ---------- 3D scene ----------
+var ok3d = true, renderer, scene, camera;
+var SC = 1 / 40; // 420×560 → 10.5×14 واحد جهانی
+function wx(x) { return (x - 210) * SC; }
+function wz(y) { return (280 - y) * SC; }
+var pPaddle, aPaddle, ballMesh, ballLight, pMat, aMat, hitFlash = { p: 0, a: 0 };
+try {
+  renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  stage.insertBefore(renderer.domElement, stage.firstChild);
+  scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x08131a);
+  scene.fog = new THREE.Fog(0x08131a, 20, 55);
+  camera = new THREE.PerspectiveCamera(60, 3 / 4, .1, 120);
+
+  var floor = new THREE.Mesh(new THREE.PlaneGeometry(34, 38),
+    new THREE.MeshStandardMaterial({ color: 0x0a1a20, roughness: .95, metalness: 0 }));
+  floor.rotation.x = -Math.PI / 2; floor.position.y = -.52; scene.add(floor);
+  var court = new THREE.Mesh(new THREE.BoxGeometry(10.9, .5, 16.9),
+    new THREE.MeshStandardMaterial({ color: 0x0c2126, roughness: .8, metalness: .15, emissive: 0x0f3a3f, emissiveIntensity: .42 }));
+  court.position.y = -.25; scene.add(court);
+  var grid = new THREE.GridHelper(16, 16, 0x3fb8af, 0x164a46);
+  grid.material.transparent = true; grid.material.opacity = .2; grid.position.y = .012; scene.add(grid);
+
+  // خط مرکزی درخشان (خط‌چین)
+  var dashMat = new THREE.MeshStandardMaterial({ color: 0x3fb8af, emissive: 0x3fb8af, emissiveIntensity: .9, roughness: .4 });
+  var dashGeo = new THREE.BoxGeometry(9.4, .04, .34);
+  var di;
+  for (di = 0; di < 9; di++) {
+    var dash = new THREE.Mesh(dashGeo, dashMat);
+    dash.position.set(0, .04, -6.2 + di * 1.55);
+    scene.add(dash);
+  }
+
+  var wallMat = new THREE.MeshStandardMaterial({ color: 0x123640, roughness: .6, metalness: .3 });
+  var trimMat = new THREE.MeshStandardMaterial({ color: 0x3fb8af, roughness: .4, metalness: .4, emissive: 0x14554f, emissiveIntensity: .6 });
+  function wall(w, d, x, z) {
+    var m = new THREE.Mesh(new THREE.BoxGeometry(w, .6, d), wallMat);
+    m.position.set(x, .3, z); scene.add(m);
+    var t = new THREE.Mesh(new THREE.BoxGeometry(w + .06, .05, d + .06), trimMat);
+    t.position.set(x, .63, z); scene.add(t);
+  }
+  wall(.5, 17, -5.45, 0);
+  wall(.5, 17, 5.45, 0);
+  wall(11.4, .5, 0, 8.45);
+
+  pMat = new THREE.MeshStandardMaterial({ color: 0xd9a441, roughness: .32, metalness: .6, emissive: 0x8a6420, emissiveIntensity: .4 });
+  aMat = new THREE.MeshStandardMaterial({ color: 0x3fb8af, roughness: .35, metalness: .45, emissive: 0x14554f, emissiveIntensity: .5 });
+  pPaddle = new THREE.Mesh(new THREE.BoxGeometry(L.PW * SC, .3, .55), pMat); scene.add(pPaddle);
+  aPaddle = new THREE.Mesh(new THREE.BoxGeometry(L.PW * SC, .3, .55), aMat); scene.add(aPaddle);
+  ballMesh = new THREE.Mesh(new THREE.SphereGeometry(.16, 20, 14),
+    new THREE.MeshStandardMaterial({ color: 0xf3ead8, roughness: .2, metalness: .3, emissive: 0xfff4d6, emissiveIntensity: 1 }));
+  scene.add(ballMesh);
+  ballLight = new THREE.PointLight(0xffeecc, .95, 7); scene.add(ballLight);
+
+  scene.add(new THREE.HemisphereLight(0xbfe8e4, 0x08131a, .9));
+  var dl = new THREE.DirectionalLight(0xe8c073, .6); dl.position.set(5, 12, 6); scene.add(dl);
+  var dl2 = new THREE.DirectionalLight(0x3fb8af, .3); dl2.position.set(-6, 9, -8); scene.add(dl2);
+
+  function resize() {
+    var w = stage.clientWidth || 480, h = stage.clientHeight || 640;
+    renderer.setSize(w, h, false);
+    camera.aspect = w / h; camera.updateProjectionMatrix();
+  }
+  window.addEventListener('resize', resize);
+  resize();
+} catch (e) { ok3d = false; }
+
+// ---------- game state ----------
+var st = null, state = 'menu';
+var QA = window.__wog3d = { frames: 0, draws: 0 };
+
+function show(msg, sub, btn) {
+  pMsg.textContent = msg;
+  pSub.textContent = sub || '';
+  pSub.style.display = sub ? '' : 'none';
+  pBtn.textContent = btn;
+  panel.classList.remove('hidden');
+}
+
+function start() {
+  st = L.newState();
+  st.wins = wins;
+  L.begin(st, Math.random);
+  state = 'run';
+  panel.classList.add('hidden');
+  consume();
+}
+
+function consume() {
+  var i, e;
+  for (i = 0; i < st.events.length; i++) {
+    e = st.events[i];
+    if (e.k === 'start' || e.k === 'point') { psEl.textContent = fa(st.ps); csEl.textContent = fa(st.cs); }
+    else if (e.k === 'win') { wins = st.wins; winsEl.textContent = fa(wins); store.set('wog-pong-wins', String(wins)); }
+    else if (e.k === 'hit') { if (e.up) hitFlash.a = .25; else hitFlash.p = .25; }
+    else if (e.k === 'over') {
+      state = 'over';
+      show(e.won ? 'بردی!' : 'باختی!', 'نتیجه: ' + fa(st.ps) + ' — ' + fa(st.cs), 'شروع دوباره');
+    }
+  }
+}
+
+// ---------- input ----------
+var keys = { left: false, right: false }, pendingPx = null;
+function toX(clientX) {
+  var r = stage.getBoundingClientRect();
+  return (clientX - r.left) * (L.W / r.width);
+}
+stage.addEventListener('mousemove', function (e) { if (state === 'run') pendingPx = toX(e.clientX); });
+stage.addEventListener('touchstart', function (e) {
+  e.preventDefault();
+  if (state === 'run') pendingPx = toX(e.touches[0].clientX);
+}, { passive: false });
+stage.addEventListener('touchmove', function (e) {
+  e.preventDefault();
+  if (state === 'run') pendingPx = toX(e.touches[0].clientX);
+}, { passive: false });
+
+document.addEventListener('keydown', function (e) {
+  if (e.code === 'ArrowLeft' || e.code === 'KeyA') { keys.left = true; e.preventDefault(); }
+  else if (e.code === 'ArrowRight' || e.code === 'KeyD') { keys.right = true; e.preventDefault(); }
+  else if (e.code === 'Space' || e.code === 'Enter') {
+    e.preventDefault();
+    if (state !== 'run') start();
+  }
+});
+document.addEventListener('keyup', function (e) {
+  if (e.code === 'ArrowLeft' || e.code === 'KeyA') keys.left = false;
+  if (e.code === 'ArrowRight' || e.code === 'KeyD') keys.right = false;
+});
+pBtn.addEventListener('click', start);
+
+// ---------- render loop ----------
+var lastT = 0;
+function frame(now) {
+  requestAnimationFrame(frame);
+  if (document.hidden) { lastT = now; return; }
+  var dt = lastT ? Math.min(.032, (now - lastT) / 1000) : 0;
+  lastT = now;
+  if (!ok3d || !renderer) return;
+  if (state === 'run' && st) {
+    L.update(st, dt, { left: keys.left, right: keys.right, px: pendingPx }, Math.random);
+    pendingPx = null;
+    consume();
+  }
+  // رندر وضعیت منطق در هر فریم
+  pPaddle.position.set(wx((st ? st.px : (L.W - L.PW) / 2) + L.PW / 2), .15, wz(L.PY + L.PH / 2));
+  aPaddle.position.set(wx((st ? st.ax : (L.W - L.PW) / 2) + L.PW / 2), .15, wz(L.AY + L.PH / 2));
+  ballMesh.position.set(wx(st ? st.ball.x : L.W / 2), .3, wz(st ? st.ball.y : L.H / 2));
+  ballLight.position.copy(ballMesh.position);
+  ballLight.position.y += .5;
+  if (hitFlash.p > 0) { hitFlash.p -= dt; pMat.emissiveIntensity = .4 + hitFlash.p * 2.4; }
+  if (hitFlash.a > 0) { hitFlash.a -= dt; aMat.emissiveIntensity = .5 + hitFlash.a * 2.4; }
+
+  var pxw = pPaddle.position.x;
+  var camX = pxw * .38;
+  camera.position.set(camX, 7.6, wz(L.PY) - 7.1);
+  camera.lookAt(camX * .3, 0, 1.7);
+  renderer.render(scene, camera);
+  QA.frames++;
+  QA.draws = renderer.info.render.calls;
+}
+requestAnimationFrame(frame);
+
+if (!ok3d) {
+  show('WebGL در دسترس نیست', 'مرورگر شما از گرافیک سه‌بعدی پشتیبانی نمی‌کند.', 'تلاش دوباره');
+  pBtn.onclick = function () { location.reload(); };
+} else {
+  st = L.newState();
+  show('آماده‌ای؟', 'اولین کسی که به ۷ امتیاز برسد برنده است.', 'شروع بازی');
+}
+})();
+</script>
+</body>
+</html>

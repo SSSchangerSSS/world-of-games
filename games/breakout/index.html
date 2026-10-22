@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+<title>توپ‌شکن</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  body {
+    font-family: Vazirmatn, Tahoma, sans-serif;
+    background:
+      radial-gradient(900px 420px at 50% -80px, var(--g1a), transparent 68%),
+      radial-gradient(720px 480px at 108% 112%, var(--g2a), transparent 60%),
+      linear-gradient(168deg, #111c33 0%, #0b1220 58%, #0a0f1d 100%);
+    color: #f3ead8; min-height: 100dvh;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 14px; padding-top: 64px; user-select: none; touch-action: manipulation; position: relative; overflow-x: hidden;
+  }
+  a.wog-home{position:fixed;top:12px;inset-inline-start:14px;z-index:99;display:inline-flex;align-items:center;gap:6px;background:linear-gradient(140deg,rgba(217,164,65,.16),rgba(217,164,65,.06));border:1px solid rgba(217,164,65,.5);color:#e8c073;text-decoration:none;padding:7px 14px;border-radius:12px;font-size:.85rem;font-weight:700;box-shadow:0 2px 10px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.06);transition:.18s}
+  a.wog-home:hover{background:rgba(217,164,65,.3);transform:translateY(-1px)}
+  header { text-align: center; margin-bottom: 12px; position: relative; z-index: 1; }
+  h1 { font-size: 1.3rem; font-weight: 800; display: inline-flex; align-items: center; gap: 10px;
+       background: linear-gradient(180deg, #f6d996, var(--g1b) 55%, var(--g1)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  h1:before, h1:after { content: '❋'; font-size: .85em; color: var(--g2); -webkit-text-fill-color: var(--g2); }
+  .hud { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; color: #a8b3c9; font-size: .9rem; margin-top: 6px; }
+  .hud b { color: #e8c073; }
+  .stage3d { position: relative; width: min(92vw, 480px); aspect-ratio: 3 / 4; border-radius: 14px; overflow: hidden;
+    box-shadow: 0 14px 36px rgba(0,0,0,.55), 0 0 0 2px rgba(226,109,92,.45), 0 0 0 6px rgba(14,10,10,.95);
+    z-index: 1; }
+  .stage3d canvas { display: block; width: 100%; height: 100%; touch-action: none; }
+  .toast {
+    position: absolute; top: 56px; left: 0; right: 0; text-align: center; pointer-events: none; z-index: 3;
+    color: #e8c073; font-weight: 700; font-size: .95rem; opacity: 0; transition: opacity .25s;
+    text-shadow: 0 1px 4px rgba(0,0,0,.6);
+  }
+  .toast.show { opacity: 1; }
+  .panel { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 12px; padding: 20px; text-align: center; background: rgba(11,18,32,.86); backdrop-filter: blur(4px); z-index: 5;
+    border: 1px solid rgba(217,164,65,.4); border-radius: 18px; }
+  .panel.hidden { display: none; }
+  .panel p { font-size: 1.12rem; font-weight: 700; line-height: 1.9; }
+  .panel .sub { font-size: .9rem; color: #a8b3c9; font-weight: 400; }
+  button { font-family: inherit; font-weight: 800; border: 0; cursor: pointer; touch-action: manipulation;
+    background: linear-gradient(180deg, #e9bd68, #c8922f); color: #251905; border-radius: 12px; padding: 10px 22px; font-size: .98rem;
+    box-shadow: 0 3px 10px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.35); }
+  button:active { transform: translateY(1px); }
+  #hint { color: #96a2ba; font-size: .84rem; margin-top: 12px; text-align: center; max-width: 660px; line-height: 2; position: relative; z-index: 1; }
+</style>
+<script src="../../js/vendor/three.min.js"></script>
+</head>
+<body data-cat="arcade" data-slug="breakout" data-flag3d="1" style="--g1:#e26d5c;--g2:#6e2c24;--g1a:rgba(226,109,92,0.30);--g2a:rgba(110,44,36,0.42);--g1b:#6e2c24">
+<a class="wog-home" href="../../index.html">⌂ خانه</a>
+<header>
+  <h1>❋ توپ‌شکن ❋</h1>
+  <div class="hud">
+    <span>امتیاز: <b id="score">۰</b></span>
+    <span>جون: <b id="lives">۳</b></span>
+    <span>لِوِل: <b id="level">۱</b></span>
+    <span>رکورد: <b id="best">۰</b></span>
+  </div>
+</header>
+<div class="stage3d" id="stage">
+  <div class="toast" id="toast" aria-live="polite"></div>
+  <div class="panel" id="panel">
+    <p id="pMsg" aria-live="polite"></p>
+    <p class="sub" id="pSub"></p>
+    <button id="pBtn" data-smoke="start">شروع بازی</button>
+  </div>
+</div>
+<p id="hint">راهنما: راکت را با ماوس، لمس یا کلیدهای چپ/راست حرکت بده؛ برای پرتاب توپ ضربه بزن یا Space. ردیف‌های بالاتر امتیاز بیشتری دارند.</p>
+
+<script>
+(function () {
+'use strict';
+/*WOG_LOGIC_START*/
+var WOG_LOGIC = {
+  // ابعاد و ثابت‌ها عیناً برابر نسخهٔ 2D (احساس فیزیک دست‌نخورده)
+  W: 420, H: 560,
+  PW: 78, PH: 12, PY: 526, BR: 6,
+  BASE_SPEED: 270, SPEED_MUL: 1.09, MAX_SPEED: 560,
+  ROWS: 6, COLS: 8, BW: 44, BH: 16, GX: 5, GY: 6, BTOP: 64,
+  BLEFT: 16.5,
+  ROW_PTS: [60, 50, 40, 30, 20, 10],
+  PADDLE_SPEED: 400, PAD_MARGIN: 8, SUBSTEP: .008,
+  clampP: function (x) { return Math.max(this.PAD_MARGIN, Math.min(this.W - this.PAD_MARGIN - this.PW, x)); },
+  newState: function () {
+    return {
+      state: 'menu', px: (this.W - this.PW) / 2,
+      ball: { x: this.W / 2, y: this.PY - this.BR - 1, vx: 0, vy: 0, stuck: true },
+      bricks: [], bricksLeft: 0,
+      score: 0, best: 0, lives: 3, level: 1, speed: this.BASE_SPEED,
+      events: []
+    };
+  },
+  buildBricks: function (s) {
+    s.bricks = [];
+    var r, c;
+    for (r = 0; r < this.ROWS; r++) {
+      for (c = 0; c < this.COLS; c++) {
+        s.bricks.push({ x: this.BLEFT + c * (this.BW + this.GX), y: this.BTOP + r * (this.BH + this.GY), r: r, a: true });
+      }
+    }
+    s.bricksLeft = this.ROWS * this.COLS;
+  },
+  stick: function (s) {
+    var b = s.ball;
+    b.stuck = true;
+    b.x = s.px + this.PW / 2;
+    b.y = this.PY - this.BR - 1;
+    b.vx = 0; b.vy = 0;
+  },
+  begin: function (s) {
+    s.score = 0; s.lives = 3; s.level = 1; s.speed = this.BASE_SPEED;
+    s.events.push({ k: 'start' });
+    this.buildBricks(s);
+    this.stick(s);
+    s.state = 'run';
+  },
+  launch: function (s, rng) {
+    if (s.state !== 'run' || !s.ball.stuck) return false;
+    var ang = rng() * .6 - .3;
+    var b = s.ball;
+    b.stuck = false;
+    b.vx = s.speed * Math.sin(ang);
+    b.vy = -s.speed * Math.cos(ang);
+    s.events.push({ k: 'launch', ang: ang });
+    return true;
+  },
+  addScore: function (s, n) {
+    s.score += n;
+    s.events.push({ k: 'score', score: s.score });
+    if (s.score > s.best) { s.best = s.score; s.events.push({ k: 'best', best: s.best }); }
+  },
+  levelClear: function (s) {
+    s.level++;
+    s.speed = Math.min(this.MAX_SPEED, this.BASE_SPEED * Math.pow(this.SPEED_MUL, s.level - 1));
+    s.events.push({ k: 'level', level: s.level });
+    this.buildBricks(s);
+    this.stick(s);
+  },
+  loseLife: function (s) {
+    s.lives--;
+    if (s.lives <= 0) { s.state = 'over'; s.events.push({ k: 'over' }); return; }
+    s.events.push({ k: 'life', lives: s.lives });
+    this.stick(s);
+  },
+  sub: function (s, dt) {
+    var b = s.ball;
+    b.x += b.vx * dt;
+    b.y += b.vy * dt;
+    if (b.x < this.BR) { b.x = this.BR; b.vx = Math.abs(b.vx); }
+    if (b.x > this.W - this.BR) { b.x = this.W - this.BR; b.vx = -Math.abs(b.vx); }
+    if (b.y < this.BR) { b.y = this.BR; b.vy = Math.abs(b.vy); }
+    if (b.vy > 0 && b.y <= this.PY + this.PH && b.y + this.BR >= this.PY &&
+        b.x >= s.px - this.BR && b.x <= s.px + this.PW + this.BR) {
+      var rel = Math.max(-1, Math.min(1, (b.x - (s.px + this.PW / 2)) / (this.PW / 2)));
+      var ang = rel * 1.05;
+      b.vx = s.speed * Math.sin(ang);
+      b.vy = -s.speed * Math.cos(ang);
+      b.y = this.PY - this.BR;
+      s.events.push({ k: 'paddle', ang: ang });
+      return;
+    }
+    var i, k, pl, pr, pt, pb, m;
+    for (i = 0; i < s.bricks.length; i++) {
+      k = s.bricks[i];
+      if (!k.a) continue;
+      if (b.x + this.BR > k.x && b.x - this.BR < k.x + this.BW && b.y + this.BR > k.y && b.y - this.BR < k.y + this.BH) {
+        pl = b.x + this.BR - k.x;
+        pr = k.x + this.BW - (b.x - this.BR);
+        pt = b.y + this.BR - k.y;
+        pb = k.y + this.BH - (b.y - this.BR);
+        m = Math.min(pl, pr, pt, pb);
+        if (m === pt) { b.vy = Math.abs(b.vy); b.y = k.y - this.BR; }
+        else if (m === pb) { b.vy = -Math.abs(b.vy); b.y = k.y + this.BH + this.BR; }
+        else if (m === pl) { b.vx = -Math.abs(b.vx); b.x = k.x - this.BR; }
+        else { b.vx = Math.abs(b.vx); b.x = k.x + this.BW + this.BR; }
+        k.a = false;
+        s.bricksLeft--;
+        s.events.push({ k: 'brick', row: k.r, pts: this.ROW_PTS[k.r] });
+        this.addScore(s, this.ROW_PTS[k.r]);
+        if (s.bricksLeft === 0) this.levelClear(s);
+        return;
+      }
+    }
+    if (b.y - this.BR > this.H) this.loseLife(s);
+  },
+  update: function (s, dt, inp, rng) {
+    if (s.state !== 'run') return;
+    s.events.length = 0;
+    rng = rng || Math.random;
+    inp = inp || {};
+    if (inp.px != null) s.px = this.clampP(inp.px);
+    if (inp.left) s.px = this.clampP(s.px - this.PADDLE_SPEED * dt);
+    if (inp.right) s.px = this.clampP(s.px + this.PADDLE_SPEED * dt);
+    if (inp.launch) this.launch(s, rng);
+    var b = s.ball;
+    if (b.stuck) { b.x = s.px + this.PW / 2; b.y = this.PY - this.BR - 1; return; }
+    var steps = Math.max(1, Math.ceil(dt / this.SUBSTEP));
+    var sd = dt / steps, i;
+    for (i = 0; i < steps; i++) {
+      this.sub(s, sd);
+      if (s.ball.stuck || s.state !== 'run') break;
+    }
+  }
+};
+/*WOG_LOGIC_END*/
+var L = WOG_LOGIC;
+
+// ---------- UI helpers ----------
+var FA_D = '۰۱۲۳۴۵۶۷۸۹';
+function fa(n) { return String(n).replace(/\d/g, function (d) { return FA_D[+d]; }); }
+var store = {
+  get: function (k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+  set: function (k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+};
+
+var stage = document.getElementById('stage');
+var toastEl = document.getElementById('toast');
+var panel = document.getElementById('panel');
+var pMsg = document.getElementById('pMsg');
+var pSub = document.getElementById('pSub');
+var pBtn = document.getElementById('pBtn');
+var scoreEl = document.getElementById('score');
+var livesEl = document.getElementById('lives');
+var levelEl = document.getElementById('level');
+var bestEl = document.getElementById('best');
+var best = Number(store.get('wog-breakout-best')) || 0;
+bestEl.textContent = fa(best);
+
+// ---------- 3D scene ----------
+var ok3d = true, renderer, scene, camera;
+var SC = 1 / 40; // 420×560 → 10.5×14 واحد جهانی
+function wx(x) { return (x - 210) * SC; }
+function wz(y) { return (280 - y) * SC; }
+var brickMeshes = [], paddleMesh, ballMesh, ballLight, shakeT = 0;
+try {
+  renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  stage.insertBefore(renderer.domElement, stage.firstChild);
+  scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x0a1024);
+  scene.fog = new THREE.Fog(0x0a1024, 18, 50);
+  camera = new THREE.PerspectiveCamera(62, 3 / 4, .1, 120);
+
+  var floor = new THREE.Mesh(new THREE.PlaneGeometry(34, 38),
+    new THREE.MeshStandardMaterial({ color: 0x0d1428, roughness: .95, metalness: 0 }));
+  floor.rotation.x = -Math.PI / 2; floor.position.y = -.52; scene.add(floor);
+  var court = new THREE.Mesh(new THREE.BoxGeometry(10.9, .5, 14.9),
+    new THREE.MeshStandardMaterial({ color: 0x101a30, roughness: .85, metalness: .12 }));
+  court.position.y = -.25; scene.add(court);
+  var grid = new THREE.GridHelper(14, 14, 0xe26d5c, 0x27345c);
+  grid.material.transparent = true; grid.material.opacity = .16; grid.position.y = .012; scene.add(grid);
+
+  var wallMat = new THREE.MeshStandardMaterial({ color: 0x1b2745, roughness: .6, metalness: .25 });
+  var trimMat = new THREE.MeshStandardMaterial({ color: 0xd9a441, roughness: .35, metalness: .5, emissive: 0x8a6420, emissiveIntensity: .45 });
+  function wall(w, d, x, z) {
+    var m = new THREE.Mesh(new THREE.BoxGeometry(w, .6, d), wallMat);
+    m.position.set(x, .3, z); scene.add(m);
+    var t = new THREE.Mesh(new THREE.BoxGeometry(w + .06, .05, d + .06), trimMat);
+    t.position.set(x, .63, z); scene.add(t);
+  }
+  wall(.5, 15, -5.45, 0);
+  wall(.5, 15, 5.45, 0);
+  wall(11.4, .5, 0, 7.45);
+
+  var ROW_COLORS3D = [0xe8c073, 0xd9a441, 0x3fb8af, 0x2f8f88, 0xd9d0b8, 0xa89f88];
+  var ROW_EMI3D = [0x8a6420, 0x7a5a22, 0x0f4a45, 0x0d3d39, 0x6e6852, 0x565040];
+  var brickGeo = new THREE.BoxGeometry(L.BW * SC, .42, .55);
+  var brickMats = ROW_COLORS3D.map(function (c, i) {
+    return new THREE.MeshStandardMaterial({ color: c, roughness: .4, metalness: .3, emissive: ROW_EMI3D[i], emissiveIntensity: .35 });
+  });
+  var i, bm;
+  for (i = 0; i < L.ROWS * L.COLS; i++) {
+    bm = new THREE.Mesh(brickGeo, brickMats[(i / L.COLS) | 0]);
+    bm.visible = false; scene.add(bm); brickMeshes.push(bm);
+  }
+
+  paddleMesh = new THREE.Mesh(new THREE.BoxGeometry(L.PW * SC, .3, .55),
+    new THREE.MeshStandardMaterial({ color: 0xd9a441, roughness: .32, metalness: .6, emissive: 0x8a6420, emissiveIntensity: .4 }));
+  scene.add(paddleMesh);
+  ballMesh = new THREE.Mesh(new THREE.SphereGeometry(.16, 20, 14),
+    new THREE.MeshStandardMaterial({ color: 0xf3ead8, roughness: .25, metalness: .3, emissive: 0xfff0c8, emissiveIntensity: .85 }));
+  scene.add(ballMesh);
+  ballLight = new THREE.PointLight(0xffe9b0, .9, 6); scene.add(ballLight);
+
+  scene.add(new THREE.HemisphereLight(0xbfd0ff, 0x0a1024, .9));
+  var dl = new THREE.DirectionalLight(0xe8c073, .75); dl.position.set(6, 14, 4); scene.add(dl);
+  var dl2 = new THREE.DirectionalLight(0x9fd8ff, .28); dl2.position.set(-6, 10, -6); scene.add(dl2);
+
+  function resize() {
+    var w = stage.clientWidth || 480, h = stage.clientHeight || 640;
+    renderer.setSize(w, h, false);
+    camera.aspect = w / h; camera.updateProjectionMatrix();
+  }
+  window.addEventListener('resize', resize);
+  resize();
+} catch (e) { ok3d = false; }
+
+// ---------- game state ----------
+var st = null, state = 'menu';
+var QA = window.__wog3d = { frames: 0, draws: 0 };
+
+function show(msg, sub, btn) {
+  pMsg.textContent = msg;
+  pSub.textContent = sub || '';
+  pSub.style.display = sub ? '' : 'none';
+  pBtn.textContent = btn;
+  panel.classList.remove('hidden');
+}
+
+var toastTimer = 0;
+function toast(msg) {
+  toastEl.textContent = msg;
+  toastEl.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function () { toastEl.classList.remove('show'); }, 1800);
+}
+
+function start() {
+  st = L.newState();
+  st.best = best;
+  L.begin(st);
+  state = 'run';
+  panel.classList.add('hidden');
+  toastEl.classList.remove('show');
+  consume();
+}
+
+function consume() {
+  var i, e;
+  for (i = 0; i < st.events.length; i++) {
+    e = st.events[i];
+    if (e.k === 'score') { scoreEl.textContent = fa(st.score); }
+    else if (e.k === 'best') { best = st.best; bestEl.textContent = fa(best); store.set('wog-breakout-best', String(best)); }
+    else if (e.k === 'level') { levelEl.textContent = fa(st.level); toast('بردی! لِوِل ' + fa(e.level) + ' — توپ کمی سریع‌تر شد'); shakeT = .3; }
+    else if (e.k === 'life') { livesEl.textContent = fa(e.lives); toast('یک جون از دست رفت! ' + fa(e.lives) + ' جون باقی مانده'); shakeT = .45; }
+    else if (e.k === 'start') { scoreEl.textContent = fa(0); livesEl.textContent = fa(3); levelEl.textContent = fa(1); toast('برای پرتاب توپ ضربه بزن یا Space'); }
+    else if (e.k === 'over') { livesEl.textContent = fa(0); state = 'over'; shakeT = .5; show('باختی! امتیاز: ' + fa(st.score), 'به لِوِل ' + fa(st.level) + ' رسیدی.', 'شروع دوباره'); }
+  }
+}
+
+// ---------- input ----------
+var keys = { left: false, right: false }, pendingPx = null, pendingLaunch = false;
+function toX(clientX) {
+  var r = stage.getBoundingClientRect();
+  return (clientX - r.left) * (L.W / r.width);
+}
+stage.addEventListener('mousemove', function (e) { if (state === 'run') pendingPx = toX(e.clientX); });
+stage.addEventListener('mousedown', function () { if (state === 'run') pendingLaunch = true; });
+stage.addEventListener('touchstart', function (e) {
+  e.preventDefault();
+  if (state === 'run') { pendingPx = toX(e.touches[0].clientX); pendingLaunch = true; }
+}, { passive: false });
+stage.addEventListener('touchmove', function (e) {
+  e.preventDefault();
+  if (state === 'run') pendingPx = toX(e.touches[0].clientX);
+}, { passive: false });
+
+document.addEventListener('keydown', function (e) {
+  if (e.code === 'ArrowLeft' || e.code === 'KeyA') { keys.left = true; e.preventDefault(); }
+  else if (e.code === 'ArrowRight' || e.code === 'KeyD') { keys.right = true; e.preventDefault(); }
+  else if (e.code === 'Space' || e.code === 'Enter') {
+    e.preventDefault();
+    if (state !== 'run') start();
+    else pendingLaunch = true;
+  }
+});
+document.addEventListener('keyup', function (e) {
+  if (e.code === 'ArrowLeft' || e.code === 'KeyA') keys.left = false;
+  if (e.code === 'ArrowRight' || e.code === 'KeyD') keys.right = false;
+});
+pBtn.addEventListener('click', start);
+
+// ---------- render loop ----------
+var lastT = 0;
+function frame(now) {
+  requestAnimationFrame(frame);
+  if (document.hidden) { lastT = now; return; }
+  var dt = lastT ? Math.min(.032, (now - lastT) / 1000) : 0;
+  lastT = now;
+  if (!ok3d || !renderer) return;
+  if (state === 'run' && st) {
+    L.update(st, dt, { left: keys.left, right: keys.right, px: pendingPx, launch: pendingLaunch });
+    pendingPx = null; pendingLaunch = false;
+    consume();
+  }
+  // رندر وضعیت منطق در هر فریم
+  var j, b;
+  for (j = 0; j < brickMeshes.length; j++) {
+    b = st ? st.bricks[j] : null;
+    if (b && b.a) {
+      brickMeshes[j].visible = true;
+      brickMeshes[j].position.set(wx(b.x + L.BW / 2), .22, wz(b.y + L.BH / 2));
+    } else brickMeshes[j].visible = false;
+  }
+  var pxw = wx((st ? st.px : (L.W - L.PW) / 2) + L.PW / 2);
+  paddleMesh.position.set(pxw, .15, wz(L.PY));
+  ballMesh.position.set(wx(st ? st.ball.x : L.W / 2), .3, wz(st ? st.ball.y : L.PY - L.BR - 1));
+  ballLight.position.copy(ballMesh.position);
+  ballLight.position.y += .5;
+  ballMesh.rotation.x += dt * 2.4;
+
+  var camX = pxw * .42;
+  camera.position.set(camX, 8.2, wz(L.PY) - 7.4);
+  if (shakeT > 0) {
+    shakeT -= dt;
+    camera.position.x += (Math.random() - .5) * shakeT * 1.2;
+    camera.position.y += (Math.random() - .5) * shakeT * .9;
+  }
+  camera.lookAt(camX * .3, 0, 2.1);
+  renderer.render(scene, camera);
+  QA.frames++;
+  QA.draws = renderer.info.render.calls;
+}
+requestAnimationFrame(frame);
+
+if (!ok3d) {
+  show('WebGL در دسترس نیست', 'مرورگر شما از گرافیک سه‌بعدی پشتیبانی نمی‌کند.', 'تلاش دوباره');
+  pBtn.onclick = function () { location.reload(); };
+} else {
+  st = L.newState();
+  show('آماده‌ای؟', 'راکت را با ماوس، لمس یا کلیدهای چپ/راست حرکت بده؛ برای پرتاب توپ ضربه بزن.', 'شروع بازی');
+}
+})();
+</script>
+</body>
+</html>

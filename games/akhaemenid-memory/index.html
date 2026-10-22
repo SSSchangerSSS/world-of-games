@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+<title>حافظه هخامنشی</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  @font-face{font-family:Vazirmatn;src:url(../../fonts/Vazirmatn-Regular.woff2) format('woff2');font-weight:400;font-display:swap}
+  @font-face{font-family:Vazirmatn;src:url(../../fonts/Vazirmatn-Bold.woff2) format('woff2');font-weight:700;font-display:swap}
+  body {
+    font-family: Vazirmatn, Tahoma, sans-serif;
+    background:
+      radial-gradient(880px 440px at 50% -80px, rgba(217,164,65,.30), transparent 66%),
+      radial-gradient(700px 460px at 106% 112%, rgba(122,78,32,.42), transparent 58%),
+      linear-gradient(168deg, #111c33 0%, #0b1220 58%, #0a0f1d 100%);
+    background-attachment: fixed;
+    color: #f3ead8; min-height: 100dvh;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 14px; padding-top: 64px; user-select: none; touch-action: manipulation; position: relative; overflow-x: hidden;
+  }
+  a.wog-home{position:fixed;top:12px;inset-inline-start:14px;z-index:99;display:inline-flex;align-items:center;gap:6px;background:linear-gradient(140deg,rgba(217,164,65,.16),rgba(217,164,65,.06));border:1px solid rgba(217,164,65,.5);color:#e8c073;text-decoration:none;padding:7px 14px;border-radius:12px;font-size:.85rem;font-weight:700;box-shadow:0 2px 10px rgba(0,0,0,.35);transition:.18s}
+  a.wog-home:hover{background:rgba(217,164,65,.3);transform:translateY(-1px)}
+  header { text-align: center; margin-bottom: 12px; position: relative; z-index: 1; }
+  h1 { font-size: 1.25rem; font-weight: 800; display: inline-flex; align-items: center; gap: 10px;
+       background: linear-gradient(180deg, #f6d996, #e2b568 55%, #d9a441); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  h1:before, h1:after { content: '❋'; font-size: .85em; color: #7a4e20; -webkit-text-fill-color: #b98a3a; }
+  .hud { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; color: #a8b3c9; font-size: .9rem; margin-top: 6px; }
+  .hud b { color: #e8c073; }
+  .stage3d { position: relative; width: min(92vw, 480px); aspect-ratio: 10 / 8.8; border-radius: 16px; overflow: hidden;
+    box-shadow: 0 14px 36px rgba(0,0,0,.55), 0 0 0 2px rgba(217,164,65,.45), 0 0 0 6px rgba(8,12,20,.95), 0 0 30px rgba(217,164,65,.10);
+    z-index: 1; }
+  .stage3d canvas { display: block; width: 100%; height: 100%; touch-action: none; }
+  .panel { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 12px; padding: 20px; text-align: center; background: rgba(10,15,29,.82); backdrop-filter: blur(4px); z-index: 5; }
+  .panel.hidden { display: none; }
+  .panel p { font-size: 1.12rem; font-weight: 700; line-height: 1.9; }
+  .panel .sub { font-size: .88rem; color: #a8b3c9; font-weight: 400; }
+  button { font-family: inherit; font-weight: 800; border: 0; cursor: pointer; touch-action: manipulation;
+    background: linear-gradient(180deg, #e9bd68, #c8922f); color: #251905; border-radius: 12px; padding: 10px 22px; font-size: .98rem;
+    box-shadow: 0 3px 10px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.35); }
+  button:active { transform: translateY(1px); }
+  button.restart { margin-top: 12px; padding: 12px 26px; min-height: 44px; position: relative; z-index: 1;
+    background: linear-gradient(135deg, #e8c073, #d9a441); box-shadow: 0 3px 10px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.35); }
+  #hint { color: #96a2ba; font-size: .84rem; margin-top: 12px; text-align: center; max-width: 660px; line-height: 2; position: relative; z-index: 1; }
+</style>
+<script src="../../js/vendor/three.min.js"></script>
+</head>
+<body data-cat="cards" data-slug="akhaemenid-memory" data-flag3d="1" style="--g1:#d9a441;--g2:#7a4e20">
+<a class="wog-home" href="../../index.html">⌂ خانه</a>
+<header>
+  <h1>❋ حافظه هخامنشی ❋</h1>
+  <div class="hud">
+    <span>حرکت: <b id="moves">۰</b></span>
+    <span>جفت‌ها: <b id="pairs">۰/۸</b></span>
+    <span>رکورد: <b id="best">—</b></span>
+  </div>
+</header>
+<div class="stage3d" id="stage">
+  <div class="panel" id="panel">
+    <p id="pMsg" aria-live="polite"></p>
+    <p class="sub" id="pSub"></p>
+    <button id="pBtn" data-smoke="start">شروع بازی</button>
+  </div>
+</div>
+<button class="restart" id="restart" data-smoke="restart">شروع دوباره</button>
+<p id="hint">راهنما: کارت‌ها را برگردان و جفتِ نقش‌های هخامنشی — شیر، گاو، نیلوفر، سرو، خورشید، بال، گل و ستاره — را پیدا کن؛ جفت درست با پالس طلایی بالا می‌آید و بهترین رکوردِ حرکت ثبت می‌شود.</p>
+
+<script>
+(function () {
+'use strict';
+/*WOG_LOGIC_START*/
+var WOG_LOGIC = {
+  SYMBOLS: ['lion', 'bull', 'lotus', 'cypress', 'sun', 'wing', 'rosette', 'star'],
+  PAIRS: 8,
+  FLIP_MS: 350,
+  BACK_MS: 700,
+  BEST_KEY: 'wog-memory-best',
+  newGame: function (rng) {
+    rng = rng || Math.random;
+    var deck = [], i, j, t;
+    for (i = 0; i < this.SYMBOLS.length; i++) {
+      deck.push({ sym: this.SYMBOLS[i] });
+      deck.push({ sym: this.SYMBOLS[i] });
+    }
+    for (i = deck.length - 1; i > 0; i--) {
+      j = Math.floor(rng() * (i + 1));
+      t = deck[i]; deck[i] = deck[j]; deck[j] = t;
+    }
+    return { deck: deck, moves: 0, pairs: 0, first: -1, open: [], done: [], lock: false, state: 'run' };
+  },
+  isUp: function (s, i) { return s.open.indexOf(i) !== -1; },
+  isDone: function (s, i) { return s.done.indexOf(i) !== -1; },
+  pick: function (s, i) {
+    if (s.state !== 'run' || s.lock || this.isDone(s, i) || this.isUp(s, i)) return 'ignored';
+    if (s.first < 0) { s.first = i; s.open = [i]; return 'first'; }
+    var j = s.first;
+    s.first = -1;
+    s.open = [j, i];
+    s.moves++;
+    if (s.deck[j].sym === s.deck[i].sym) {
+      s.done = s.done.concat([j, i]);
+      s.pairs++;
+      s.open = [];
+      if (s.pairs === this.PAIRS) s.state = 'win';
+      return 'match';
+    }
+    s.lock = true;
+    return 'miss';
+  },
+  settle: function (s) { s.lock = false; s.open = []; }
+};
+/*WOG_LOGIC_END*/
+var L = WOG_LOGIC;
+
+// ---------- helpers ----------
+var FA_D = '۰۱۲۳۴۵۶۷۸۹';
+function fa(n) { return String(n).replace(/\d/g, function (d) { return FA_D[+d]; }); }
+var store = {
+  get: function (k) { try { return window.localStorage.getItem(k); } catch (e) { return null; } },
+  set: function (k, v) { try { window.localStorage.setItem(k, v); } catch (e) {} }
+};
+
+var stage = document.getElementById('stage');
+var panel = document.getElementById('panel');
+var pMsg = document.getElementById('pMsg');
+var pSub = document.getElementById('pSub');
+var pBtn = document.getElementById('pBtn');
+var movesEl = document.getElementById('moves');
+var pairsEl = document.getElementById('pairs');
+var bestEl = document.getElementById('best');
+
+function bestOf() { return Number(store.get(L.BEST_KEY)) || 0; }
+function bestShow() { var b = bestOf(); bestEl.textContent = b ? fa(b) : '—'; }
+bestShow();
+
+function show(msg, sub, btn) {
+  pMsg.textContent = msg;
+  pSub.textContent = sub || '';
+  pSub.style.display = sub ? '' : 'none';
+  pBtn.textContent = btn;
+  panel.classList.remove('hidden');
+}
+
+// ---------- canvas textures: girih back + gold line-art fronts ----------
+function mkCanvas() { var c = document.createElement('canvas'); c.width = 256; c.height = 256; return c; }
+function star8(g, cx, cy, r1, r2, rot) {
+  g.beginPath();
+  for (var i = 0; i < 16; i++) {
+    var a = rot + i * Math.PI / 8, r = i % 2 ? r2 : r1;
+    var x = cx + Math.cos(a) * r, y = cy + Math.sin(a) * r;
+    if (i) g.lineTo(x, y); else g.moveTo(x, y);
+  }
+  g.closePath();
+}
+var GOLD = '#a9782c', IVORY = '#f7efdc';
+
+function texBack() {
+  var c = mkCanvas(), g = c.getContext('2d');
+  var bg = g.createLinearGradient(0, 0, 256, 256);
+  bg.addColorStop(0, '#26385f'); bg.addColorStop(1, '#15223f');
+  g.fillStyle = bg; g.fillRect(0, 0, 256, 256);
+  g.strokeStyle = 'rgba(217,164,65,.9)'; g.lineWidth = 4;
+  g.strokeRect(10, 10, 236, 236);
+  g.lineWidth = 1.5; g.strokeRect(20, 20, 216, 216);
+  g.strokeStyle = 'rgba(217,164,65,.35)'; g.lineWidth = 1;
+  var k, x, y;
+  for (k = 0; k < 4; k++) {
+    x = k % 2 ? 236 : 20; y = k < 2 ? 20 : 236;
+    g.beginPath(); g.arc(x, y, 34, 0, Math.PI * 2); g.stroke();
+  }
+  g.strokeStyle = '#d9a441'; g.lineWidth = 5;
+  star8(g, 128, 128, 92, 56, -Math.PI / 2); g.stroke();
+  g.lineWidth = 2.5; g.strokeStyle = '#e8c073';
+  star8(g, 128, 128, 46, 27, -Math.PI / 2); g.stroke();
+  g.beginPath(); g.arc(128, 128, 18, 0, Math.PI * 2); g.stroke();
+  g.fillStyle = '#e8c073'; g.beginPath(); g.arc(128, 128, 5, 0, Math.PI * 2); g.fill();
+  g.strokeStyle = 'rgba(217,164,65,.55)'; g.lineWidth = 2;
+  for (k = 0; k < 16; k++) {
+    var a = k * Math.PI / 8;
+    g.beginPath();
+    g.moveTo(128 + Math.cos(a) * 98, 128 + Math.sin(a) * 98);
+    g.lineTo(128 + Math.cos(a) * 110, 128 + Math.sin(a) * 110);
+    g.stroke();
+  }
+  return c;
+}
+
+function texMotif(kind) {
+  var c = mkCanvas(), g = c.getContext('2d');
+  g.fillStyle = IVORY; g.fillRect(0, 0, 256, 256);
+  var v = g.createRadialGradient(128, 118, 20, 128, 128, 130);
+  v.addColorStop(0, '#fbf6e8'); v.addColorStop(1, '#efe3c4');
+  g.fillStyle = v; g.fillRect(0, 0, 256, 256);
+  g.lineCap = 'round'; g.lineJoin = 'round';
+  g.strokeStyle = GOLD; g.lineWidth = 3;
+  g.strokeRect(8, 8, 240, 240);
+  g.strokeStyle = GOLD; g.fillStyle = GOLD; g.lineWidth = 7;
+  var i, a, x, y;
+  if (kind === 'sun') {
+    g.beginPath(); g.arc(128, 128, 44, 0, Math.PI * 2); g.stroke();
+    g.beginPath(); g.arc(128, 128, 12, 0, Math.PI * 2); g.stroke();
+    for (i = 0; i < 12; i++) {
+      a = i * Math.PI / 6;
+      var r2 = i % 2 ? 76 : 90;
+      g.beginPath();
+      g.moveTo(128 + Math.cos(a) * 52, 128 + Math.sin(a) * 52);
+      g.lineTo(128 + Math.cos(a) * r2, 128 + Math.sin(a) * r2);
+      g.stroke();
+    }
+  } else if (kind === 'star') {
+    g.lineWidth = 6; star8(g, 128, 128, 92, 50, -Math.PI / 2); g.stroke();
+    g.lineWidth = 4; g.beginPath(); g.arc(128, 128, 34, 0, Math.PI * 2); g.stroke();
+    star8(g, 128, 128, 20, 11, -Math.PI / 2); g.stroke();
+  } else if (kind === 'rosette') {
+    g.lineWidth = 5;
+    for (i = 0; i < 8; i++) {
+      a = i * Math.PI / 4;
+      g.beginPath();
+      g.ellipse(128 + Math.cos(a) * 46, 128 + Math.sin(a) * 46, 34, 15, a, 0, Math.PI * 2);
+      g.stroke();
+    }
+    g.beginPath(); g.arc(128, 128, 26, 0, Math.PI * 2); g.stroke();
+    g.beginPath(); g.arc(128, 128, 8, 0, Math.PI * 2); g.fill();
+  } else if (kind === 'lion') {
+    var n = 14;
+    g.lineWidth = 5;
+    g.beginPath();
+    for (i = 0; i <= n * 2; i++) {
+      a = -Math.PI / 2 + i * Math.PI / n;
+      var r = i % 2 ? 66 : 92;
+      x = 128 + Math.cos(a) * r; y = 130 + Math.sin(a) * r;
+      if (i) g.lineTo(x, y); else g.moveTo(x, y);
+    }
+    g.closePath(); g.stroke();
+    g.beginPath(); g.arc(128, 130, 42, 0, Math.PI * 2); g.stroke();
+    g.beginPath(); g.arc(114, 120, 4, 0, Math.PI * 2); g.fill();
+    g.beginPath(); g.arc(142, 120, 4, 0, Math.PI * 2); g.fill();
+    g.beginPath(); g.moveTo(120, 142); g.lineTo(136, 142); g.lineTo(128, 152); g.closePath(); g.stroke();
+    g.beginPath(); g.arc(128, 152, 14, .15 * Math.PI, .85 * Math.PI); g.stroke();
+  } else if (kind === 'bull') {
+    g.lineWidth = 6;
+    g.beginPath();
+    g.moveTo(84, 96); g.lineTo(172, 96);
+    g.quadraticCurveTo(178, 150, 128, 186);
+    g.quadraticCurveTo(78, 150, 84, 96);
+    g.closePath(); g.stroke();
+    g.lineWidth = 7;
+    g.beginPath(); g.moveTo(88, 100); g.quadraticCurveTo(52, 84, 58, 46); g.quadraticCurveTo(80, 56, 92, 84); g.stroke();
+    g.beginPath(); g.moveTo(168, 100); g.quadraticCurveTo(204, 84, 198, 46); g.quadraticCurveTo(176, 56, 164, 84); g.stroke();
+    g.lineWidth = 5;
+    g.beginPath(); g.arc(108, 122, 4.5, 0, Math.PI * 2); g.fill();
+    g.beginPath(); g.arc(148, 122, 4.5, 0, Math.PI * 2); g.fill();
+    g.beginPath(); g.arc(128, 158, 12, 0, Math.PI * 2); g.stroke();
+    g.beginPath(); g.arc(128, 96, 9, 0, Math.PI * 2); g.stroke();
+  } else if (kind === 'lotus') {
+    g.lineWidth = 6;
+    g.beginPath(); g.moveTo(128, 52); g.quadraticCurveTo(112, 100, 128, 148); g.quadraticCurveTo(144, 100, 128, 52); g.stroke();
+    g.beginPath(); g.moveTo(96, 74); g.quadraticCurveTo(84, 118, 122, 152); g.stroke();
+    g.beginPath(); g.moveTo(160, 74); g.quadraticCurveTo(172, 118, 134, 152); g.stroke();
+    g.lineWidth = 5;
+    g.beginPath(); g.moveTo(72, 96); g.quadraticCurveTo(74, 148, 126, 158); g.stroke();
+    g.beginPath(); g.moveTo(184, 96); g.quadraticCurveTo(182, 148, 130, 158); g.stroke();
+    g.beginPath(); g.moveTo(64, 176); g.quadraticCurveTo(128, 196, 192, 176); g.stroke();
+    g.beginPath(); g.moveTo(80, 196); g.quadraticCurveTo(128, 212, 176, 196); g.stroke();
+  } else if (kind === 'cypress') {
+    g.lineWidth = 6;
+    g.beginPath();
+    g.moveTo(128, 36);
+    g.bezierCurveTo(88, 78, 88, 140, 120, 196);
+    g.lineTo(136, 196);
+    g.bezierCurveTo(168, 140, 168, 78, 128, 36);
+    g.closePath(); g.stroke();
+    g.lineWidth = 4;
+    g.beginPath(); g.moveTo(102, 92); g.quadraticCurveTo(128, 104, 154, 92); g.stroke();
+    g.beginPath(); g.moveTo(98, 126); g.quadraticCurveTo(128, 138, 158, 126); g.stroke();
+    g.beginPath(); g.moveTo(106, 160); g.quadraticCurveTo(128, 170, 150, 160); g.stroke();
+    g.lineWidth = 6;
+    g.beginPath(); g.moveTo(118, 196); g.lineTo(118, 220); g.moveTo(138, 196); g.lineTo(138, 220); g.stroke();
+    g.beginPath(); g.moveTo(104, 222); g.lineTo(152, 222); g.stroke();
+  } else if (kind === 'wing') {
+    g.lineWidth = 6;
+    g.beginPath(); g.moveTo(58, 196); g.quadraticCurveTo(96, 60, 200, 56); g.stroke();
+    g.lineWidth = 5;
+    for (i = 0; i < 4; i++) {
+      var t = (i + 1) / 5;
+      g.beginPath();
+      g.moveTo(58 + t * 30, 196 - t * 26);
+      g.quadraticCurveTo(96 + t * 40, 74 + t * 30, 186 - t * 40, 66 + t * 34);
+      g.stroke();
+    }
+    g.lineWidth = 4;
+    g.beginPath(); g.moveTo(58, 196); g.quadraticCurveTo(70, 150, 96, 128); g.stroke();
+    g.beginPath(); g.arc(58, 200, 8, 0, Math.PI * 2); g.stroke();
+  }
+  var tex = new THREE.CanvasTexture(c);
+  tex.anisotropy = 4;
+  return tex;
+}
+
+// ---------- 3D scene ----------
+var ok3d = true, renderer, scene, camera;
+var cardGroups = [], cardMeshes = [], frontMats = {};
+var glowLight, dust, camT = { x: 0, y: 0 }, geo;
+try {
+  renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  stage.insertBefore(renderer.domElement, stage.firstChild);
+  scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x0d1526);
+  scene.fog = new THREE.Fog(0x0d1526, 9, 24);
+  camera = new THREE.PerspectiveCamera(46, 1, .1, 60);
+
+  // girih floor
+  var fc = mkCanvas(), fg = fc.getContext('2d');
+  fg.fillStyle = '#101a30'; fg.fillRect(0, 0, 256, 256);
+  fg.strokeStyle = 'rgba(217,164,65,.5)'; fg.lineWidth = 2;
+  star8(fg, 128, 128, 96, 58, -Math.PI / 2); fg.stroke();
+  star8(fg, 0, 0, 96, 58, -Math.PI / 2); fg.stroke();
+  star8(fg, 256, 0, 96, 58, -Math.PI / 2); fg.stroke();
+  star8(fg, 0, 256, 96, 58, -Math.PI / 2); fg.stroke();
+  star8(fg, 256, 256, 96, 58, -Math.PI / 2); fg.stroke();
+  fg.strokeStyle = 'rgba(217,164,65,.28)'; fg.lineWidth = 1.4;
+  fg.beginPath(); fg.moveTo(0, 128); fg.lineTo(256, 128); fg.moveTo(128, 0); fg.lineTo(128, 256); fg.stroke();
+  fg.beginPath(); fg.arc(128, 128, 34, 0, Math.PI * 2); fg.stroke();
+  var floorTex = new THREE.CanvasTexture(fc);
+  floorTex.wrapS = floorTex.wrapT = THREE.RepeatWrapping;
+  floorTex.repeat.set(7, 7);
+  var floor = new THREE.Mesh(
+    new THREE.PlaneGeometry(34, 30),
+    new THREE.MeshStandardMaterial({ map: floorTex, color: 0xbfc9e6, roughness: .85, metalness: .15 }));
+  floor.rotation.x = -Math.PI / 2; floor.position.y = -1.15; scene.add(floor);
+
+  // golden dust
+  var dg = new THREE.BufferGeometry();
+  var dp = new Float32Array(130 * 3);
+  for (var di = 0; di < 130; di++) {
+    dp[di * 3] = (Math.random() - .5) * 11;
+    dp[di * 3 + 1] = Math.random() * 5.5 - 1;
+    dp[di * 3 + 2] = (Math.random() - .5) * 8;
+  }
+  dg.setAttribute('position', new THREE.BufferAttribute(dp, 3));
+  dust = new THREE.Points(dg, new THREE.PointsMaterial({
+    color: 0xe8c073, size: .055, transparent: true, opacity: .8,
+    blending: THREE.AdditiveBlending, depthWrite: false }));
+  scene.add(dust);
+
+  scene.add(new THREE.HemisphereLight(0x9db4e8, 0x1a2340, .85));
+  var dl = new THREE.DirectionalLight(0xe8c073, .95); dl.position.set(5, 9, 6); scene.add(dl);
+  var dl2 = new THREE.DirectionalLight(0x3fb8af, .28); dl2.position.set(-6, 4, -5); scene.add(dl2);
+  glowLight = new THREE.PointLight(0xe8c073, 0, 4.5); scene.add(glowLight);
+
+  // card materials
+  var backTex = new THREE.CanvasTexture(texBack());
+  backTex.anisotropy = 4;
+  var backMat = new THREE.MeshStandardMaterial({ map: backTex, roughness: .55, metalness: .2 });
+  geo = new THREE.PlaneGeometry(1.02, 1.02);
+  for (var mi = 0; mi < L.SYMBOLS.length; mi++) {
+    frontMats[L.SYMBOLS[mi]] = new THREE.MeshStandardMaterial({
+      map: texMotif(L.SYMBOLS[mi]), roughness: .5, metalness: .12,
+      emissive: 0xe8c073, emissiveIntensity: 0 });
+  }
+
+  function resize() {
+    var w = stage.clientWidth || 480, h = stage.clientHeight || 420;
+    renderer.setSize(w, h, false);
+    camera.aspect = w / h; camera.updateProjectionMatrix();
+  }
+  window.addEventListener('resize', resize);
+  resize();
+} catch (e) { ok3d = false; }
+
+// ---------- game state ----------
+var S = null, gen = 0, glow = 0;
+
+function buildBoard() {
+  if (!ok3d) return;
+  var i, g;
+  for (i = 0; i < cardGroups.length; i++) scene.remove(cardGroups[i]);
+  cardGroups = []; cardMeshes = [];
+  for (i = 0; i < 16; i++) {
+    var col = i % 4, row = Math.floor(i / 4);
+    g = new THREE.Group();
+    g.position.set((col - 1.5) * 1.32, (1.5 - row) * 1.06 + .5, 0);
+    g.userData = { anim: null, float: false, phase: 0, baseY: g.position.y };
+    var back = new THREE.Mesh(geo, backMat);
+    back.position.z = .013;
+    back.userData.idx = i;
+    var front = new THREE.Mesh(geo, frontMats[S.deck[i].sym]);
+    front.position.z = -.013;
+    front.rotation.y = Math.PI;
+    front.userData.idx = i;
+    g.add(back); g.add(front);
+    scene.add(g);
+    cardGroups.push(g);
+    cardMeshes.push(back, front);
+  }
+}
+
+function setRot(i, from, to, t0, dur) {
+  cardGroups[i].userData.anim = { from: from, to: to, t0: t0, dur: dur };
+}
+
+function floatOn(i) {
+  var c = cardGroups[i];
+  c.userData.float = true;
+  c.userData.phase = Math.random() * 6.28;
+  var fm = frontMats[S.deck[i].sym].clone();
+  fm.emissiveIntensity = .15;
+  c.children[1].material = fm;
+}
+
+function newRun(hidePanel) {
+  gen++;
+  S = L.newGame();
+  movesEl.textContent = fa(0);
+  pairsEl.textContent = fa(0) + '/۸';
+  buildBoard();
+  glow = 0;
+  if (glowLight) glowLight.intensity = 0;
+  if (hidePanel) panel.classList.add('hidden');
+}
+
+function onCard(i) {
+  if (!S || S.state !== 'run') return;
+  var fi = S.first;
+  var res = L.pick(S, i);
+  if (res === 'ignored') return;
+  var now = performance.now();
+  if (res === 'first') { setRot(i, cardGroups[i].rotation.y, Math.PI, now, L.FLIP_MS); return; }
+  setRot(i, cardGroups[i].rotation.y, Math.PI, now, L.FLIP_MS);
+  movesEl.textContent = fa(S.moves);
+  var a = fi >= 0 ? fi : S.done[S.done.length - 2], b = i;
+  var myGen = gen;
+  if (res === 'match') {
+    pairsEl.textContent = fa(S.pairs) + '/۸';
+    setTimeout(function () {
+      if (myGen !== gen) return;
+      floatOn(a); floatOn(b);
+      glowLight.position.set(cardGroups[a].position.x, cardGroups[a].position.y + .2, .8);
+      glow = 1.5;
+    }, 140);
+    if (S.state === 'win') {
+      setTimeout(function () {
+        if (myGen !== gen) return;
+        var best = bestOf(), record = false;
+        if (!best || S.moves < best) {
+          store.set(L.BEST_KEY, String(S.moves));
+          record = true;
+        }
+        bestShow();
+        show('آفرین! همه جفت‌ها را در ' + fa(S.moves) + ' حرکت پیدا کردی',
+          record ? 'رکورد جدید!' : 'بهترین رکورد: ' + fa(bestOf()) + ' حرکت', 'شروع دوباره');
+      }, 620);
+    }
+  } else {
+    setTimeout(function () {
+      if (myGen !== gen) return;
+      setRot(a, cardGroups[a].rotation.y, 0, performance.now(), L.FLIP_MS);
+      setRot(b, cardGroups[b].rotation.y, 0, performance.now(), L.FLIP_MS);
+    }, L.BACK_MS / 2);
+    setTimeout(function () {
+      if (myGen !== gen) return;
+      L.settle(S);
+    }, L.BACK_MS);
+  }
+}
+
+// ---------- input ----------
+var raycaster = null, pointerV = null;
+function pickAt(cx, cy) {
+  if (!ok3d) return -1;
+  if (!raycaster) { raycaster = new THREE.Raycaster(); pointerV = new THREE.Vector2(); }
+  var r = renderer.domElement.getBoundingClientRect();
+  pointerV.x = ((cx - r.left) / r.width) * 2 - 1;
+  pointerV.y = -((cy - r.top) / r.height) * 2 + 1;
+  raycaster.setFromCamera(pointerV, camera);
+  var hits = raycaster.intersectObjects(cardMeshes);
+  return hits.length ? hits[0].object.userData.idx : -1;
+}
+stage.addEventListener('pointerdown', function (e) {
+  if (e.target === pBtn || e.target === panel || e.target === pMsg || e.target === pSub) return;
+  var i = pickAt(e.clientX, e.clientY);
+  if (i >= 0) { e.preventDefault(); onCard(i); }
+});
+stage.addEventListener('pointermove', function (e) {
+  var r = stage.getBoundingClientRect();
+  camT.x = ((e.clientX - r.left) / r.width - .5) * .9;
+  camT.y = -((e.clientY - r.top) / r.height - .5) * .5;
+  if (!panel.classList.contains('hidden') || !ok3d) return;
+  renderer.domElement.style.cursor = pickAt(e.clientX, e.clientY) >= 0 ? 'pointer' : '';
+});
+pBtn.addEventListener('click', function () {
+  if (!ok3d) { location.reload(); return; }
+  newRun(true);
+});
+document.getElementById('restart').addEventListener('click', function () { newRun(true); });
+
+// ---------- render loop ----------
+var lastT = performance.now();
+function frame(now) {
+  requestAnimationFrame(frame);
+  var dt = Math.min(.05, (now - lastT) / 1000); lastT = now;
+  if (!ok3d || !renderer || document.hidden) return;
+  var i, c, u, k, an;
+  for (i = 0; i < 16; i++) {
+    c = cardGroups[i]; if (!c) continue;
+    u = c.userData;
+    if (u.anim) {
+      an = u.anim;
+      k = Math.min(1, (now - an.t0) / an.dur);
+      k = k < .5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2;
+      c.rotation.y = an.from + (an.to - an.from) * k;
+      if (k >= 1) u.anim = null;
+    }
+    if (u.float) {
+      c.position.y = u.baseY + .16 + Math.sin(now / 400 + u.phase) * .05;
+      c.rotation.z = Math.sin(now / 500 + u.phase) * .06;
+      c.children[1].material.emissiveIntensity = .16 + .13 * Math.sin(now / 300 + u.phase);
+      var sc = 1 + .035 * Math.sin(now / 300 + u.phase);
+      c.scale.set(sc, sc, 1);
+    }
+  }
+  if (glow > 0) {
+    glow *= Math.pow(.05, dt);
+    glowLight.intensity = glow;
+    if (glow < .02) { glow = 0; glowLight.intensity = 0; }
+  }
+  if (dust) { dust.rotation.y += dt * .05; dust.material.opacity = .65 + Math.sin(now / 1600) * .18; }
+  camera.position.x += (camT.x - camera.position.x) * .06;
+  camera.position.y += ((4.9 + camT.y) - camera.position.y) * .06;
+  camera.position.z = 5.4;
+  camera.lookAt(0, .55, 0);
+  renderer.render(scene, camera);
+}
+
+// ---------- boot ----------
+if (!ok3d) {
+  show('سه‌بعدی در دسترس نیست', 'مرورگر شما از گرافیک سه‌بعدی (WebGL) پشتیبانی نمی‌کند.', 'تلاش دوباره');
+} else {
+  newRun(false);
+  show('آماده‌ای؟', 'پشت هر کارت نقشی از تخت جمشید پنهان است؛ جفت‌ها را پیدا کن.', 'شروع بازی');
+  requestAnimationFrame(frame);
+}
+})();
+</script>
+</body>
+</html>
